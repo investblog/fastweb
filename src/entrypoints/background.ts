@@ -3,6 +3,21 @@ import type { RequestMessage } from '@shared/messaging';
 import { BADGE_COLORS } from '@shared/constants';
 
 export default defineBackground(() => {
+  // --- Cross-browser action API (MV3: chrome.action, MV2: chrome.browserAction) ---
+  const actionAPI: typeof chrome.action | null = (() => {
+    try {
+      if (typeof chrome !== 'undefined') {
+        if (chrome.action) return chrome.action;
+        if ((chrome as any).browserAction) return (chrome as any).browserAction;
+      }
+      if (typeof browser !== 'undefined') {
+        if ((browser as any).action) return (browser as any).action;
+        if ((browser as any).browserAction) return (browser as any).browserAction;
+      }
+    } catch { /* ignore */ }
+    return null;
+  })();
+
   async function openSettingsInSidePanel(tabId: number): Promise<void> {
     try {
       if (
@@ -32,7 +47,8 @@ export default defineBackground(() => {
   function getBadgeCount(tabId: number): Promise<number> {
     return new Promise((resolve) => {
       try {
-        chrome.action.getBadgeText({ tabId }, (text) => {
+        if (!actionAPI) return resolve(0);
+        actionAPI.getBadgeText({ tabId }, (text) => {
           if (chrome.runtime.lastError) return resolve(0);
           const n = parseInt(text || '', 10);
           resolve(Number.isFinite(n) ? n : 0);
@@ -113,24 +129,26 @@ export default defineBackground(() => {
   });
 
   // --- Action click ---
-  chrome.action.onClicked.addListener(async (tab) => {
-    if (!tab?.id) return;
-    try {
-      if (isEmptyTab(tab)) {
-        await openSettingsInSidePanel(tab.id);
-        return;
+  if (actionAPI) {
+    actionAPI.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
+      if (!tab?.id) return;
+      try {
+        if (isEmptyTab(tab)) {
+          await openSettingsInSidePanel(tab.id);
+          return;
+        }
+        const badgeCount = await getBadgeCount(tab.id);
+        if (badgeCount > 0) {
+          const resp = await requestTogglePanel(tab.id);
+          if (!resp?.ok) await openSettingsInSidePanel(tab.id);
+        } else {
+          await openSettingsInSidePanel(tab.id);
+        }
+      } catch {
+        await openSettingsInSidePanel(tab.id!);
       }
-      const badgeCount = await getBadgeCount(tab.id);
-      if (badgeCount > 0) {
-        const resp = await requestTogglePanel(tab.id);
-        if (!resp?.ok) await openSettingsInSidePanel(tab.id);
-      } else {
-        await openSettingsInSidePanel(tab.id);
-      }
-    } catch {
-      await openSettingsInSidePanel(tab.id!);
-    }
-  });
+    });
+  }
 
   // --- Unified message handler ---
   chrome.runtime.onMessage.addListener(
@@ -139,7 +157,11 @@ export default defineBackground(() => {
 
       switch (msg.type) {
         case 'OPEN_SETTINGS':
-          if (sender?.tab?.id) openSettingsInSidePanel(sender.tab.id);
+          if (sender?.tab?.id) {
+            openSettingsInSidePanel(sender.tab.id).catch(() => {
+              chrome.tabs.create({ url: chrome.runtime.getURL('sidepanel.html') });
+            });
+          }
           break;
 
         case 'GET_BOOKMARKS':
@@ -155,9 +177,13 @@ export default defineBackground(() => {
 
         case 'SET_BADGE': {
           const n = Math.max(0, parseInt(String(msg.count || 0), 10) || 0);
+          const tabId = sender?.tab?.id;
           try {
-            chrome.action.setBadgeBackgroundColor({ color: msg.color || BADGE_COLORS.alts });
-            chrome.action.setBadgeText({ text: n > 0 ? String(n) : '' });
+            if (actionAPI) {
+              const opts = tabId ? { tabId } : {};
+              actionAPI.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
+              actionAPI.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
+            }
           } catch { /* ignore */ }
           sendResponse?.({ ok: true });
           break;
