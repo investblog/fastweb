@@ -190,7 +190,11 @@ export default defineContentScript({
             : bmCount > 0
               ? BADGE_COLORS.bm
               : BADGE_COLORS.alts;
-          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color });
+          const parts: string[] = [];
+          if (altsCount > 0) parts.push(`${altsCount} alt${altsCount > 1 ? 's' : ''}`);
+          if (bmCount > 0) parts.push(`${bmCount} bookmark${bmCount > 1 ? 's' : ''}`);
+          const title = parts.length ? `FastWeb: ${parts.join(', ')}` : '';
+          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
         }
       } catch { /* ignore */ }
     }

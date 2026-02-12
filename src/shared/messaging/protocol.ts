@@ -21,6 +21,7 @@ export interface SetBadgeRequest {
   type: 'SET_BADGE';
   count: number;
   color: string;
+  title: string;
 }
 
 export interface SetBadgeResponse {

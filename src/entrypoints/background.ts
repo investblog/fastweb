@@ -39,8 +39,13 @@ export default defineBackground(() => {
     await browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
   }
 
-  function openSettingsInTab(): void {
-    browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
+  function openSettingsPopup(): void {
+    browser.windows.create({
+      url: browser.runtime.getURL('/sidepanel.html'),
+      type: 'popup',
+      width: 420,
+      height: 700,
+    });
   }
 
   // --- Badge ---
@@ -165,7 +170,7 @@ export default defineBackground(() => {
               break;
             }
           } catch { /* ignore */ }
-          openSettingsInTab();
+          openSettingsPopup();
           break;
 
         case 'GET_BOOKMARKS':
@@ -187,6 +192,9 @@ export default defineBackground(() => {
               const opts = tabId ? { tabId } : {};
               browser.action.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
               browser.action.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
+              if (browser.action.setTitle) {
+                browser.action.setTitle({ ...opts, title: msg.title || '' });
+              }
             }
           } catch { /* ignore */ }
           sendResponse?.({ ok: true });
