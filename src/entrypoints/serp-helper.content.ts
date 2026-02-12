@@ -184,18 +184,22 @@ export default defineContentScript({
 
     function setBadge(count: number, altsCount: number, bmCount: number): void {
       try {
-        if (__prefs.showBadge !== false && hasRuntime()) {
-          const color = altsCount > 0 && bmCount > 0
-            ? BADGE_COLORS.mixed
-            : bmCount > 0
-              ? BADGE_COLORS.bm
-              : BADGE_COLORS.alts;
-          const parts: string[] = [];
-          if (altsCount > 0) parts.push(`${altsCount} alt${altsCount > 1 ? 's' : ''}`);
-          if (bmCount > 0) parts.push(`${bmCount} bookmark${bmCount > 1 ? 's' : ''}`);
-          const title = parts.length ? `FastWeb: ${parts.join(', ')}` : '';
-          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
+        if (!hasRuntime()) return;
+        if (__prefs.showBadge === false) {
+          // Clear any previously-set badge
+          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: 0, color: BADGE_COLORS.alts, title: '' });
+          return;
         }
+        const color = altsCount > 0 && bmCount > 0
+          ? BADGE_COLORS.mixed
+          : bmCount > 0
+            ? BADGE_COLORS.bm
+            : BADGE_COLORS.alts;
+        const parts: string[] = [];
+        if (altsCount > 0) parts.push(`${altsCount} alt${altsCount > 1 ? 's' : ''}`);
+        if (bmCount > 0) parts.push(`${bmCount} bookmark${bmCount > 1 ? 's' : ''}`);
+        const title = parts.length ? `FastWeb: ${parts.join(', ')}` : '';
+        chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
       } catch { /* ignore */ }
     }
 
