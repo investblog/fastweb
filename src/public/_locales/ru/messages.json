@@ -42,19 +42,19 @@
     "message": "Удалить"
   },
   "serpPanelTitle": {
-    "message": "Подсказки по поиску"
+    "message": "FastWeb"
   },
   "serpHide": {
     "message": "Скрыть"
   },
-  "serpTipCheck": {
-    "message": "Проверьте написание, попробуйте более точную фразу или используйте кавычки для точного совпадения."
+  "altsHeading": {
+    "message": "Альтернативы"
   },
-  "serpTipRestrict": {
-    "message": "Попробуйте ограничить поиск доменом:"
+  "accelOn": {
+    "message": "Ускорение вкл."
   },
-  "serpTipYandex": {
-    "message": "То же в Яндексе:"
+  "accelOff": {
+    "message": "Ускорение выкл."
   },
   "serpNoTips": {
     "message": "Подсказок нет"

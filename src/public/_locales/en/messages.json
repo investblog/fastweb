@@ -42,19 +42,19 @@
     "message": "Delete"
   },
   "serpPanelTitle": {
-    "message": "Search tips"
+    "message": "FastWeb"
   },
   "serpHide": {
     "message": "Hide"
   },
-  "serpTipCheck": {
-    "message": "Check spelling, try a more precise phrase, or use quotes for exact match."
+  "altsHeading": {
+    "message": "Alternates"
   },
-  "serpTipRestrict": {
-    "message": "Try restricting the search to domain:"
+  "accelOn": {
+    "message": "Acceleration on"
   },
-  "serpTipYandex": {
-    "message": "Same in Yandex:"
+  "accelOff": {
+    "message": "Acceleration off"
   },
   "serpNoTips": {
     "message": "No tips right now."

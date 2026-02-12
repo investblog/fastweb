@@ -1,7 +1,7 @@
 import { detectSerpContext, getQuery, getQueryFromDom, findDomainsInQuery, toHref, toHost } from '@shared/url-utils';
 import { tokenizeQuery, matchAlternatesByBrandTokens, ruToLat } from '@shared/tokenizer';
 import { DEFAULT_PREFS, STORAGE_DEFAULTS, TLD_STOP, BADGE_COLORS } from '@shared/constants';
-import { createIcon, createSectionHeader, escapeHtml } from '@shared/ui-helpers';
+import { createIcon } from '@shared/ui-helpers';
 import { _ } from '@shared/i18n';
 import type { Prefs, AlternatesMap, BookmarkEntry } from '@shared/types';
 
@@ -130,14 +130,21 @@ export default defineContentScript({
       #ah-root .ah-pill-arrow { color: var(--ah-muted); font-size: 12px; }
       #ah-root .ah-pill-icon { border-radius: calc(var(--ah-radius) / 2); width: 16px; height: 16px; object-fit: cover; }
       #ah-root .ah-section-note { margin: 0 0 6px; color: var(--ah-muted); }
-      #ah-root .ah-panel-body { font-size: var(--ah-font-size); color: var(--ah-text); }
-      #ah-root .ah-tip { margin: 4px 0; }
-      #ah-root .ah-inline-link { color: var(--ah-accent); text-decoration: none; }
-      #ah-root .ah-inline-link:hover { text-decoration: underline; }
-      #ah-root .ah-panel-actions {
-        margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--ah-border-subtle);
-        display: flex; flex-wrap: nowrap; gap: 8px; justify-content: space-between; align-items: center;
+      #ah-root .ah-footer {
+        margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ah-border-subtle);
+        display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--ah-muted);
       }
+      #ah-root .ah-footer-status { display: inline-flex; align-items: center; gap: 4px; }
+      #ah-root .ah-footer-status svg { width: 12px; height: 12px; flex-shrink: 0; }
+      #ah-root .ah-footer-status--on svg { color: #22c55e; }
+      #ah-root .ah-footer-status--off svg { color: #64748b; }
+      #ah-root .ah-footer-cog {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 22px; height: 22px; border-radius: 4px; cursor: pointer;
+        color: var(--ah-muted); transition: color .15s ease;
+      }
+      #ah-root .ah-footer-cog:hover { color: var(--ah-accent); }
+      #ah-root .ah-footer-cog svg { width: 14px; height: 14px; }
       #ah-root.ah-root--inline-hidden { display: none; }
       #ah-serp-toast {
         position: fixed; top: 16px; right: 16px; z-index: 999999;
@@ -203,14 +210,6 @@ export default defineContentScript({
       } catch { /* ignore */ }
     }
 
-    // --- Link helpers ---
-    function makePlainLink(href: string, text: string): string {
-      return `<a href="${href}" target="_blank" rel="noreferrer" class="ah-inline-link">${escapeHtml(text)}</a>`;
-    }
-    function makePillLink(href: string, text: string): string {
-      return `<a href="${href}" target="_blank" rel="noreferrer" class="ah-pill"><span class="ah-pill-label">${escapeHtml(text)}</span><span class="ah-pill-arrow">\u2B62</span></a>`;
-    }
-
     // --- Bookmarks cache ---
     let __bmCache: BookmarkEntry[] | null = null;
     function fetchBookmarksOnce(): Promise<BookmarkEntry[]> {
@@ -238,15 +237,14 @@ export default defineContentScript({
         <div id="ah-root" class="ah-root ah-serp-root">
           <div class="ah-panel">
             <div class="ah-panel-header">
-              <div class="ah-panel-title"><span>${_('serpPanelTitle', 'Search tips')}</span></div>
+              <div class="ah-panel-title"><span>${_('serpPanelTitle', 'FastWeb')}</span></div>
               <button id="ah-close-x" class="ah-btn ah-btn-ghost ah-panel-close" type="button" aria-label="${_('serpHide', 'Hide')}">\u00d7</button>
             </div>
             <div id="ah-mirrors" class="ah-section"></div>
             <div id="ah-bookmarks" class="ah-section"></div>
-            <div id="ah-body" class="ah-panel-body"></div>
-            <div id="ah-actions" class="ah-panel-actions">
-              <button id="ah-settings" class="ah-btn ah-btn-outline" type="button">${_('settingsBtn', 'Settings')}</button>
-              <button id="ah-close" class="ah-btn ah-btn-outline" type="button">${_('serpHide', 'Hide')}</button>
+            <div class="ah-footer">
+              <span id="ah-status" class="ah-footer-status"></span>
+              <button id="ah-settings" class="ah-footer-cog" type="button" aria-label="${_('settingsBtn', 'Settings')}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z" fill="currentColor"/></svg></button>
             </div>
           </div>
         </div>`;
@@ -254,9 +252,7 @@ export default defineContentScript({
       el = box.firstElementChild as HTMLElement;
       document.documentElement.appendChild(el);
 
-      const collapse = () => collapsePanel(el!);
-      el.querySelector('#ah-close-x')?.addEventListener('click', collapse);
-      el.querySelector('#ah-close')?.addEventListener('click', collapse);
+      el.querySelector('#ah-close-x')?.addEventListener('click', () => collapsePanel(el!));
       el.querySelector('#ah-settings')?.addEventListener('click', () => {
         try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
       });
@@ -286,8 +282,14 @@ export default defineContentScript({
           if (map[d] && !matchedKeys.includes(d)) matchedKeys.push(d);
         }
 
+        // Only keep keys that have actual alternates
+        const keysWithAlts = matchedKeys.filter(key => {
+          const alts = map[key] || map[key.replace(/^www\./, '')] || [];
+          return Array.isArray(alts) && alts.length > 0;
+        });
+
         const existing = document.getElementById('ah-root');
-        if (!matchedKeys.length) {
+        if (!keysWithAlts.length) {
           setBadge(0, 0, 0);
           if (existing) existing.remove();
           return;
@@ -298,24 +300,39 @@ export default defineContentScript({
         const el = injectPanel();
         setPanelExpanded(el, isOpenMode);
 
-        const body = el.querySelector('#ah-body');
+        // Update acceleration status footer
+        const statusEl = el.querySelector('#ah-status') as HTMLElement | null;
+        if (statusEl) {
+          const on = !!__prefs.enablePrefetch;
+          const cls = on ? 'ah-footer-status--on' : 'ah-footer-status--off';
+          statusEl.className = `ah-footer-status ${cls}`;
+          const label = on
+            ? _('accelOn', 'Acceleration on')
+            : _('accelOff', 'Acceleration off');
+          statusEl.innerHTML = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 0v11h3v9l7-12H9l4-8m2 13h2v2h-2zm0-8h2v6h-2z" fill="currentColor"/></svg>${label}`;
+        }
+
         const mirrorsWrap = el.querySelector('#ah-mirrors') as HTMLElement | null;
         const bmWrap = el.querySelector('#ah-bookmarks') as HTMLElement | null;
 
-        if (mirrorsWrap) { mirrorsWrap.innerHTML = ''; mirrorsWrap.classList.remove('active', 'ah-panel-section--alternates'); }
+        if (mirrorsWrap) { mirrorsWrap.innerHTML = ''; mirrorsWrap.classList.remove('active'); }
         if (bmWrap) { bmWrap.innerHTML = ''; bmWrap.classList.remove('active'); }
 
-        setBadge(matchedKeys.length, matchedKeys.length, 0);
+        setBadge(keysWithAlts.length, keysWithAlts.length, 0);
 
-        // Render alternates
+        // Render alternates as mini-cards with favicons
         if (mirrorsWrap) {
           let showedMirrors = false;
-          matchedKeys.forEach((key) => {
+          keysWithAlts.forEach((key) => {
             const alts = map[key] || map[key.replace(/^www\./, '')] || [];
             if (Array.isArray(alts) && alts.length) {
               if (!showedMirrors) {
                 showedMirrors = true;
-                mirrorsWrap.classList.add('active', 'ah-panel-section--alternates');
+                mirrorsWrap.classList.add('active');
+                const hdr = document.createElement('div');
+                hdr.className = 'ah-header';
+                hdr.textContent = _('altsHeading', 'Alternates');
+                mirrorsWrap.appendChild(hdr);
               }
               const note = document.createElement('div');
               note.className = 'ah-section-note';
@@ -326,11 +343,20 @@ export default defineContentScript({
               row.className = 'ah-pill-row';
               alts.forEach((a: string) => {
                 const obj = toHref(a);
-                const pill = document.createElement('span');
-                pill.innerHTML = makePillLink(obj.href, obj.host);
-                const anchor = pill.firstElementChild as HTMLElement;
-                if (anchor?.tagName === 'A') (anchor as HTMLAnchorElement).title = obj.href;
-                row.appendChild(anchor);
+                if (!obj.href) return;
+                const link = document.createElement('a');
+                link.className = 'ah-pill ah-pill-rich';
+                link.href = obj.href; link.target = '_blank'; link.rel = 'noreferrer'; link.title = obj.href;
+                const img = document.createElement('img');
+                img.src = `https://icons.duckduckgo.com/ip3/${obj.host}.ico`;
+                img.className = 'ah-pill-icon'; img.alt = '';
+                const span = document.createElement('span');
+                span.className = 'ah-pill-label';
+                span.textContent = obj.host;
+                const arrow = document.createElement('span');
+                arrow.textContent = '\u2B62'; arrow.className = 'ah-pill-arrow';
+                link.append(img, span, arrow);
+                row.appendChild(link);
               });
               mirrorsWrap.appendChild(row);
             }
@@ -360,7 +386,7 @@ export default defineContentScript({
               };
 
               const slds = new Set<string>();
-              matchedKeys.forEach((key) => {
+              keysWithAlts.forEach((key) => {
                 addKw(key);
                 slds.add((key.split('.')[0] || key).toLowerCase());
                 const alts = map[key] || map[key.replace(/^www\./, '')] || [];
@@ -384,12 +410,15 @@ export default defineContentScript({
                 if (bookmarkHits.length >= 6) break;
               }
 
-              const totalCount = matchedKeys.length + bookmarkHits.length;
-              setBadge(totalCount, matchedKeys.length, bookmarkHits.length);
+              const totalCount = keysWithAlts.length + bookmarkHits.length;
+              setBadge(totalCount, keysWithAlts.length, bookmarkHits.length);
 
               if (bookmarkHits.length && bmWrap) {
                 bmWrap.classList.add('active');
-                bmWrap.appendChild(createSectionHeader('brand', _('bookmarksHeading', 'Related bookmarks'), 'sm', 'main'));
+                const bmHdr = document.createElement('div');
+                bmHdr.className = 'ah-header';
+                bmHdr.textContent = _('bookmarksHeading', 'Related bookmarks');
+                bmWrap.appendChild(bmHdr);
                 const row = document.createElement('div');
                 row.className = 'ah-pill-row';
                 bookmarkHits.forEach(h => {
@@ -416,29 +445,21 @@ export default defineContentScript({
           });
         }
 
-        // Tips
-        const tips: string[] = [];
-        tips.push(_('serpTipCheck', 'Check spelling, try a more precise phrase, or use quotes for exact match.'));
-
-        const host = location.host;
-        const isYandex = /^yandex\./i.test(host) || /(^|\.)ya\.ru$/i.test(host);
-        if (!isYandex && domainTokens.length) {
-          const d = domainTokens[0];
-          const hasSiteOrHost = /\b(?:site|host):\S+/i.test(q);
-          if (!hasSiteOrHost) {
-            const cleanedOnce = q.replace(/\b(?:site|host):\S+/gi, ' ').trim();
-            const escapedD = d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const cleaned = cleanedOnce.replace(new RegExp(escapedD, 'gi'), ' ').replace(/\s{2,}/g, ' ').trim();
-            const newQ = cleaned ? `site:${d} ${cleaned}` : `site:${d}`;
-            tips.push(`${_('serpTipRestrict', 'Try restricting the search to domain:')} <span>${makePlainLink(`https://www.google.com/search?q=${encodeURIComponent(newQ)}`, `site:${d}`)}</span>.`);
-          }
-        }
-
-        if (body) {
-          body.innerHTML = tips.map(t => `<div class="ah-tip">${t}</div>`).join('');
-        }
       });
     }
+
+    // --- Re-render when storage changes (e.g. bundle loaded from sidepanel) ---
+    try {
+      if (chrome.storage?.onChanged) {
+        chrome.storage.onChanged.addListener((changes, area) => {
+          if (area !== 'sync') return;
+          if (changes.alternates || changes.prefs) {
+            document.getElementById('ah-root')?.remove();
+            renderTips();
+          }
+        });
+      }
+    } catch { /* ignore */ }
 
     // --- Init & URL change detection ---
     renderTips();

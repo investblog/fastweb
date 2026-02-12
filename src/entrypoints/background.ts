@@ -4,6 +4,11 @@ import type { RequestMessage } from '@shared/messaging';
 import { BADGE_COLORS } from '@shared/constants';
 
 export default defineBackground(() => {
+  // browser.action (MV3 Chrome/Edge) vs browser.browserAction (Firefox MV2)
+  // WXT polyfill returns native browser object on Firefox, which only has browserAction in MV2.
+  const actionApi: typeof browser.action =
+    (browser as any).action || (browser as any).browserAction;
+
   // --- Side panel / sidebar ---
   // Chrome/Edge: setPanelBehavior({ openPanelOnActionClick: true }) — icon click opens side panel.
   // Firefox: sidebarAction.open() from onClicked (has user gesture).
@@ -16,8 +21,8 @@ export default defineBackground(() => {
   } catch { /* not available */ }
 
   // Firefox: onClicked fires (no sidePanel API) → open sidebar
-  if (browser?.action?.onClicked) {
-    browser.action.onClicked.addListener(async () => {
+  if (actionApi?.onClicked) {
+    actionApi.onClicked.addListener(async () => {
       try {
         if ((browser as any).sidebarAction?.open) {
           await (browser as any).sidebarAction.open();
@@ -71,8 +76,18 @@ export default defineBackground(() => {
     await browser.storage.sync.set({ alternates: map, bundleDomains: bundleKeys });
   }
 
-  browser.runtime.onInstalled.addListener(({ reason }) => {
-    if (reason === 'install') autoLoadBundle();
+  browser.runtime.onInstalled.addListener(async ({ reason }) => {
+    if (reason === 'install') {
+      autoLoadBundle();
+    } else if (reason === 'update') {
+      // Auto-load bundle on update/reload if alternates are empty
+      try {
+        const data = await browser.storage.sync.get({ alternates: {} });
+        if (!data.alternates || !Object.keys(data.alternates).length) {
+          autoLoadBundle();
+        }
+      } catch { /* ignore */ }
+    }
   });
 
   // --- Unified message handler ---
@@ -81,23 +96,28 @@ export default defineBackground(() => {
       if (!msg?.type) return;
 
       switch (msg.type) {
-        case 'OPEN_SETTINGS':
-          // Firefox: sidebarAction works from onMessage (no gesture needed)
-          try {
-            if ((browser as any).sidebarAction?.open) {
-              (browser as any).sidebarAction.open();
-              break;
-            }
-          } catch { /* ignore */ }
-          // Chrome/Edge: sidePanel is already openable via icon click (setPanelBehavior).
-          // From onMessage we open a compact popup window as fallback.
-          browser.windows.create({
-            url: browser.runtime.getURL('/sidepanel.html'),
-            type: 'popup',
-            width: 420,
-            height: 700,
-          });
+        case 'OPEN_SETTINGS': {
+          // Async: sidebarAction.open() returns a promise that rejects without user gesture
+          (async () => {
+            // Firefox: sidebarAction.open() — works only if user gesture context
+            try {
+              if ((browser as any).sidebarAction?.open) {
+                await (browser as any).sidebarAction.open();
+                return;
+              }
+            } catch { /* no gesture — fall through */ }
+            // Chrome/Edge: sidePanel.open({ tabId }) — no gesture needed
+            try {
+              if ((browser as any).sidePanel?.open && sender?.tab?.id) {
+                await (browser as any).sidePanel.open({ tabId: sender.tab.id });
+                return;
+              }
+            } catch { /* ignore */ }
+            // Fallback: open as tab
+            browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
+          })();
           break;
+        }
 
         case 'GET_BOOKMARKS':
           try {
@@ -114,12 +134,12 @@ export default defineBackground(() => {
           const n = Math.max(0, parseInt(String(msg.count || 0), 10) || 0);
           const tabId = sender?.tab?.id;
           try {
-            if (browser?.action?.setBadgeText) {
+            if (actionApi?.setBadgeText) {
               const opts = tabId ? { tabId } : {};
-              browser.action.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
-              browser.action.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
-              if (browser.action.setTitle) {
-                browser.action.setTitle({ ...opts, title: msg.title || '' });
+              actionApi.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
+              actionApi.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
+              if (actionApi.setTitle) {
+                actionApi.setTitle({ ...opts, title: msg.title || '' });
               }
             }
           } catch { /* ignore */ }
