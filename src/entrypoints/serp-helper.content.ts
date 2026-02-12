@@ -51,7 +51,7 @@ export default defineContentScript({
       const style = document.createElement('style');
       style.id = PANEL_STYLE_ID;
       style.textContent = `
-      :root {
+      #ah-root {
         --ah-bg: #050812;
         --ah-bg-gradient: radial-gradient(circle at top left, #111827 0, #050812 50%);
         --ah-card: #0b1020;
@@ -69,7 +69,7 @@ export default defineContentScript({
         --ah-font-size: 13px;
       }
       @media (prefers-color-scheme: light) {
-        :root {
+        #ah-root {
           --ah-bg: #f8fafc;
           --ah-bg-gradient: radial-gradient(circle at top left, #e2e8f0 0, #f8fafc 55%);
           --ah-card: #ffffff;
@@ -182,11 +182,14 @@ export default defineContentScript({
     }
 
     // --- Panel state ---
+    let userDismissed = false;
+
     function setPanelExpanded(el: HTMLElement, expanded: boolean): void {
       if (expanded) el.classList.remove('ah-root--collapsed');
       else el.classList.add('ah-root--collapsed');
     }
     function collapsePanel(el: HTMLElement): void { setPanelExpanded(el, false); }
+    function dismissPanel(el: HTMLElement): void { userDismissed = true; collapsePanel(el); }
     function togglePanel(el: HTMLElement): void { setPanelExpanded(el, !el.classList.contains('ah-root--collapsed')); }
 
     function setBadge(count: number, altsCount: number, bmCount: number): void {
@@ -252,7 +255,7 @@ export default defineContentScript({
       el = box.firstElementChild as HTMLElement;
       document.documentElement.appendChild(el);
 
-      el.querySelector('#ah-close-x')?.addEventListener('click', () => collapsePanel(el!));
+      el.querySelector('#ah-close-x')?.addEventListener('click', () => dismissPanel(el!));
       el.querySelector('#ah-settings')?.addEventListener('click', () => {
         try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
       });
@@ -298,7 +301,8 @@ export default defineContentScript({
         const panelMode = normalizePanelMode(__prefs.panelMode || 'open');
         const isOpenMode = panelMode === 'open';
         const el = injectPanel();
-        setPanelExpanded(el, isOpenMode);
+        // Respect user's manual dismiss — don't re-expand on SPA navigation
+        if (!userDismissed) setPanelExpanded(el, isOpenMode);
 
         // Update acceleration status footer
         const statusEl = el.querySelector('#ah-status') as HTMLElement | null;
@@ -449,13 +453,18 @@ export default defineContentScript({
     }
 
     // --- Re-render when storage changes (e.g. bundle loaded from sidepanel) ---
+    let storageDebounce: ReturnType<typeof setTimeout> | undefined;
     try {
       if (chrome.storage?.onChanged) {
         chrome.storage.onChanged.addListener((changes, area) => {
           if (area !== 'sync') return;
           if (changes.alternates || changes.prefs) {
-            document.getElementById('ah-root')?.remove();
-            renderTips();
+            clearTimeout(storageDebounce);
+            storageDebounce = setTimeout(() => {
+              __bmCache = null; // invalidate bookmark cache
+              document.getElementById('ah-root')?.remove();
+              renderTips();
+            }, 300);
           }
         });
       }
@@ -466,6 +475,7 @@ export default defineContentScript({
 
     function onUrlMaybeChanged(): void {
       if (location.href !== lastUrl) {
+        userDismissed = false; // new search → reset dismiss
         document.getElementById('ah-root')?.remove();
         renderTips();
       }
@@ -484,7 +494,9 @@ export default defineContentScript({
     };
 
     window.addEventListener('popstate', onUrlMaybeChanged);
-    setInterval(onUrlMaybeChanged, 800);
+    // Fallback poll — pushState/popstate hooks handle most SPA navigations;
+    // this only catches edge-cases (e.g. location.assign, hash changes).
+    setInterval(onUrlMaybeChanged, 4000);
 
     // --- Listen for TOGGLE_SERP_PANEL from background ---
     try {
