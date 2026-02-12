@@ -1,6 +1,6 @@
-export function _(id: string, fallback = ''): string {
+export function _(id: string, fallback = '', subs?: string[]): string {
   try {
-    return chrome.i18n.getMessage(id) || fallback;
+    return chrome.i18n.getMessage(id, subs) || fallback;
   } catch {
     return fallback;
   }

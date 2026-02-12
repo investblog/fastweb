@@ -134,5 +134,13 @@
   },
   "rateBtn": {
     "message": "Rate us"
+  },
+  "badgeAlts": {
+    "message": "$1 alts",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "badgeBookmarks": {
+    "message": "$1 bookmarks",
+    "placeholders": { "1": { "content": "$1" } }
   }
 }

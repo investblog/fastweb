@@ -206,8 +206,8 @@ export default defineContentScript({
             ? BADGE_COLORS.bm
             : BADGE_COLORS.alts;
         const parts: string[] = [];
-        if (altsCount > 0) parts.push(`${altsCount} alt${altsCount > 1 ? 's' : ''}`);
-        if (bmCount > 0) parts.push(`${bmCount} bookmark${bmCount > 1 ? 's' : ''}`);
+        if (altsCount > 0) parts.push(_('badgeAlts', `${altsCount} alts`, [String(altsCount)]));
+        if (bmCount > 0) parts.push(_('badgeBookmarks', `${bmCount} bookmarks`, [String(bmCount)]));
         const title = parts.length ? `FastWeb: ${parts.join(', ')}` : '';
         chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
       } catch { /* ignore */ }
