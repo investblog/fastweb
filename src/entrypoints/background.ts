@@ -1,58 +1,60 @@
+import { browser } from 'wxt/browser';
 import type { BookmarkEntry } from '@shared/types';
 import type { RequestMessage } from '@shared/messaging';
 import { BADGE_COLORS } from '@shared/constants';
 
 export default defineBackground(() => {
-  // --- Cross-browser action API (MV3: chrome.action, MV2: chrome.browserAction) ---
-  const actionAPI: typeof chrome.action | null = (() => {
-    try {
-      if (typeof chrome !== 'undefined') {
-        if (chrome.action) return chrome.action;
-        if ((chrome as any).browserAction) return (chrome as any).browserAction;
-      }
-      if (typeof browser !== 'undefined') {
-        if ((browser as any).action) return (browser as any).action;
-        if ((browser as any).browserAction) return (browser as any).browserAction;
-      }
-    } catch { /* ignore */ }
-    return null;
-  })();
+  // --- Side panel / sidebar ---
+  // sidePanel.open() requires user gesture — only works from onClicked, NOT from onMessage.
+  // For onMessage (Settings button) we always open in a new tab.
 
-  async function openSettingsInSidePanel(tabId: number): Promise<void> {
+  async function openSidePanelWithGesture(tabId: number): Promise<void> {
+    // Chrome/Edge: sidePanel API
     try {
-      if (
-        typeof chrome !== 'undefined' &&
-        chrome.sidePanel &&
-        typeof chrome.sidePanel.open === 'function'
-      ) {
-        await chrome.sidePanel.setOptions({ tabId, path: 'sidepanel.html', enabled: true });
-        await chrome.sidePanel.open({ tabId });
+      if ((browser as any).sidePanel?.open) {
+        await (browser as any).sidePanel.setOptions({ tabId, path: 'sidepanel.html', enabled: true });
+        try {
+          await (browser as any).sidePanel.open({ tabId });
+          return;
+        } catch {
+          // tabId might be a chrome:// page — try windowId fallback
+          const win = await browser.windows.getCurrent();
+          if (win?.id) {
+            await (browser as any).sidePanel.open({ windowId: win.id });
+            return;
+          }
+        }
+      }
+    } catch { /* fallback */ }
+
+    // Firefox: sidebarAction (always available in onClicked context)
+    try {
+      if ((browser as any).sidebarAction?.open) {
+        await (browser as any).sidebarAction.open();
         return;
       }
     } catch { /* fallback */ }
 
-    try {
-      if (
-        typeof browser !== 'undefined' &&
-        (browser as any).sidebarAction
-      ) {
-        (browser as any).sidebarAction.open();
-        return;
-      }
-    } catch { /* fallback */ }
-
-    await chrome.tabs.create({ url: chrome.runtime.getURL('sidepanel.html') });
+    // Last resort: open as tab
+    await browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
   }
 
+  function openSettingsInTab(): void {
+    browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
+  }
+
+  // --- Badge ---
   function getBadgeCount(tabId: number): Promise<number> {
     return new Promise((resolve) => {
       try {
-        if (!actionAPI) return resolve(0);
-        actionAPI.getBadgeText({ tabId }, (text) => {
-          if (chrome.runtime.lastError) return resolve(0);
-          const n = parseInt(text || '', 10);
-          resolve(Number.isFinite(n) ? n : 0);
-        });
+        if (!browser?.action?.getBadgeText) return resolve(0);
+        browser.action.getBadgeText({ tabId }).then(
+          (text) => {
+            const n = parseInt(text || '', 10);
+            resolve(Number.isFinite(n) ? n : 0);
+          },
+          () => resolve(0),
+        );
       } catch { resolve(0); }
     });
   }
@@ -60,23 +62,23 @@ export default defineBackground(() => {
   function requestTogglePanel(tabId: number): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       try {
-        chrome.tabs.sendMessage(tabId, { type: 'TOGGLE_SERP_PANEL' }, (resp) => {
-          if (chrome.runtime.lastError) return resolve({ ok: false });
-          resolve(resp && typeof resp === 'object' ? resp : { ok: false });
-        });
+        browser.tabs.sendMessage(tabId, { type: 'TOGGLE_SERP_PANEL' }).then(
+          (resp: any) => resolve(resp && typeof resp === 'object' ? resp : { ok: false }),
+          () => resolve({ ok: false }),
+        );
       } catch {
         resolve({ ok: false });
       }
     });
   }
 
-  function isEmptyTab(tab: chrome.tabs.Tab): boolean {
+  function isEmptyTab(tab: { url?: string }): boolean {
     const url = String(tab?.url || '').trim();
     if (!url) return true;
     return (
-      /^about:blank$/i.test(url) ||
-      /^(chrome|edge):\/\/newtab\/?/i.test(url) ||
-      /^chrome-search:\/\/local-ntp\//i.test(url)
+      /^about:(blank|newtab|home)/i.test(url) ||
+      /^(chrome|edge|moz-extension):\/\//i.test(url) ||
+      /^chrome-search:\/\//i.test(url)
     );
   }
 
@@ -101,7 +103,7 @@ export default defineBackground(() => {
       await mergeBundle(bundle);
     } catch {
       try {
-        const local = await fetch(chrome.runtime.getURL('bundle.json'));
+        const local = await fetch(browser.runtime.getURL('/bundle.json'));
         const bundle = await local.json();
         await mergeBundle(bundle);
       } catch { /* silent */ }
@@ -110,9 +112,8 @@ export default defineBackground(() => {
 
   async function mergeBundle(bundle: Record<string, unknown>): Promise<void> {
     if (!bundle || typeof bundle !== 'object') return;
-    const { alternates = {} } = await new Promise<Record<string, unknown>>((r) =>
-      chrome.storage.sync.get({ alternates: {} }, r));
-    const map = (alternates || {}) as Record<string, string[]>;
+    const data = await browser.storage.sync.get({ alternates: {} });
+    const map = (data.alternates || {}) as Record<string, string[]>;
     const bundleKeys: string[] = [];
     for (const [key, alts] of Object.entries(bundle)) {
       bundleKeys.push(key);
@@ -120,48 +121,51 @@ export default defineBackground(() => {
         map[key] = alts as string[];
       }
     }
-    await new Promise<void>((r) =>
-      chrome.storage.sync.set({ alternates: map, bundleDomains: bundleKeys }, () => r()));
+    await browser.storage.sync.set({ alternates: map, bundleDomains: bundleKeys });
   }
 
-  chrome.runtime.onInstalled.addListener(({ reason }) => {
+  browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason === 'install') autoLoadBundle();
   });
 
-  // --- Action click ---
-  if (actionAPI) {
-    actionAPI.onClicked.addListener(async (tab: chrome.tabs.Tab) => {
+  // --- Action click (has user gesture → sidePanel.open works) ---
+  if (browser?.action?.onClicked) {
+    browser.action.onClicked.addListener(async (tab) => {
       if (!tab?.id) return;
       try {
         if (isEmptyTab(tab)) {
-          await openSettingsInSidePanel(tab.id);
+          await openSidePanelWithGesture(tab.id);
           return;
         }
         const badgeCount = await getBadgeCount(tab.id);
         if (badgeCount > 0) {
           const resp = await requestTogglePanel(tab.id);
-          if (!resp?.ok) await openSettingsInSidePanel(tab.id);
+          if (!resp?.ok) await openSidePanelWithGesture(tab.id);
         } else {
-          await openSettingsInSidePanel(tab.id);
+          await openSidePanelWithGesture(tab.id);
         }
       } catch {
-        await openSettingsInSidePanel(tab.id!);
+        await openSidePanelWithGesture(tab.id!);
       }
     });
   }
 
   // --- Unified message handler ---
-  chrome.runtime.onMessage.addListener(
-    (msg: RequestMessage, sender: chrome.runtime.MessageSender, sendResponse) => {
+  browser.runtime.onMessage.addListener(
+    ((msg: RequestMessage, sender: any, sendResponse: (r?: any) => void) => {
       if (!msg?.type) return;
 
       switch (msg.type) {
         case 'OPEN_SETTINGS':
-          if (sender?.tab?.id) {
-            openSettingsInSidePanel(sender.tab.id).catch(() => {
-              chrome.tabs.create({ url: chrome.runtime.getURL('sidepanel.html') });
-            });
-          }
+          // No user gesture in onMessage → sidePanel.open() won't work.
+          // Firefox sidebarAction is always visible once registered, so just toggle it.
+          try {
+            if ((browser as any).sidebarAction?.open) {
+              (browser as any).sidebarAction.open();
+              break;
+            }
+          } catch { /* ignore */ }
+          openSettingsInTab();
           break;
 
         case 'GET_BOOKMARKS':
@@ -179,16 +183,16 @@ export default defineBackground(() => {
           const n = Math.max(0, parseInt(String(msg.count || 0), 10) || 0);
           const tabId = sender?.tab?.id;
           try {
-            if (actionAPI) {
+            if (browser?.action?.setBadgeText) {
               const opts = tabId ? { tabId } : {};
-              actionAPI.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
-              actionAPI.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
+              browser.action.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
+              browser.action.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
             }
           } catch { /* ignore */ }
           sendResponse?.({ ok: true });
           break;
         }
       }
-    },
+    }) as (...args: any[]) => void,
   );
 });
