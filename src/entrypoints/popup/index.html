@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>FastWeb</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+  :root {
+    --ah-bg: #050812;
+    --ah-bg-gradient: radial-gradient(circle at top left, #111827 0, #050812 50%);
+    --ah-card: #0b1020;
+    --ah-card-soft: #101625;
+    --ah-border-subtle: rgba(255,255,255,.04);
+    --ah-border-strong: #252c3c;
+    --ah-text: #E7E9F0;
+    --ah-muted: #9BA3B4;
+    --ah-accent: #5E8BFF;
+    --ah-accent-soft: rgba(94,139,255,.16);
+    --ah-radius: 12px;
+    --ah-radius-pill: 999px;
+    --ah-shadow-soft: 0 18px 45px rgba(0,0,0,.55);
+    --ah-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ah-font-size: 13px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--ah-font);
+    font-size: var(--ah-font-size);
+    background: var(--ah-bg-gradient);
+    color: var(--ah-text);
+  }
+  .popup-root {
+    min-width: 320px;
+    max-width: 360px;
+    padding: 16px;
+    background: var(--ah-card);
+    border: 1px solid var(--ah-border-subtle);
+    border-radius: 18px;
+    box-shadow: var(--ah-shadow-soft);
+  }
+  .popup-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 14px;
+  }
+  .ah-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ah-heading-text {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ah-icon-link { color: inherit; text-decoration: none; }
+  .ah-icon-link:hover { opacity: .92; }
+  .popup-header h1 {
+    margin: 0;
+    font-size: 18px;
+  }
+  .popup-subtitle { color: var(--ah-muted); margin: 0; }
+  .popup-section {
+    background: var(--ah-card-soft);
+    border: 1px solid var(--ah-border-subtle);
+    border-radius: var(--ah-radius);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .popup-section:last-of-type { margin-bottom: 0; }
+  .popup-section-title {
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ah-muted);
+  }
+  .popup-hints-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ah-muted);
+  }
+  .ah-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: var(--ah-radius-pill);
+    border: 1px solid transparent;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter .15s ease, border-color .15s ease, background .15s ease;
+  }
+  .ah-btn:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
+  .ah-btn-primary { background: var(--ah-accent); color: #050812; border-color: var(--ah-accent); }
+  .ah-btn-primary:hover { filter: brightness(1.06); }
+  .ah-btn-outline { background: transparent; color: var(--ah-text); border-color: var(--ah-border-strong); }
+  .ah-btn-outline:hover { color: var(--ah-accent); border-color: var(--ah-accent); background: var(--ah-accent-soft); }
+  .ah-btn-ghost { background: rgba(255,255,255,.02); color: var(--ah-text); border-color: var(--ah-border-subtle); }
+  .ah-icon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    flex: 0 0 auto;
+  }
+  .ah-icon img, .ah-icon svg { width: 100%; height: 100%; display: block; }
+  .ah-icon--sm { width: 14px; height: 14px; }
+  .ah-icon--lg { width: 20px; height: 20px; }
+  .popup-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ah-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .ah-toggle span { color: var(--ah-text); }
+  .ah-toggle-control {
+    position: relative;
+    width: 40px;
+    height: 22px;
+    flex: 0 0 auto;
+  }
+  .ah-toggle-control input {
+    position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer;
+  }
+  .ah-toggle-switch {
+    position: absolute; inset: 0; border-radius: var(--ah-radius-pill);
+    background: var(--ah-border-strong); border: 1px solid var(--ah-border-subtle);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .ah-toggle-switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--ah-text); transition: transform .2s ease;
+  }
+  .ah-toggle-control input:checked + .ah-toggle-switch,
+  .ah-toggle-switch.is-on { background: var(--ah-accent-soft); border-color: rgba(94,139,255,.5); }
+  .ah-toggle-control input:checked + .ah-toggle-switch::after,
+  .ah-toggle-switch.is-on::after { transform: translateX(18px); }
+  .popup-links { display: flex; flex-direction: column; gap: 6px; }
+  a { color: var(--ah-accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .popup-hints { display: flex; flex-direction: column; gap: 10px; }
+  .popup-hints-group { display: flex; flex-direction: column; gap: 8px; }
+  .popup-hints-empty { color: var(--ah-muted); }
+  .ah-pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ah-pill {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+    border-radius: var(--ah-radius-pill); border: 1px solid var(--ah-border-subtle);
+    background: rgba(255,255,255,.02); color: var(--ah-text); text-decoration: none; font-size: 13px;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .ah-pill:hover { border-color: rgba(94,139,255,.8); color: #dbe4ff; }
+  .ah-pill-label { max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-flex; align-items: center; }
+  .ah-pill-arrow { color: var(--ah-muted); }
+  .ah-tip { color: var(--ah-text); }
+  </style>
+</head>
+<body>
+  <div class="popup-root">
+    <header class="popup-header">
+      <h1 class="ah-heading">
+        <a class="ah-icon ah-icon-link ah-icon--main ah-icon--lg" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb">
+          <img src="/icons/brand.svg" alt="">
+        </a>
+        <span class="ah-heading-text">
+          <span>FastWeb</span>
+        </span>
+      </h1>
+      <p class="popup-subtitle" data-i18n="appDesc">Search accelerator — tips, alternates & bookmarks.</p>
+    </header>
+    <section class="popup-section">
+      <div class="popup-section-title" data-i18n="settingsBtn">Quick actions</div>
+      <div class="popup-actions">
+        <button class="ah-btn ah-btn-primary" type="button" data-action="open-settings" data-i18n="settingsBtn">Open settings</button>
+        <a class="ah-btn ah-btn-outline" href="https://web.archive.org" target="_blank" rel="noreferrer">Wayback</a>
+      </div>
+    </section>
+    <section class="popup-section" id="popup-hints-section">
+      <div class="popup-section-title" data-i18n="serpPanelTitle">Search hints</div>
+      <div class="popup-hints" id="popup-hints"></div>
+    </section>
+    <section class="popup-section">
+      <div class="popup-section-title">Links</div>
+      <div class="popup-links">
+        <a href="sidepanel.html" target="_blank" data-i18n="settingsBtn">Full settings</a>
+        <a href="suggest.html" target="_blank">Suggestions & help</a>
+      </div>
+    </section>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

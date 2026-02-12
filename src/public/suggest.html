@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>FastWeb — подсказки</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+  :root {
+    --ah-bg: #050812;
+    --ah-bg-gradient: radial-gradient(circle at top left, #111827 0, #050812 50%);
+    --ah-card: #0b1020;
+    --ah-card-soft: #101625;
+    --ah-border-subtle: rgba(255,255,255,.04);
+    --ah-border-strong: #252c3c;
+    --ah-text: #E7E9F0;
+    --ah-muted: #9BA3B4;
+    --ah-accent: #5E8BFF;
+    --ah-accent-soft: rgba(94,139,255,.16);
+    --ah-radius: 12px;
+    --ah-radius-pill: 999px;
+    --ah-shadow-soft: 0 18px 45px rgba(0,0,0,.55);
+    --ah-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ah-font-size: 14px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px;
+    background: var(--ah-bg-gradient);
+    font-family: var(--ah-font);
+    font-size: var(--ah-font-size);
+    color: var(--ah-text);
+  }
+  .ah-card {
+    width: min(420px, 100%);
+    background: var(--ah-card);
+    border-radius: 24px;
+    border: 1px solid var(--ah-border-subtle);
+    box-shadow: var(--ah-shadow-soft);
+    padding: 28px;
+    text-align: center;
+  }
+  .ah-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    justify-content: center;
+  }
+  .ah-heading-text {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  h1 { margin: 0 0 8px; font-size: 26px; }
+  p { margin: 0 0 18px; color: var(--ah-muted); }
+  .ah-card-soft {
+    background: var(--ah-card-soft);
+    border-radius: var(--ah-radius);
+    border: 1px solid var(--ah-border-subtle);
+    padding: 18px;
+    margin-bottom: 18px;
+  }
+  .ah-pill-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .ah-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: var(--ah-radius-pill);
+    border: 1px solid transparent;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter .15s ease, border-color .15s ease, background .15s ease;
+    text-decoration: none;
+    color: inherit;
+  }
+  .ah-btn-primary { background: var(--ah-accent); color: #050812; border-color: var(--ah-accent); }
+  .ah-btn-outline { background: transparent; border-color: var(--ah-border-strong); color: var(--ah-text); }
+  .ah-btn-outline:hover { color: var(--ah-accent); border-color: var(--ah-accent); background: var(--ah-accent-soft); }
+  .ah-suggest-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .ah-icon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+  }
+  .ah-icon img,
+  .ah-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .ah-icon--sm { width: 14px; height: 14px; }
+  .ah-icon--lg { width: 20px; height: 20px; }
+  .ah-icon-link { color: inherit; text-decoration: none; }
+  .ah-icon-link:hover { opacity: .92; }
+  .ah-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: var(--ah-radius-pill);
+    border: 1px solid var(--ah-border-subtle);
+    background: rgba(255,255,255,.02);
+    color: var(--ah-accent);
+    text-decoration: none;
+    font-size: 13px;
+  }
+  .ah-pill:hover { border-color: rgba(94,139,255,.8); color: #dbe4ff; }
+  </style>
+</head>
+<body>
+  <div class="ah-card">
+    <h1 class="ah-heading">
+      <a class="ah-icon ah-icon-link ah-icon--warn ah-icon--lg" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb"><img src="icons/locked.svg" alt=""></a>
+      <span class="ah-heading-text">
+        <span>Нужна подсказка?</span>
+      </span>
+    </h1>
+    <p>Используйте советы FastWeb, похожие закладки и быстрые инструменты.</p>
+    <div class="ah-card-soft">
+      <div class="ah-pill-row">
+        <a class="ah-pill" href="https://www.google.com/search?q=site:example.com" target="_blank" rel="noreferrer">Попробовать site:example.com</a>
+        <a class="ah-pill" href="https://web.archive.org" target="_blank" rel="noreferrer">Открыть Wayback Machine</a>
+      </div>
+    </div>
+    <div class="ah-suggest-actions">
+      <button class="ah-btn ah-btn-primary" type="button" data-action="open-settings">Открыть настройки</button>
+      <a class="ah-btn ah-btn-outline" href="sidepanel.html" target="_blank" rel="noreferrer">Управление доменами</a>
+    </div>
+  </div>
+  <script>
+    (function(){
+      const btn = document.querySelector('[data-action="open-settings"]');
+      if (!btn) return;
+      btn.addEventListener('click', () => {
+        try {
+          if (chrome?.runtime?.openOptionsPage) {
+            chrome.runtime.openOptionsPage();
+            return;
+          }
+        } catch (e) {}
+        window.open('sidepanel.html', '_blank');
+      });
+    })();
+  </script>
+</body>
+</html>

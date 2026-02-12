@@ -1,0 +1,134 @@
+{
+  "appName": {
+    "message": "FastWeb — Ускоритель поиска"
+  },
+  "appDesc": {
+    "message": "Работает только на страницах поиска (SERP). Показывает зеркала, закладки и подсказки. Режим ускорения (выкл. по умолчанию) предзагружает топ-результаты при наведении. Без трекинга и сбора данных."
+  },
+  "optTitle": {
+    "message": "FastWeb — настройки"
+  },
+  "extName": {
+    "message": "FastWeb — Ускоритель поиска"
+  },
+  "extDesc": {
+    "message": "Ускоритель поиска, работающий только на SERP. Показывает альтернативные домены, подсказки и закладки. Опциональный режим ускорения предзагружает топ-ссылки при наведении. Без трекинга. Ранее Unlock.SBS."
+  },
+  "domainLabel": {
+    "message": "Домен"
+  },
+  "altsLabel": {
+    "message": "Официальные альтернативы (домен или полный URL, через запятую)"
+  },
+  "addBtn": {
+    "message": "Добавить"
+  },
+  "exportBtn": {
+    "message": "Экспорт JSON"
+  },
+  "importBtn": {
+    "message": "Импорт JSON"
+  },
+  "loadBundleBtn": {
+    "message": "Загрузить пример"
+  },
+  "jsonFormatHelp": {
+    "message": "JSON формат: {\"example.com\":[\"example.org\",\"https://ya.ru/internet\"]}"
+  },
+  "listEmpty": {
+    "message": "Список пуст."
+  },
+  "deleteBtn": {
+    "message": "Удалить"
+  },
+  "serpPanelTitle": {
+    "message": "Подсказки по поиску"
+  },
+  "serpHide": {
+    "message": "Скрыть"
+  },
+  "serpTipCheck": {
+    "message": "Проверьте написание, попробуйте более точную фразу или используйте кавычки для точного совпадения."
+  },
+  "serpTipRestrict": {
+    "message": "Попробуйте ограничить поиск доменом:"
+  },
+  "serpTipAlternates": {
+    "message": "Альтернативные домены из ваших настроек:"
+  },
+  "serpTipArchive": {
+    "message": "Посмотреть архивные копии:"
+  },
+  "serpTipYandex": {
+    "message": "То же в Яндексе:"
+  },
+  "serpNoTips": {
+    "message": "Подсказок нет"
+  },
+  "settingsBtn": {
+    "message": "Настройки"
+  },
+  "searchLabel": {
+    "message": "Поиск по доменам"
+  },
+  "searchPlaceholder": {
+    "message": "Начните ввод для фильтра..."
+  },
+  "bookmarksHeading": {
+    "message": "Похожие закладки"
+  },
+  "prefsHeading": {
+    "message": "Расширенные настройки"
+  },
+  "prefSensitivity": {
+    "message": "Чувствительность (мин. длина бренда)"
+  },
+  "prefUnicode": {
+    "message": "Юникод-разбор (если поддерживается)"
+  },
+  "prefShowBookmarks": {
+    "message": "Показывать закладки на странице поиска"
+  },
+  "prefShowBadge": {
+    "message": "Значок с количеством подсказок"
+  },
+  "prefPrefetch": {
+    "message": "Режим ускорения — предзагрузка топ-результатов при наведении (только SERP)"
+  },
+  "prefPrefetchTopN": {
+    "message": "Количество ссылок для предзагрузки (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "Задержка при наведении (мс)"
+  },
+  "prefPrefetchWarning": {
+    "message": "Предзагрузка может увеличить расход трафика. Используется только на страницах поисковой выдачи (Google, Bing, DuckDuckGo, Yandex)."
+  },
+  "panelModeLabel": {
+    "message": "Режим панели на SERP"
+  },
+  "panelModeChip": {
+    "message": "Значок + компактный чип"
+  },
+  "panelModeOpen": {
+    "message": "Значок + сразу раскрытая панель"
+  },
+  "bundleApplied": {
+    "message": "Добавлено $1 новых доменов из примера"
+  },
+  "bundleAppliedNone": {
+    "message": "Новые домены из примера не найдены"
+  },
+  "bundleLoadFailed": {
+    "message": "Не удалось загрузить пример бандла. Проверьте соединение."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — настройки"
+  },
+  "chipLabel": {
+    "message": "FastWeb"
+  },
+  "domainsHeading": {
+    "message": "Управление доменами"
+  }
+}

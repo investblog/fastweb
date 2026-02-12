@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title data-i18n="optTitle">FastWeb — настройки</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+  :root {
+    --ah-bg: #050812;
+    --ah-bg-gradient: radial-gradient(circle at top left, #111827 0, #050812 50%);
+    --ah-card: #0b1020;
+    --ah-card-soft: #101625;
+    --ah-border-subtle: rgba(255,255,255,.04);
+    --ah-border-strong: #252c3c;
+    --ah-text: #E7E9F0;
+    --ah-muted: #9BA3B4;
+    --ah-accent: #5E8BFF;
+    --ah-accent-soft: rgba(94,139,255,.16);
+    --ah-radius: 12px;
+    --ah-radius-pill: 999px;
+    --ah-shadow-soft: 0 18px 45px rgba(0,0,0,.55);
+    --ah-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ah-font-size: 13px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--ah-font);
+    font-size: var(--ah-font-size);
+    line-height: 1.5;
+    background: var(--ah-bg);
+    color: var(--ah-text);
+  }
+  body.ah-page {
+    min-height: 100vh;
+    background: var(--ah-bg-gradient);
+  }
+  a { color: var(--ah-accent); }
+  .ah-shell {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 32px 16px 48px;
+  }
+  .ah-card {
+    background: var(--ah-card);
+    border-radius: 24px;
+    box-shadow: var(--ah-shadow-soft);
+    border: 1px solid var(--ah-border-subtle);
+    padding: 24px 28px;
+  }
+  .ah-card-soft {
+    background: var(--ah-card-soft);
+    border: 1px solid var(--ah-border-subtle);
+    border-radius: var(--ah-radius);
+    padding: 20px 24px;
+  }
+  .ah-page-header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .ah-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .ah-heading-text {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .ah-icon-link { color: inherit; text-decoration: none; }
+  .ah-icon-link:hover { opacity: .9; }
+  .ah-page-header h1 {
+    margin: 0;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  .ah-page-subtitle {
+    margin: 0;
+    color: var(--ah-muted);
+    font-size: 14px;
+  }
+  .ah-section + .ah-section { margin-top: 18px; }
+  .ah-section-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--ah-muted);
+    margin-bottom: 12px;
+  }
+  .ah-field-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .ah-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ah-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    color: var(--ah-muted);
+  }
+  input, button {
+    font-family: inherit;
+    font-size: inherit;
+  }
+  .ah-input {
+    width: 100%;
+    padding: 11px 14px;
+    border-radius: var(--ah-radius);
+    border: 1px solid var(--ah-border-strong);
+    background: rgba(255,255,255,.02);
+    color: var(--ah-text);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .ah-input:focus {
+    outline: none;
+    border-color: var(--ah-accent);
+    box-shadow: 0 0 0 1px var(--ah-accent);
+  }
+  .ah-combo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .ah-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: var(--ah-radius-pill);
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform .12s ease, border-color .15s ease, color .15s ease, background .15s ease;
+  }
+  .ah-btn:focus-visible {
+    outline: 2px solid var(--ah-accent);
+    outline-offset: 2px;
+  }
+  .ah-btn-primary {
+    background: var(--ah-accent);
+    color: #050812;
+    border-color: var(--ah-accent);
+  }
+  .ah-btn-primary:hover { filter: brightness(1.05); }
+  .ah-btn-outline {
+    background: transparent;
+    color: var(--ah-text);
+    border-color: var(--ah-border-strong);
+  }
+  .ah-btn-outline:hover {
+    color: var(--ah-accent);
+    border-color: var(--ah-accent);
+    background: var(--ah-accent-soft);
+  }
+  .ah-btn-ghost {
+    background: rgba(255,255,255,.02);
+    color: var(--ah-text);
+    border-color: var(--ah-border-subtle);
+  }
+  .ah-icon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    flex: 0 0 auto;
+  }
+  .ah-icon img,
+  .ah-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .ah-icon--sm { width: 14px; height: 14px; }
+  .ah-icon--lg { width: 20px; height: 20px; }
+  .ah-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-top: 14px;
+  }
+  .ah-muted { color: var(--ah-muted); }
+  .ah-inline-msg { display: none; margin-top: 6px; color: var(--ah-muted); }
+  .ah-inline-msg.is-visible { display: block; }
+  .ah-muted.small { font-size: 12px; }
+  .ah-list {
+    margin-top: 14px;
+    border-top: 1px solid var(--ah-border-subtle);
+  }
+  .ah-list-item {
+    display: grid;
+    grid-template-columns: minmax(160px, 220px) minmax(200px, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ah-border-subtle);
+  }
+  .ah-list-item:last-child { border-bottom: none; }
+  .ah-domain { font-weight: 600; color: var(--ah-text); word-break: break-word; }
+  .ah-list-actions { display: flex; justify-content: flex-end; }
+  .ah-pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ah-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: var(--ah-radius-pill);
+    border: 1px solid var(--ah-border-subtle);
+    background: rgba(255,255,255,.02);
+    color: var(--ah-accent);
+    text-decoration: none;
+    font-size: 12px;
+    max-width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ah-pill:hover { border-color: rgba(94,139,255,.8); color: #dbe4ff; }
+  .ah-pill-rich { background: rgba(255,255,255,.04); color: var(--ah-text); }
+  .ah-pill-arrow { color: var(--ah-muted); }
+  .ah-pill-icon {
+    border-radius: calc(var(--ah-radius) / 2);
+    width: 16px;
+    height: 16px;
+    object-fit: cover;
+  }
+  .bookmark-section {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--ah-border-subtle);
+  }
+  .bookmark-section.is-hidden { display: none; }
+  .ah-prefs-grid { display: flex; flex-direction: column; gap: 18px; }
+  .ah-range { display: flex; flex-direction: column; gap: 8px; }
+  .ah-range-control { display: flex; align-items: center; gap: 10px; }
+  .ah-slider-value { min-width: 32px; text-align: center; font-weight: 600; }
+  .ah-slider {
+    width: 100%;
+    accent-color: var(--ah-accent);
+  }
+  .ah-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ah-accent);
+    cursor: pointer;
+  }
+  .ah-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ah-accent);
+    cursor: pointer;
+    border: none;
+  }
+  .ah-slider::-webkit-slider-runnable-track,
+  .ah-slider::-moz-range-track {
+    height: 4px;
+    border-radius: var(--ah-radius-pill);
+    background: var(--ah-border-strong);
+  }
+  .ah-toggle-group { display: flex; flex-direction: column; gap: 12px; }
+  .ah-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .ah-toggle-text { color: var(--ah-text); }
+  .ah-toggle-control {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    flex: 0 0 auto;
+  }
+  .ah-toggle-control input {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .ah-toggle-switch {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--ah-radius-pill);
+    background: var(--ah-border-strong);
+    border: 1px solid var(--ah-border-subtle);
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .ah-toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--ah-text);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .ah-toggle-control input:checked + .ah-toggle-switch,
+  .ah-toggle-switch.is-on {
+    background: var(--ah-accent-soft);
+    border-color: rgba(94,139,255,.5);
+  }
+  .ah-toggle-control input:checked + .ah-toggle-switch::after,
+  .ah-toggle-switch.is-on::after { transform: translateX(18px); background: #fff; }
+  .ah-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .ah-radio-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: var(--ah-radius-pill);
+    border: 1px solid var(--ah-border-subtle);
+    color: var(--ah-text);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease, color .15s ease;
+  }
+  .ah-radio-pill:hover { border-color: var(--ah-accent); }
+  .ah-radio-pill input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .ah-radio-pill span { pointer-events: none; }
+  .ah-radio-pill input:checked + span {
+    color: var(--ah-accent);
+    background: var(--ah-accent-soft);
+    padding: 0 2px;
+    border-radius: inherit;
+  }
+  .ah-panel-note { color: var(--ah-muted); font-size: 13px; margin-top: 8px; }
+  .ah-settings-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .ah-settings-card-header .ah-icon { margin-right: 0; }
+  @media (max-width: 960px) {
+    .ah-card { padding: 24px 22px; }
+  }
+  @media (max-width: 720px) {
+    .ah-field-grid { grid-template-columns: 1fr; }
+    .ah-list-item { grid-template-columns: 1fr; }
+    .ah-list-actions { justify-content: flex-start; }
+    .ah-actions-row { flex-direction: column; align-items: flex-start; }
+  }
+  </style>
+</head>
+<body class="ah-page options-page">
+  <div class="ah-shell">
+    <div class="ah-card ah-options-card">
+      <header class="ah-page-header">
+        <h1 class="ah-heading">
+          <a class="ah-icon ah-icon-link ah-icon--main ah-icon--lg" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb"><img src="/icons/brand.svg" alt=""></a>
+          <span class="ah-heading-text">
+            <span data-i18n="optTitle">FastWeb — настройки</span>
+          </span>
+        </h1>
+        <p class="ah-page-subtitle" data-i18n="appDesc">Подсказки, официальные зеркала и похожие закладки прямо на странице выдачи.</p>
+      </header>
+
+      <section class="ah-section ah-card-soft">
+        <div class="ah-section-title ah-settings-card-header">
+          <a class="ah-icon ah-icon-link ah-icon--main" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb"><img src="/icons/brand.svg" alt=""></a>
+          <span class="ah-heading-text">
+            <span data-i18n="domainsHeading">Управление доменами</span>
+          </span>
+        </div>
+        <div class="ah-field-grid">
+          <label class="ah-field">
+            <span class="ah-label" data-i18n="domainLabel">Домен</span>
+            <input id="domain" class="ah-input" placeholder="example.com" />
+          </label>
+          <label class="ah-field">
+            <span class="ah-label" data-i18n="altsLabel">Официальные альтернативы (домен или полный URL, через запятую)</span>
+            <div class="ah-combo">
+              <input id="alts" class="ah-input" placeholder="example.org, example.net" />
+              <button id="add" type="button" class="ah-btn ah-btn-primary"><span data-i18n="addBtn">Добавить</span></button>
+            </div>
+          </label>
+        </div>
+        <div class="ah-actions-row">
+          <button id="exportBtn" type="button" class="ah-btn ah-btn-outline"><span data-i18n="exportBtn">Экспорт JSON</span></button>
+          <button id="importBtn" type="button" class="ah-btn ah-btn-outline"><span data-i18n="importBtn">Импорт JSON</span></button>
+          <button id="ah-load-bundle" type="button" class="ah-btn ah-btn-ghost"><span data-i18n="loadBundleBtn">Загрузить пример</span></button>
+          <span class="ah-muted small" data-i18n="jsonFormatHelp">JSON формат: {"example.com":["example.org","https://ya.ru/internet"]}</span>
+        </div>
+        <div id="ah-inline-msg" class="ah-inline-msg ah-muted small" role="status" aria-live="polite"></div>
+      </section>
+
+      <section class="ah-section ah-card-soft" id="prefs">
+        <div class="ah-section-title ah-settings-card-header">
+          <a class="ah-icon ah-icon-link ah-icon--main" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb"><img src="/icons/brand.svg" alt=""></a>
+          <span class="ah-heading-text">
+            <span data-i18n="prefsHeading">Расширенные настройки</span>
+          </span>
+        </div>
+        <div class="ah-prefs-grid">
+          <label class="ah-range">
+            <span class="ah-label" data-i18n="prefSensitivity">Чувствительность (мин. длина бренда)</span>
+            <div class="ah-range-control">
+              <input
+                id="ah-minBrand"
+                class="ah-slider"
+                type="range"
+                min="1"
+                max="10"
+                step="1"
+                value="2"
+              />
+              <span id="ah-minBrand-value" class="ah-slider-value">2</span>
+            </div>
+          </label>
+          <div class="ah-toggle-group">
+            <label class="ah-toggle">
+              <span class="ah-toggle-text" data-i18n="prefUnicode">Юникод-разбор (если поддерживается)</span>
+              <span class="ah-toggle-control">
+                <input id="prefUnicode" type="checkbox" checked />
+                <span class="ah-toggle-switch" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="ah-toggle">
+              <span class="ah-toggle-text" data-i18n="prefShowBookmarks">Показывать закладки на странице поиска</span>
+              <span class="ah-toggle-control">
+                <input id="prefShowBookmarks" type="checkbox" checked />
+                <span class="ah-toggle-switch" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="ah-toggle">
+              <span class="ah-toggle-text" data-i18n="prefShowBadge">Значок с количеством подсказок</span>
+              <span class="ah-toggle-control">
+                <input id="prefShowBadge" type="checkbox" checked />
+                <span class="ah-toggle-switch" aria-hidden="true"></span>
+              </span>
+            </label>
+            <label class="ah-toggle">
+              <span class="ah-toggle-text" data-i18n="prefPrefetch">Предзагрузка ссылок при наведении (быстрая навигация)</span>
+              <span class="ah-toggle-control">
+                <input id="prefPrefetch" type="checkbox" />
+                <span class="ah-toggle-switch" aria-hidden="true"></span>
+              </span>
+            </label>
+            <div id="prefetch-options" style="display:none; margin-left: 4px;">
+              <label class="ah-range">
+                <span class="ah-label" data-i18n="prefPrefetchTopN">Количество ссылок для предзагрузки (Top N)</span>
+                <div class="ah-range-control">
+                  <input id="ah-prefetchTopN" class="ah-slider" type="range" min="1" max="15" step="1" value="5" />
+                  <span id="ah-prefetchTopN-value" class="ah-slider-value">5</span>
+                </div>
+              </label>
+              <label class="ah-range" style="margin-top:12px;">
+                <span class="ah-label" data-i18n="prefPrefetchDelay">Задержка при наведении (мс)</span>
+                <div class="ah-range-control">
+                  <input id="ah-prefetchDelay" class="ah-slider" type="range" min="50" max="2000" step="50" value="200" />
+                  <span id="ah-prefetchDelay-value" class="ah-slider-value">200</span>
+                </div>
+              </label>
+              <p class="ah-panel-note" data-i18n="prefPrefetchWarning" style="margin-top:10px;">
+                Предзагрузка может увеличить расход трафика. Используется только на страницах поисковой выдачи (Google, Bing, DuckDuckGo, Yandex).
+              </p>
+            </div>
+          </div>
+          <div class="panel-mode">
+            <div class="ah-label">
+              <a class="ah-icon ah-icon-link ah-icon--ok ah-icon--sm" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb"><img src="/icons/unlocked.svg" alt=""></a>
+              <span class="ah-heading-text">
+                <span data-i18n="panelModeLabel">Режим панели на SERP</span>
+              </span>
+            </div>
+            <div class="ah-radio-group">
+              <label class="ah-radio-pill">
+                <input type="radio" name="panelMode" value="chip" checked />
+                <span data-i18n="panelModeChip">Значок + компактный чип</span>
+              </label>
+              <label class="ah-radio-pill">
+                <input type="radio" name="panelMode" value="open" />
+                <span data-i18n="panelModeOpen">Значок + сразу раскрытая панель</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="ah-section ah-card-soft list-section">
+        <label class="ah-field">
+          <span class="ah-label ah-settings-card-header">
+            <a class="ah-icon ah-icon-link ah-icon--main ah-icon--sm" href="https://fastweb.cam" target="_blank" rel="noreferrer" aria-label="FastWeb"><img src="/icons/brand.svg" alt=""></a>
+            <span class="ah-heading-text">
+              <span data-i18n="searchLabel">Поиск по доменам</span>
+            </span>
+          </span>
+          <input id="search" class="ah-input" placeholder="..." data-i18n-placeholder="searchPlaceholder" />
+        </label>
+        <div class="ah-list" id="list"></div>
+        <div class="bookmark-section is-hidden" id="bmSection">
+          <div class="ah-muted" data-i18n="bookmarksHeading">Похожие закладки</div>
+          <div id="bmResults" class="ah-pill-row bookmark-pills"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+{
+  "appName": {
+    "message": "FastWeb — Search Accelerator"
+  },
+  "appDesc": {
+    "message": "Works only on search pages (SERP). Shows official mirrors, related bookmarks and tips. Acceleration Mode (off by default) prefetches top results on hover for instant navigation. No tracking, no data collection."
+  },
+  "optTitle": {
+    "message": "FastWeb — Settings"
+  },
+  "extName": {
+    "message": "FastWeb — Search Accelerator"
+  },
+  "extDesc": {
+    "message": "SERP-only search accelerator. Shows official alternates, tips and bookmarks on search result pages. Optional Acceleration Mode prefetches top links on hover. No tracking. Formerly Unlock.SBS."
+  },
+  "domainLabel": {
+    "message": "Domain"
+  },
+  "altsLabel": {
+    "message": "Official alternates (comma-separated)"
+  },
+  "addBtn": {
+    "message": "Add"
+  },
+  "exportBtn": {
+    "message": "Export JSON"
+  },
+  "importBtn": {
+    "message": "Import JSON"
+  },
+  "loadBundleBtn": {
+    "message": "Load sample bundle"
+  },
+  "jsonFormatHelp": {
+    "message": "JSON format: {\"example.com\":[\"example.org\",\"example.net\"]}"
+  },
+  "listEmpty": {
+    "message": "List is empty."
+  },
+  "deleteBtn": {
+    "message": "Delete"
+  },
+  "serpPanelTitle": {
+    "message": "Search tips"
+  },
+  "serpHide": {
+    "message": "Hide"
+  },
+  "serpTipCheck": {
+    "message": "Check spelling, try a more precise phrase, or use quotes for exact match."
+  },
+  "serpTipRestrict": {
+    "message": "Try restricting the search to domain:"
+  },
+  "serpTipAlternates": {
+    "message": "Official alternates from your settings:"
+  },
+  "serpTipArchive": {
+    "message": "See archived copies:"
+  },
+  "serpTipYandex": {
+    "message": "Same in Yandex:"
+  },
+  "serpNoTips": {
+    "message": "No tips right now."
+  },
+  "settingsBtn": {
+    "message": "Settings"
+  },
+  "searchLabel": {
+    "message": "Filter domains"
+  },
+  "searchPlaceholder": {
+    "message": "Type to filter..."
+  },
+  "bookmarksHeading": {
+    "message": "Related bookmarks"
+  },
+  "prefsHeading": {
+    "message": "Advanced settings"
+  },
+  "prefShowBadge": {
+    "message": "Badge with tip count"
+  },
+  "prefUnicode": {
+    "message": "Unicode tokenization (if available)"
+  },
+  "prefSensitivity": {
+    "message": "Sensitivity (min brand length)"
+  },
+  "prefShowBookmarks": {
+    "message": "Show bookmarks on SERP"
+  },
+  "prefPrefetch": {
+    "message": "Acceleration Mode — prefetch top results on hover (SERP only)"
+  },
+  "prefPrefetchTopN": {
+    "message": "Number of links to prefetch (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "Hover delay (ms)"
+  },
+  "prefPrefetchWarning": {
+    "message": "Prefetching may increase data usage. Only active on search result pages (Google, Bing, DuckDuckGo, Yandex)."
+  },
+  "panelModeLabel": {
+    "message": "SERP panel mode"
+  },
+  "panelModeChip": {
+    "message": "Badge + compact chip"
+  },
+  "panelModeOpen": {
+    "message": "Badge + expanded panel"
+  },
+  "bundleApplied": {
+    "message": "Added $1 new domains from the sample bundle"
+  },
+  "bundleAppliedNone": {
+    "message": "No new domains from the sample bundle"
+  },
+  "bundleLoadFailed": {
+    "message": "Could not load the sample bundle. Please check your connection."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — settings"
+  },
+  "chipLabel": {
+    "message": "FastWeb"
+  },
+  "domainsHeading": {
+    "message": "Manage domains"
+  }
+}

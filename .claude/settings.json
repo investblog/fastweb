@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(npx wxt *)",
+      "Bash(npm install)",
+      "Bash(npm ci)",
+      "Bash(tsc *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(git *)"
+    ],
+    "deny": []
+  }
+}
