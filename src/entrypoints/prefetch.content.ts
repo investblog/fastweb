@@ -15,7 +15,7 @@ export default defineContentScript({
       const prefs: Prefs = (data?.prefs as Prefs) || DEFAULT_PREFS;
       if (!prefs.enablePrefetch) return;
 
-      const topN = Math.max(1, Math.min(30, prefs.prefetchTopN || 5));
+      const topN = Math.max(1, Math.min(15, prefs.prefetchTopN || 5));
       const hoverDelay = Math.max(50, Math.min(2000, prefs.prefetchHoverDelay || 200));
 
       setupSerpHoverPrefetch(serpCtx, topN, hoverDelay);

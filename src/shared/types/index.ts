@@ -19,24 +19,9 @@ export interface SerpContext {
   query: string;
 }
 
-export interface HintPayload {
-  brands: string[];
-  alternates: { domain: string; alternates: string[] }[];
-  bookmarks: BookmarkEntry[];
-  tips: string[];
-  count: number;
-  timestamp: number;
-  query: string;
-}
-
 export interface BookmarkEntry {
   title: string;
   url: string;
-}
-
-export interface TabHintData {
-  url: string;
-  hints: HintPayload;
 }
 
 export interface HrefResult {
