@@ -1,0 +1,552 @@
+/* =========================
+   FastWeb – COMPONENTS
+   Ported from 301.st UI system
+   ========================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+a {
+  color: var(--brand);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ============================================================================
+   Button — unified control recipe
+   ============================================================================ */
+
+.btn {
+  font-size: var(--fs-control);
+  line-height: var(--lh-control);
+  padding-block: var(--control-pad-y);
+  padding-inline: var(--control-pad-x);
+  min-height: var(--control-min-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  white-space: nowrap;
+  border-width: var(--border-1);
+  border-style: solid;
+  border-color: transparent;
+  border-radius: var(--r-pill);
+  font-weight: var(--fw-medium);
+  text-decoration: none;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-md);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Primary */
+.btn--primary {
+  background: var(--primary);
+  color: var(--btn-text-on-dark);
+}
+
+.btn--primary:hover {
+  background: var(--primary-hover);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+}
+
+/* Ghost */
+.btn--ghost {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--border-subtle);
+}
+
+.btn--ghost:hover {
+  background: var(--panel);
+  border-color: var(--border-strong);
+}
+
+/* Outline */
+.btn--outline {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--border-strong);
+}
+
+.btn--outline:hover {
+  color: var(--brand);
+  border-color: var(--brand);
+  background: var(--primary-soft);
+}
+
+/* Danger */
+.btn--danger {
+  background: var(--danger);
+  color: var(--btn-text-on-dark);
+  border-color: color-mix(in srgb, var(--danger) 40%, transparent);
+}
+
+.btn--danger:hover {
+  background: color-mix(in srgb, var(--danger) 88%, #000 6%);
+}
+
+/* Small variant */
+.btn--sm {
+  font-size: calc(var(--fs-control) * 0.9);
+  padding-block: calc(var(--control-pad-y) * 0.9);
+  padding-inline: calc(var(--control-pad-x) * 0.9);
+  min-height: calc(var(--control-min-height) * 0.9);
+}
+
+/* Icon inside buttons */
+.btn .ah-icon {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* ============================================================================
+   Icon Button — square icon-only button
+   ============================================================================ */
+
+.btn-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(1em + 1.5rem);
+  height: calc(1em + 1.5rem);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-icon:hover {
+  color: var(--text);
+  background: var(--border-subtle);
+}
+
+.btn-icon:active {
+  background: var(--border);
+}
+
+.btn-icon .ah-icon {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* ============================================================================
+   Input
+   ============================================================================ */
+
+.input {
+  font-family: inherit;
+  font-size: var(--fs-control);
+  line-height: var(--lh-control);
+  padding-block: var(--control-pad-y);
+  padding-inline: var(--control-pad-x);
+  min-height: var(--control-min-height);
+  width: 100%;
+  border-radius: var(--r-field);
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input:focus-visible {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--brand), transparent 80%);
+}
+
+.input::placeholder {
+  color: var(--text-subtle);
+  opacity: 0.9;
+}
+
+/* ============================================================================
+   Field
+   ============================================================================ */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field__label {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  font-weight: var(--fw-medium);
+}
+
+/* ============================================================================
+   Toggle switch
+   ============================================================================ */
+
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.toggle__text {
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+
+.toggle__control {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+
+.toggle__control input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.toggle__track {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-pill);
+  background: var(--border-strong);
+  border: 1px solid var(--border-subtle);
+  transition: background var(--transition-md), border-color var(--transition-md);
+}
+
+.toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform var(--transition-md), background var(--transition-md);
+}
+
+.toggle__control input:checked + .toggle__track {
+  background: var(--primary-soft);
+  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+}
+
+.toggle__control input:checked + .toggle__track::after {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+/* ============================================================================
+   Range slider
+   ============================================================================ */
+
+.range {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.range__label {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  font-weight: var(--fw-medium);
+}
+
+.range__control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.range__slider {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--primary);
+}
+
+.range__slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+}
+
+.range__slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: none;
+}
+
+.range__slider::-webkit-slider-runnable-track,
+.range__slider::-moz-range-track {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--border-strong);
+}
+
+.range__value {
+  min-width: 2.5rem;
+  flex: 0 0 auto;
+  text-align: right;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================================
+   Chip button + Dropdown (301-ui pattern)
+   ============================================================================ */
+
+.btn-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375em;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-control);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r-pill);
+  background: var(--panel);
+  color: var(--text-muted);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.btn-chip:hover {
+  background: var(--bg-soft);
+  border-color: var(--brand);
+  color: var(--text);
+}
+
+.btn-chip.is-active {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--primary) 55%, transparent);
+  background: var(--primary-soft);
+}
+
+.btn-chip__label { white-space: nowrap; }
+
+.btn-chip__chevron {
+  width: 0.75em;
+  height: 0.75em;
+  flex: 0 0 0.75em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.btn-chip__chevron svg { width: 100%; height: 100%; }
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown__menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  min-width: 100%;
+  width: max-content;
+  background: var(--panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  padding: var(--space-1) 0;
+  display: none;
+  z-index: 20;
+}
+
+.dropdown--open .dropdown__menu { display: block; }
+.dropdown--open .btn-chip__chevron { transform: rotate(180deg); }
+.dropdown--open > .btn-chip { border-color: var(--brand); }
+
+.dropdown__item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.dropdown__item:hover {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+.dropdown__item.is-active {
+  color: var(--brand);
+  font-weight: var(--fw-medium);
+}
+
+/* ============================================================================
+   Icon (compat with createIcon() in ui-helpers.ts)
+   ============================================================================ */
+
+.ah-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+
+.ah-icon img,
+.ah-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.ah-icon--sm { width: 14px; height: 14px; }
+.ah-icon--lg { width: 20px; height: 20px; }
+
+/* ============================================================================
+   Pill row — domain alternates
+   ============================================================================ */
+
+.pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-soft);
+  color: var(--brand);
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  max-width: 280px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.pill:hover {
+  border-color: color-mix(in srgb, var(--brand) 80%, transparent);
+  text-decoration: none;
+}
+
+.pill--rich {
+  background: var(--bg-soft);
+  color: var(--text);
+}
+
+.pill__arrow {
+  color: var(--text-muted);
+}
+
+.pill__icon {
+  border-radius: calc(var(--radius) / 2);
+  width: 16px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.pill__label {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ============================================================================
+   Inline message
+   ============================================================================ */
+
+.inline-msg {
+  display: none;
+  margin-top: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.inline-msg.is-visible {
+  display: block;
+}
+
+/* ============================================================================
+   Section title
+   ============================================================================ */
+
+.section-title {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
+}
+
+/* ============================================================================
+   Muted text
+   ============================================================================ */
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-sm {
+  font-size: var(--fs-sm);
+}

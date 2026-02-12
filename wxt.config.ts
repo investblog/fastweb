@@ -35,6 +35,16 @@ export default defineConfig({
       256: 'icons/unlock_256.png',
     },
 
+    action: {
+      default_icon: {
+        16: 'icons/unlock_16.png',
+        32: 'icons/unlock_32.png',
+        48: 'icons/unlock_48.png',
+        64: 'icons/unlock_64.png',
+        128: 'icons/unlock_128.png',
+      },
+    },
+
     web_accessible_resources: [
       {
         resources: ['icons/*.svg', 'bundle.json'],

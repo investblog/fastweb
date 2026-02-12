@@ -1,9 +1,9 @@
 import { detectSerpContext, getQuery, getQueryFromDom, findDomainsInQuery, toHref, toHost } from '@shared/url-utils';
 import { tokenizeQuery, matchAlternatesByBrandTokens, ruToLat } from '@shared/tokenizer';
-import { DEFAULT_PREFS, STORAGE_DEFAULTS, TLD_STOP } from '@shared/constants';
+import { DEFAULT_PREFS, STORAGE_DEFAULTS, TLD_STOP, BADGE_COLORS } from '@shared/constants';
 import { createIcon, createSectionHeader, escapeHtml } from '@shared/ui-helpers';
 import { _ } from '@shared/i18n';
-import type { Prefs, AlternatesMap, HintPayload, BookmarkEntry } from '@shared/types';
+import type { Prefs, AlternatesMap, BookmarkEntry } from '@shared/types';
 
 export default defineContentScript({
   matches: ['*://*/*'],
@@ -42,8 +42,8 @@ export default defineContentScript({
     const PANEL_STYLE_ID = 'ah-serp-style';
     const TOAST_ID = 'ah-serp-toast';
 
-    function normalizePanelMode(mode: string): 'chip' | 'open' {
-      return mode === 'open' ? 'open' : 'chip';
+    function normalizePanelMode(mode: string): 'open' | 'badge-only' {
+      return mode === 'badge-only' ? 'badge-only' : 'open';
     }
 
     function ensurePanelStyles(): void {
@@ -67,14 +67,6 @@ export default defineContentScript({
         --ah-shadow-soft: 0 18px 45px rgba(0,0,0,.55);
         --ah-font: system-ui, -apple-system, "Segoe UI", sans-serif;
         --ah-font-size: 13px;
-        --ah-chip-bg: rgba(15, 23, 42, 0.96);
-        --ah-chip-border: rgba(148, 163, 184, 0.6);
-        --ah-chip-text: #E5E7EB;
-        --ah-chip-badge-bg: linear-gradient(135deg, #9CB8FF 0%, #5E8BFF 65%);
-        --ah-chip-badge-tx: #0A1020;
-        --ah-chip-hover-bg: rgba(15, 20, 33, .95);
-        --ah-chip-hover-border: rgba(94, 139, 255, .6);
-        --ah-chip-shadow: 0 8px 20px rgba(15, 23, 42, 0.35);
       }
       @media (prefers-color-scheme: light) {
         :root {
@@ -89,20 +81,12 @@ export default defineContentScript({
           --ah-accent: #2563eb;
           --ah-accent-soft: rgba(37,99,235,.12);
           --ah-shadow-soft: 0 16px 40px rgba(15,23,42,.12);
-          --ah-chip-bg: rgba(255, 255, 255, 0.98);
-          --ah-chip-border: rgba(15, 23, 42, 0.12);
-          --ah-chip-text: #0f172a;
-          --ah-chip-badge-bg: linear-gradient(135deg, #2563eb 0%, #1d4ed8 65%);
-          --ah-chip-badge-tx: #f8fafc;
-          --ah-chip-hover-bg: #e2e8f0;
-          --ah-chip-hover-border: rgba(37, 99, 235, 0.45);
-          --ah-chip-shadow: 0 10px 25px rgba(15,23,42,.12);
         }
       }
       #ah-root {
         position: fixed; top: 64px; right: 86px; z-index: 999999;
         font-family: var(--ah-font); font-size: var(--ah-font-size); color: var(--ah-text);
-        display: flex; flex-direction: column; align-items: flex-end; gap: 6px; min-width: 0;
+        min-width: 0;
       }
       #ah-root * { box-sizing: border-box; font-family: inherit; }
       #ah-root button { background: none; border: none; padding: 0; color: inherit; font: inherit; }
@@ -121,27 +105,12 @@ export default defineContentScript({
       .ah-icon img, .ah-icon svg { width: 100%; height: 100%; display: block; }
       .ah-icon--sm { width: 14px; height: 14px; }
       .ah-icon--lg { width: 20px; height: 20px; }
-      .ah-serp-root .ah-chip {
-        display: inline-flex; align-items: center; gap: 6px; padding: 4px 9px;
-        border-radius: var(--ah-radius-pill); border: 1px solid var(--ah-chip-border);
-        background: var(--ah-chip-bg); cursor: pointer; backdrop-filter: blur(8px);
-        color: var(--ah-chip-text); font-weight: 600; box-shadow: var(--ah-chip-shadow);
-      }
-      .ah-serp-root .ah-chip:hover { border-color: var(--ah-chip-hover-border); background: var(--ah-chip-hover-bg); }
-      .ah-serp-root .ah-chip:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
-      .ah-serp-root .ah-chip-text { display: inline-flex; align-items: center; gap: 6px; }
-      .ah-serp-root .ah-chip .ah-icon { margin-right: 6px; }
-      .ah-serp-root .ah-chip-count {
-        min-width: 20px; padding: 2px 6px; border-radius: var(--ah-radius-pill); font-size: 11px; line-height: 1;
-        background: var(--ah-chip-badge-bg); color: var(--ah-chip-badge-tx); font-weight: 700;
-        box-shadow: 0 0 0 1px rgba(255,255,255,.14);
-      }
       #ah-root .ah-panel {
-        display: none; margin-top: 8px; background: var(--ah-card); border-radius: var(--ah-radius);
+        background: var(--ah-card); border-radius: var(--ah-radius);
         border: 1px solid var(--ah-border-subtle); box-shadow: var(--ah-shadow-soft);
         padding: 14px 18px; max-width: 90vw; width: 360px;
       }
-      #ah-root.ah-root--open .ah-panel { display: block; }
+      #ah-root.ah-root--collapsed .ah-panel { display: none; }
       #ah-root .ah-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
       #ah-root .ah-panel-close { width: 28px; height: 28px; border-radius: var(--ah-radius); }
       #ah-root .ah-panel-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ah-text); }
@@ -155,7 +124,7 @@ export default defineContentScript({
         background: rgba(255,255,255,.02); color: var(--ah-text); text-decoration: none; font-size: 12px;
         transition: border-color .15s ease, color .15s ease, background .15s ease;
       }
-      #ah-root .ah-pill:hover { border-color: rgba(94,139,255,.8); color: #dbe4ff; }
+      #ah-root .ah-pill:hover { border-color: rgba(94,139,255,.8); color: var(--ah-accent); }
       #ah-root .ah-pill-rich { background: rgba(255,255,255,.04); }
       #ah-root .ah-pill-label { display: inline-flex; align-items: center; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #ah-root .ah-pill-arrow { color: var(--ah-muted); font-size: 12px; }
@@ -207,29 +176,22 @@ export default defineContentScript({
 
     // --- Panel state ---
     function setPanelExpanded(el: HTMLElement, expanded: boolean): void {
-      if (expanded) el.classList.add('ah-root--open');
-      else el.classList.remove('ah-root--open');
+      if (expanded) el.classList.remove('ah-root--collapsed');
+      else el.classList.add('ah-root--collapsed');
     }
     function collapsePanel(el: HTMLElement): void { setPanelExpanded(el, false); }
-    function expandPanel(el: HTMLElement): void { setPanelExpanded(el, true); }
-    function togglePanel(el: HTMLElement): void { setPanelExpanded(el, !el.classList.contains('ah-root--open')); }
-    function updateChipCount(el: HTMLElement, count: number): void {
-      const target = el.querySelector('#ah-chip-count');
-      if (target) target.textContent = String(Math.max(0, count || 0));
-    }
+    function togglePanel(el: HTMLElement): void { setPanelExpanded(el, !el.classList.contains('ah-root--collapsed')); }
 
-    function setBadgeCount(count: number): void {
+    function setBadge(count: number, altsCount: number, bmCount: number): void {
       try {
         if (__prefs.showBadge !== false && hasRuntime()) {
-          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0) });
+          const color = altsCount > 0 && bmCount > 0
+            ? BADGE_COLORS.mixed
+            : bmCount > 0
+              ? BADGE_COLORS.bm
+              : BADGE_COLORS.alts;
+          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color });
         }
-      } catch { /* ignore */ }
-    }
-
-    function sendSerpHints(hints: HintPayload): void {
-      if (!hasRuntime()) return;
-      try {
-        chrome.runtime.sendMessage({ type: 'HINTS_UPDATED', url: location.href, hints });
       } catch { /* ignore */ }
     }
 
@@ -263,16 +225,9 @@ export default defineContentScript({
       let el = document.getElementById('ah-root');
       if (el) return el;
 
-      const chipLabel = _('chipLabel', 'FastWeb');
       const box = document.createElement('div');
       box.innerHTML = `
         <div id="ah-root" class="ah-root ah-serp-root">
-          <button id="ah-chip" class="ah-chip" type="button" aria-label="${_('serpPanelTitle', 'Search tips')}">
-            <span class="ah-chip-text">
-              <span>${chipLabel}</span>
-              <span class="ah-chip-count" id="ah-chip-count">0</span>
-            </span>
-          </button>
           <div class="ah-panel">
             <div class="ah-panel-header">
               <div class="ah-panel-title"><span>${_('serpPanelTitle', 'Search tips')}</span></div>
@@ -291,8 +246,6 @@ export default defineContentScript({
       el = box.firstElementChild as HTMLElement;
       document.documentElement.appendChild(el);
 
-      const chip = el.querySelector('#ah-chip');
-      if (chip) chip.addEventListener('click', () => togglePanel(el!));
       const collapse = () => collapsePanel(el!);
       el.querySelector('#ah-close-x')?.addEventListener('click', collapse);
       el.querySelector('#ah-close')?.addEventListener('click', collapse);
@@ -300,8 +253,6 @@ export default defineContentScript({
         try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
       });
 
-      const chipText = el.querySelector('.ah-chip-text');
-      if (chipText) chipText.prepend(createIcon('brand', 'sm', 'main'));
       const panelTitle = el.querySelector('.ah-panel-title');
       if (panelTitle) panelTitle.prepend(createIcon('brand', 'sm', 'main'));
 
@@ -327,25 +278,14 @@ export default defineContentScript({
           if (map[d] && !matchedKeys.includes(d)) matchedKeys.push(d);
         }
 
-        const hintsPayload: HintPayload = {
-          brands: matchedKeys.slice(),
-          alternates: [],
-          bookmarks: [],
-          tips: [],
-          count: 0,
-          timestamp: Date.now(),
-          query: q,
-        };
-
         const existing = document.getElementById('ah-root');
         if (!matchedKeys.length) {
-          setBadgeCount(0);
-          sendSerpHints(hintsPayload);
+          setBadge(0, 0, 0);
           if (existing) existing.remove();
           return;
         }
 
-        const panelMode = normalizePanelMode(__prefs.panelMode || 'chip');
+        const panelMode = normalizePanelMode(__prefs.panelMode || 'open');
         const isOpenMode = panelMode === 'open';
         const el = injectPanel();
         setPanelExpanded(el, isOpenMode);
@@ -357,15 +297,7 @@ export default defineContentScript({
         if (mirrorsWrap) { mirrorsWrap.innerHTML = ''; mirrorsWrap.classList.remove('active', 'ah-panel-section--alternates'); }
         if (bmWrap) { bmWrap.innerHTML = ''; bmWrap.classList.remove('active'); }
 
-        let tipCount = matchedKeys.length;
-        hintsPayload.count = tipCount;
-        setBadgeCount(tipCount);
-        updateChipCount(el, tipCount);
-
-        hintsPayload.alternates = matchedKeys.map((key) => {
-          const alts = map[key] || map[key.replace(/^www\./, '')] || [];
-          return { domain: key, alternates: Array.isArray(alts) ? alts.filter(Boolean) : [] };
-        }).filter(item => item.alternates.length > 0);
+        setBadge(matchedKeys.length, matchedKeys.length, 0);
 
         // Render alternates
         if (mirrorsWrap) {
@@ -376,8 +308,6 @@ export default defineContentScript({
               if (!showedMirrors) {
                 showedMirrors = true;
                 mirrorsWrap.classList.add('active', 'ah-panel-section--alternates');
-                const headerLabel = (_('serpTipAlternates', 'Official alternates from your settings:') || '').replace(/:\s*$/, '');
-                mirrorsWrap.appendChild(createSectionHeader('unlocked', headerLabel, 'sm', 'ok'));
               }
               const note = document.createElement('div');
               note.className = 'ah-section-note';
@@ -446,13 +376,8 @@ export default defineContentScript({
                 if (bookmarkHits.length >= 6) break;
               }
 
-              tipCount = matchedKeys.length + bookmarkHits.length;
-              hintsPayload.count = tipCount;
-              setBadgeCount(tipCount);
-              updateChipCount(el, tipCount);
-
-              hintsPayload.bookmarks = bookmarkHits;
-              sendSerpHints(hintsPayload);
+              const totalCount = matchedKeys.length + bookmarkHits.length;
+              setBadge(totalCount, matchedKeys.length, bookmarkHits.length);
 
               if (bookmarkHits.length && bmWrap) {
                 bmWrap.classList.add('active');
@@ -500,14 +425,10 @@ export default defineContentScript({
             tips.push(`${_('serpTipRestrict', 'Try restricting the search to domain:')} <span>${makePlainLink(`https://www.google.com/search?q=${encodeURIComponent(newQ)}`, `site:${d}`)}</span>.`);
           }
         }
-        tips.push(`${_('serpTipArchive', 'See archived copies:')} ${makePlainLink('https://web.archive.org/', 'Wayback Machine')}.`);
-        hintsPayload.tips = tips;
 
         if (body) {
           body.innerHTML = tips.map(t => `<div class="ah-tip">${t}</div>`).join('');
         }
-
-        sendSerpHints(hintsPayload);
       });
     }
 
@@ -536,15 +457,15 @@ export default defineContentScript({
     window.addEventListener('popstate', onUrlMaybeChanged);
     setInterval(onUrlMaybeChanged, 800);
 
-    // --- Listen for SHOW_SERP_PANEL from background ---
+    // --- Listen for TOGGLE_SERP_PANEL from background ---
     try {
       if (hasRuntime() && chrome.runtime.onMessage) {
         chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-          if (msg?.type === 'SHOW_SERP_PANEL') {
+          if (msg?.type === 'TOGGLE_SERP_PANEL') {
             try {
               const panel = document.getElementById('ah-root');
               if (panel) {
-                expandPanel(panel);
+                togglePanel(panel);
                 sendResponse?.({ ok: true, hasTips: true });
               } else {
                 showNoTipsToast();

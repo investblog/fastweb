@@ -1,0 +1,223 @@
+/* =========================
+   FastWeb – Side Panel Layout
+   Tab-based UI (cloudflare-tools pattern)
+   ========================= */
+
+/* Panel shell */
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+
+  /*  Responsive typography — vw = panel viewport width.
+      At 400px panel: sm≈14.4px, control≈14.4px, body≈15px
+      At 500px panel: sm≈15.8px, control≈15.8px, body≈16.4px  */
+  font-size: clamp(0.9375rem, 0.6rem + 1.35vw, 1.0625rem);
+  --fs-xs:      clamp(0.8rem,    0.5rem  + 1.2vw,  0.875rem);
+  --fs-sm:      clamp(0.9rem,    0.55rem + 1.4vw,  1rem);
+  --fs-control: clamp(0.9rem,    0.55rem + 1.4vw,  1rem);
+}
+
+/* Header */
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.panel__header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.panel__title {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}
+
+.panel__brand-icon {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.panel__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* Tab navigation */
+.panel__nav {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--panel);
+}
+
+.nav-tab {
+  padding: var(--space-2) var(--space-3);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: var(--fw-medium);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.nav-tab:hover {
+  color: var(--text);
+  background: var(--border-subtle);
+}
+
+.nav-tab.is-active {
+  color: var(--text);
+  background: var(--border);
+}
+
+/* Body / scrollable area */
+.panel__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-4);
+}
+
+/* View fade-in */
+.view {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============================================================================
+   Domains view
+   ============================================================================ */
+
+.domain-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+}
+
+.domain-form__row {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-end;
+}
+
+.domain-form__field {
+  flex: 1;
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  margin-top: var(--space-3);
+}
+
+.actions-row .text-muted {
+  font-size: var(--fs-xs);
+}
+
+/* Domain list */
+.domain-list {
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.domain-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.domain-item:last-child {
+  border-bottom: none;
+}
+
+.domain-item__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.domain-item__name {
+  font-weight: var(--fw-semibold);
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Bookmark section */
+.bookmark-section {
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.bookmark-section.is-hidden {
+  display: none;
+}
+
+/* ============================================================================
+   Preferences view
+   ============================================================================ */
+
+.prefs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.toggle-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.prefetch-options {
+  margin-left: var(--space-1);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.panel-note {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+/* Panel mode selector */
+.panel-mode {
+  margin-top: var(--space-2);
+}
+
+.panel-mode__label {
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+  font-weight: var(--fw-medium);
+  margin-bottom: var(--space-2);
+}

@@ -53,12 +53,6 @@
   "serpTipRestrict": {
     "message": "Попробуйте ограничить поиск доменом:"
   },
-  "serpTipAlternates": {
-    "message": "Альтернативные домены из ваших настроек:"
-  },
-  "serpTipArchive": {
-    "message": "Посмотреть архивные копии:"
-  },
   "serpTipYandex": {
     "message": "То же в Яндексе:"
   },
@@ -107,11 +101,11 @@
   "panelModeLabel": {
     "message": "Режим панели на SERP"
   },
-  "panelModeChip": {
-    "message": "Значок + компактный чип"
-  },
   "panelModeOpen": {
-    "message": "Значок + сразу раскрытая панель"
+    "message": "Авторазворот панели на SERP"
+  },
+  "panelModeBadge": {
+    "message": "Только значок (клик для показа)"
   },
   "bundleApplied": {
     "message": "Добавлено $1 новых доменов из примера"
@@ -125,10 +119,20 @@
   "settingsTitle": {
     "message": "FastWeb — настройки"
   },
-  "chipLabel": {
-    "message": "FastWeb"
+  "deleteBundleBtn": {
+    "message": "Удалить бандл"
+  },
+  "bundleDeleted": {
+    "message": "Удалено $1 доменов из бандла",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "Бандл не загружен"
   },
   "domainsHeading": {
     "message": "Управление доменами"
+  },
+  "rateBtn": {
+    "message": "Оценить"
   }
 }

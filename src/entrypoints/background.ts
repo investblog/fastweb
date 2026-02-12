@@ -1,10 +1,8 @@
-import type { TabHintData, BookmarkEntry } from '@shared/types';
+import type { BookmarkEntry } from '@shared/types';
 import type { RequestMessage } from '@shared/messaging';
-import { BADGE_COLOR } from '@shared/constants';
+import { BADGE_COLORS } from '@shared/constants';
 
 export default defineBackground(() => {
-  const tabHints = new Map<number, TabHintData>();
-
   async function openSettingsInSidePanel(tabId: number): Promise<void> {
     try {
       if (
@@ -43,10 +41,10 @@ export default defineBackground(() => {
     });
   }
 
-  function requestSerpPanel(tabId: number): Promise<{ ok: boolean }> {
+  function requestTogglePanel(tabId: number): Promise<{ ok: boolean }> {
     return new Promise((resolve) => {
       try {
-        chrome.tabs.sendMessage(tabId, { type: 'SHOW_SERP_PANEL' }, (resp) => {
+        chrome.tabs.sendMessage(tabId, { type: 'TOGGLE_SERP_PANEL' }, (resp) => {
           if (chrome.runtime.lastError) return resolve({ ok: false });
           resolve(resp && typeof resp === 'object' ? resp : { ok: false });
         });
@@ -78,6 +76,42 @@ export default defineBackground(() => {
     return flat;
   }
 
+  // --- Auto-load bundle on first install ---
+  async function autoLoadBundle(): Promise<void> {
+    try {
+      const resp = await fetch('https://raw.githubusercontent.com/investblog/fastweb/main/src/public/bundle.json', { cache: 'no-store' });
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      const bundle = await resp.json();
+      await mergeBundle(bundle);
+    } catch {
+      try {
+        const local = await fetch(chrome.runtime.getURL('bundle.json'));
+        const bundle = await local.json();
+        await mergeBundle(bundle);
+      } catch { /* silent */ }
+    }
+  }
+
+  async function mergeBundle(bundle: Record<string, unknown>): Promise<void> {
+    if (!bundle || typeof bundle !== 'object') return;
+    const { alternates = {} } = await new Promise<Record<string, unknown>>((r) =>
+      chrome.storage.sync.get({ alternates: {} }, r));
+    const map = (alternates || {}) as Record<string, string[]>;
+    const bundleKeys: string[] = [];
+    for (const [key, alts] of Object.entries(bundle)) {
+      bundleKeys.push(key);
+      if (!map[key] && Array.isArray(alts)) {
+        map[key] = alts as string[];
+      }
+    }
+    await new Promise<void>((r) =>
+      chrome.storage.sync.set({ alternates: map, bundleDomains: bundleKeys }, () => r()));
+  }
+
+  chrome.runtime.onInstalled.addListener(({ reason }) => {
+    if (reason === 'install') autoLoadBundle();
+  });
+
   // --- Action click ---
   chrome.action.onClicked.addListener(async (tab) => {
     if (!tab?.id) return;
@@ -88,7 +122,7 @@ export default defineBackground(() => {
       }
       const badgeCount = await getBadgeCount(tab.id);
       if (badgeCount > 0) {
-        const resp = await requestSerpPanel(tab.id);
+        const resp = await requestTogglePanel(tab.id);
         if (!resp?.ok) await openSettingsInSidePanel(tab.id);
       } else {
         await openSettingsInSidePanel(tab.id);
@@ -108,20 +142,6 @@ export default defineBackground(() => {
           if (sender?.tab?.id) openSettingsInSidePanel(sender.tab.id);
           break;
 
-        case 'HINTS_UPDATED': {
-          const tabId = sender?.tab?.id ?? msg.tabId;
-          if (tabId != null) {
-            tabHints.set(tabId, { url: msg.url, hints: msg.hints });
-          }
-          break;
-        }
-
-        case 'GET_HINTS_FOR_TAB': {
-          const data = tabHints.get(msg.tabId) || null;
-          sendResponse({ data });
-          return true;
-        }
-
         case 'GET_BOOKMARKS':
           try {
             chrome.bookmarks.getTree((nodes) => {
@@ -136,7 +156,7 @@ export default defineBackground(() => {
         case 'SET_BADGE': {
           const n = Math.max(0, parseInt(String(msg.count || 0), 10) || 0);
           try {
-            chrome.action.setBadgeBackgroundColor({ color: BADGE_COLOR });
+            chrome.action.setBadgeBackgroundColor({ color: msg.color || BADGE_COLORS.alts });
             chrome.action.setBadgeText({ text: n > 0 ? String(n) : '' });
           } catch { /* ignore */ }
           sendResponse?.({ ok: true });
@@ -145,9 +165,4 @@ export default defineBackground(() => {
       }
     },
   );
-
-  // --- Cleanup on tab close ---
-  chrome.tabs.onRemoved.addListener((tabId) => {
-    tabHints.delete(tabId);
-  });
 });

@@ -1,4 +1,4 @@
-import type { HintPayload, BookmarkEntry, TabHintData } from '../types';
+import type { BookmarkEntry } from '../types';
 
 // ============================================================================
 // Request Messages
@@ -6,22 +6,6 @@ import type { HintPayload, BookmarkEntry, TabHintData } from '../types';
 
 export interface OpenSettingsRequest {
   type: 'OPEN_SETTINGS';
-}
-
-export interface HintsUpdatedRequest {
-  type: 'HINTS_UPDATED';
-  url: string;
-  hints: HintPayload;
-  tabId?: number;
-}
-
-export interface GetHintsForTabRequest {
-  type: 'GET_HINTS_FOR_TAB';
-  tabId: number;
-}
-
-export interface GetHintsForTabResponse {
-  data: TabHintData | null;
 }
 
 export interface GetBookmarksRequest {
@@ -36,17 +20,18 @@ export interface GetBookmarksResponse {
 export interface SetBadgeRequest {
   type: 'SET_BADGE';
   count: number;
+  color: string;
 }
 
 export interface SetBadgeResponse {
   ok: boolean;
 }
 
-export interface ShowSerpPanelRequest {
-  type: 'SHOW_SERP_PANEL';
+export interface ToggleSerpPanelRequest {
+  type: 'TOGGLE_SERP_PANEL';
 }
 
-export interface ShowSerpPanelResponse {
+export interface ToggleSerpPanelResponse {
   ok: boolean;
   hasTips?: boolean;
 }
@@ -57,11 +42,9 @@ export interface ShowSerpPanelResponse {
 
 export type RequestMessage =
   | OpenSettingsRequest
-  | HintsUpdatedRequest
-  | GetHintsForTabRequest
   | GetBookmarksRequest
   | SetBadgeRequest
-  | ShowSerpPanelRequest;
+  | ToggleSerpPanelRequest;
 
 // ============================================================================
 // Response Mapping
@@ -69,11 +52,9 @@ export type RequestMessage =
 
 export type ResponseMap = {
   OPEN_SETTINGS: void;
-  HINTS_UPDATED: void;
-  GET_HINTS_FOR_TAB: GetHintsForTabResponse;
   GET_BOOKMARKS: GetBookmarksResponse;
   SET_BADGE: SetBadgeResponse;
-  SHOW_SERP_PANEL: ShowSerpPanelResponse;
+  TOGGLE_SERP_PANEL: ToggleSerpPanelResponse;
 };
 
 // ============================================================================

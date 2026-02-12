@@ -1,0 +1,224 @@
+/* =========================
+   FastWeb – THEME TOKENS
+   Ported from 301.st UI system
+   ========================= */
+
+:root {
+  color-scheme: dark;
+
+  /* Blues (primary brand) */
+  --blue-900: #003682;
+  --blue-700: #0055DC;
+  --blue-500: #3475C0;
+  --blue-300: #408BC9;
+  --blue-neon: #4DA3FF;
+
+  /* Neutrals */
+  --gray-900: #111111;
+  --gray-800: #222222;
+  --gray-700: #333333;
+  --gray-600: #404242;
+  --gray-500: #424242;
+  --gray-400: #808080;
+  --gray-100: #F7F7F8;
+  --gray-300: #E5E5E4;
+
+  /* Semantic */
+  --danger: #FF4F6E;
+  --success: #18C27A;
+  --warning: #FFB347;
+  --info: #3B82F6;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+
+  --fs-body: 1rem;
+  --lh-body: 1.5;
+
+  /* Unified control system */
+  --fs-control: clamp(0.94rem, 0.92rem + 0.2vw, 0.98rem);
+  --lh-control: 1.25;
+  --control-pad-y: 0.35em;
+  --control-pad-x: 0.90em;
+  --border-1: 1px;
+  --control-min-height: calc(
+    1em * var(--lh-control) +
+    2 * var(--control-pad-y) +
+    2 * var(--border-1)
+  );
+
+  /* Radius & layout */
+  --r-pill: 999px;
+  --r-field: 0.75rem;
+  --control-radius: var(--r-pill);
+  --inline-gap: 0.5rem;
+  --stack-gap: 0.75rem;
+
+  --fs-xs: 0.75rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+  --fs-xl: 1.375rem;
+  --fs-2xl: 1.75rem;
+
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+
+  --radius-xs: 0.25rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+
+  /* Shadows */
+  --shadow-sm-light: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md-light: 0 6px 18px rgba(0, 0, 0, 0.12);
+  --shadow-sm-dark: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md-dark: 0 6px 18px rgba(0, 0, 0, 0.45);
+
+  --shadow-sm: var(--shadow-sm-light);
+  --shadow-md: var(--shadow-md-light);
+
+  /* Transitions */
+  --transition-fast: 120ms ease-out;
+  --transition-md: 160ms ease-out;
+
+  /* High-contrast text for buttons */
+  --btn-text-on-dark: #FFFFFF;
+  --btn-text-on-bright: #111111;
+}
+
+/* DARK THEME – default */
+:root[data-theme="dark"] {
+  --bg: #111111;
+  --bg-elevated: #181A1F;
+  --bg-soft: #1F2229;
+
+  --panel: var(--bg-elevated);
+
+  --text-main: #E7E9EE;
+  --text-muted: #A0A4AF;
+  --text-subtle: #7A7E87;
+
+  --text: var(--text-main);
+  --muted: var(--text-muted);
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border: var(--border-strong);
+
+  --shadow-sm: var(--shadow-sm-dark);
+  --shadow-md: var(--shadow-md-dark);
+
+  --primary: #3475C0;
+  --primary-soft: rgba(77, 163, 255, 0.1);
+  --primary-hover: #4DA3FF;
+
+  --ok: var(--success);
+  --brand: var(--primary);
+
+  --input-bg: rgba(15, 16, 22, 0.9);
+  --input-border: var(--border-subtle);
+  --input-border-focus: rgba(77, 163, 255, 0.8);
+}
+
+/* LIGHT THEME */
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #FFFFFF;
+  --bg-elevated: #F7F7F8;
+  --bg-soft: #F4F8FC;
+
+  --panel: var(--bg-elevated);
+
+  --text-main: #111111;
+  --text-muted: #666A73;
+  --text-subtle: #8A8F99;
+
+  --text: var(--text-main);
+  --muted: var(--text-muted);
+
+  --border-subtle: rgba(15, 23, 42, 0.06);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --border: var(--border-strong);
+
+  --shadow-sm: var(--shadow-sm-light);
+  --shadow-md: var(--shadow-md-light);
+
+  --primary: #0055DC;
+  --primary-soft: rgba(0, 85, 220, 0.08);
+  --primary-hover: #003682;
+
+  --brand: var(--primary);
+  --ok: var(--success);
+
+  --input-bg: #FFFFFF;
+  --input-border: var(--border-subtle);
+  --input-border-focus: rgba(0, 85, 220, 0.8);
+}
+
+/* Auto theme (no data-theme attr) follows system */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #111111;
+    --bg-elevated: #181A1F;
+    --bg-soft: #1F2229;
+    --panel: var(--bg-elevated);
+    --text-main: #E7E9EE;
+    --text-muted: #A0A4AF;
+    --text-subtle: #7A7E87;
+    --text: var(--text-main);
+    --muted: var(--text-muted);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-strong: rgba(255, 255, 255, 0.14);
+    --border: var(--border-strong);
+    --shadow-sm: var(--shadow-sm-dark);
+    --shadow-md: var(--shadow-md-dark);
+    --primary: #3475C0;
+    --primary-soft: rgba(77, 163, 255, 0.1);
+    --primary-hover: #4DA3FF;
+    --ok: var(--success);
+    --brand: var(--primary);
+    --input-bg: rgba(15, 16, 22, 0.9);
+    --input-border: var(--border-subtle);
+    --input-border-focus: rgba(77, 163, 255, 0.8);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    color-scheme: light;
+    --bg: #FFFFFF;
+    --bg-elevated: #F7F7F8;
+    --bg-soft: #F4F8FC;
+    --panel: var(--bg-elevated);
+    --text-main: #111111;
+    --text-muted: #666A73;
+    --text-subtle: #8A8F99;
+    --text: var(--text-main);
+    --muted: var(--text-muted);
+    --border-subtle: rgba(15, 23, 42, 0.06);
+    --border-strong: rgba(15, 23, 42, 0.16);
+    --border: var(--border-strong);
+    --shadow-sm: var(--shadow-sm-light);
+    --shadow-md: var(--shadow-md-light);
+    --primary: #0055DC;
+    --primary-soft: rgba(0, 85, 220, 0.08);
+    --primary-hover: #003682;
+    --brand: var(--primary);
+    --ok: var(--success);
+    --input-bg: #FFFFFF;
+    --input-border: var(--border-subtle);
+    --input-border-focus: rgba(0, 85, 220, 0.8);
+  }
+}

@@ -2,9 +2,35 @@ import { applyI18n, _ } from '@shared/i18n';
 import { normalizeKeyDomain, normalizeAlt } from '@shared/url-utils';
 import { tokenizeQuery, matchesBrand, ruToLat } from '@shared/tokenizer';
 import { TLD_STOP, DEFAULT_PREFS } from '@shared/constants';
+import { initTheme, toggleTheme } from '@shared/theme';
+import { getStoreInfo } from '@shared/store-links';
 import type { Prefs, AlternatesMap, BookmarkEntry } from '@shared/types';
 
 const $ = (s: string) => document.querySelector(s);
+
+// --- Tab navigation ---
+type ViewName = 'domains' | 'preferences';
+
+function showView(viewName: ViewName): void {
+  document.querySelectorAll('[data-view-content]').forEach(el => {
+    (el as HTMLElement).hidden = true;
+  });
+  const target = document.querySelector(`[data-view-content="${viewName}"]`);
+  if (target) (target as HTMLElement).hidden = false;
+}
+
+function initNavigation(): void {
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const tabName = tab.getAttribute('data-tab') as ViewName;
+      if (!tabName) return;
+      tabs.forEach(t => t.classList.remove('is-active'));
+      tab.classList.add('is-active');
+      showView(tabName);
+    });
+  });
+}
 
 // --- Inline message ---
 let MSG_TIMER: ReturnType<typeof setTimeout> | null = null;
@@ -36,25 +62,25 @@ function render(map: AlternatesMap): void {
   list.innerHTML = '';
   const entries = Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   for (const [dom, alts] of entries) {
-    const wrap = document.createElement('div'); wrap.className = 'ah-list-item';
-    const left = document.createElement('div'); left.className = 'ah-domain'; left.textContent = dom;
-    const mid = document.createElement('div'); mid.className = 'ah-pill-row';
+    const wrap = document.createElement('div'); wrap.className = 'domain-item';
+    const header = document.createElement('div'); header.className = 'domain-item__header';
+    const left = document.createElement('div'); left.className = 'domain-item__name'; left.textContent = dom;
+    const del = document.createElement('button'); del.className = 'btn btn--outline btn--sm'; del.type = 'button';
+    del.textContent = _('deleteBtn', 'Delete');
+    del.addEventListener('click', async () => { const cur = await getMap(); delete cur[dom]; await saveMap(cur); CACHE = cur; applyFilterAndRender(); });
+    header.append(left, del);
+    const mid = document.createElement('div'); mid.className = 'pill-row';
     (Array.isArray(alts) ? alts : []).forEach((a: string) => {
       const clean = String(a).replace(/^https?:\/\//, '');
       const link = document.createElement('a');
-      link.href = `https://${clean}`; link.target = '_blank'; link.rel = 'noreferrer'; link.className = 'ah-pill';
-      link.innerHTML = `${a} <span class="ah-pill-arrow">\u2B62</span>`;
+      link.href = `https://${clean}`; link.target = '_blank'; link.rel = 'noreferrer'; link.className = 'pill';
+      link.innerHTML = `${a} <span class="pill__arrow">\u2B62</span>`;
       mid.appendChild(link);
     });
-    const right = document.createElement('div');
-    const del = document.createElement('button'); del.className = 'ah-btn ah-btn-outline'; del.type = 'button';
-    del.textContent = _('deleteBtn', 'Delete');
-    del.addEventListener('click', async () => { const cur = await getMap(); delete cur[dom]; await saveMap(cur); CACHE = cur; applyFilterAndRender(); });
-    right.appendChild(del);
-    wrap.append(left, mid, right); list.appendChild(wrap);
+    wrap.append(header, mid); list.appendChild(wrap);
   }
   if (!entries.length) {
-    const empty = document.createElement('div'); empty.className = 'ah-muted';
+    const empty = document.createElement('div'); empty.className = 'text-muted';
     empty.textContent = _('listEmpty', 'List is empty.');
     list.appendChild(empty);
   }
@@ -110,14 +136,14 @@ function renderBookmarks(tokens: string[]): void {
     if (!hits.length) { sec.classList.add('is-hidden'); return; }
     sec.classList.remove('is-hidden');
     hits.forEach(h => {
-      const a = document.createElement('a'); a.className = 'ah-pill ah-pill-rich'; a.href = h.url; a.target = '_blank'; a.rel = 'noreferrer';
+      const a = document.createElement('a'); a.className = 'pill pill--rich'; a.href = h.url; a.target = '_blank'; a.rel = 'noreferrer';
       const img = document.createElement('img');
       try { img.src = `https://icons.duckduckgo.com/ip3/${new URL(h.url).hostname}.ico`; } catch { img.src = ''; }
-      img.width = 16; img.height = 16; img.className = 'ah-pill-icon';
+      img.width = 16; img.height = 16; img.className = 'pill__icon';
       const span = document.createElement('span');
       const t = h.title?.trim() || (() => { try { return new URL(h.url).hostname; } catch { return h.url; } })();
       span.textContent = t.length > 28 ? t.slice(0, 25) + '\u2026' : t;
-      const arrow = document.createElement('span'); arrow.textContent = '\u2B62'; arrow.className = 'ah-pill-arrow';
+      const arrow = document.createElement('span'); arrow.textContent = '\u2B62'; arrow.className = 'pill__arrow';
       a.append(img, span, arrow); box.appendChild(a);
     });
   });
@@ -200,8 +226,44 @@ function loadPrefs(): Promise<Prefs> {
 function savePrefs(p: Prefs): Promise<void> { return new Promise(r => chrome.storage.sync.set({ prefs: p }, r)); }
 
 async function initPrefsUI(): Promise<void> {
-  const box = document.querySelector('#prefs'); if (!box) return;
-  const panelRadios = Array.from(document.querySelectorAll<HTMLInputElement>('input[name="panelMode"]'));
+  // --- Panel mode dropdown ---
+  const modeDropdown = document.getElementById('panelModeDropdown');
+  const modeChipLabel = document.getElementById('panelModeChipLabel');
+  const modeItems = modeDropdown ? Array.from(modeDropdown.querySelectorAll<HTMLButtonElement>('.dropdown__item')) : [];
+  let currentMode: 'open' | 'badge-only' = 'open';
+
+  function setMode(val: string): void {
+    currentMode = val === 'badge-only' ? 'badge-only' : 'open';
+    modeItems.forEach(it => {
+      it.classList.toggle('is-active', it.dataset.value === currentMode);
+    });
+    const active = modeItems.find(it => it.dataset.value === currentMode);
+    if (modeChipLabel && active) modeChipLabel.textContent = active.textContent || '';
+  }
+
+  // Dropdown toggle
+  if (modeDropdown) {
+    const trigger = modeDropdown.querySelector('.dropdown__trigger');
+    trigger?.addEventListener('click', () => {
+      const open = modeDropdown.classList.toggle('dropdown--open');
+      trigger.setAttribute('aria-expanded', String(open));
+    });
+    modeItems.forEach(item => {
+      item.addEventListener('click', () => {
+        setMode(item.dataset.value || 'open');
+        modeDropdown.classList.remove('dropdown--open');
+        trigger?.setAttribute('aria-expanded', 'false');
+        debouncedSave(snapshot());
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!modeDropdown.contains(e.target as Node)) {
+        modeDropdown.classList.remove('dropdown--open');
+        trigger?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
   const els = {
     min: document.querySelector('#ah-minBrand') as HTMLInputElement,
     minVal: document.querySelector('#ah-minBrand-value') as HTMLElement,
@@ -214,11 +276,11 @@ async function initPrefsUI(): Promise<void> {
     prefetchDelay: document.querySelector('#ah-prefetchDelay') as HTMLInputElement,
     prefetchDelayVal: document.querySelector('#ah-prefetchDelay-value') as HTMLElement,
     prefetchOptions: document.querySelector('#prefetch-options') as HTMLElement,
-    panelRadios,
   };
+  if (!els.min) return;
   const prefs = await loadPrefs();
-  if (prefs.panelMode !== 'chip' && prefs.panelMode !== 'open') {
-    prefs.panelMode = 'chip';
+  if (prefs.panelMode !== 'open' && prefs.panelMode !== 'badge-only') {
+    prefs.panelMode = 'open';
     chrome.storage.sync.set({ prefs: { ...prefs } });
   }
   const minBrand = Math.max(1, Math.min(10, prefs.minBrandLength ?? 2));
@@ -234,9 +296,8 @@ async function initPrefsUI(): Promise<void> {
   const delay = Math.max(50, Math.min(2000, prefs.prefetchHoverDelay ?? 200));
   els.prefetchDelay.value = String(delay);
   els.prefetchDelayVal.textContent = String(delay);
-  if (els.prefetchOptions) els.prefetchOptions.style.display = els.prefetch.checked ? '' : 'none';
-  const modeVal = ['chip', 'open'].includes(prefs.panelMode) ? prefs.panelMode : 'chip';
-  panelRadios.forEach(r => { r.checked = r.value === modeVal; });
+  if (els.prefetchOptions) els.prefetchOptions.hidden = !els.prefetch.checked;
+  setMode(prefs.panelMode);
 
   const debouncedSave = (() => {
     let t: ReturnType<typeof setTimeout> | null = null;
@@ -244,8 +305,6 @@ async function initPrefsUI(): Promise<void> {
   })();
 
   function snapshot(): Prefs {
-    const selected = panelRadios.find(r => r.checked);
-    const prefMode = selected ? selected.value : 'chip';
     return {
       minBrandLength: (() => {
         const n = parseInt(els.min.value, 10);
@@ -266,7 +325,7 @@ async function initPrefsUI(): Promise<void> {
         if (!Number.isFinite(n)) return 200;
         return Math.max(50, Math.min(2000, n));
       })(),
-      panelMode: (['chip', 'open'].includes(prefMode) ? prefMode : 'chip') as 'chip' | 'open',
+      panelMode: currentMode,
     };
   }
 
@@ -280,7 +339,7 @@ async function initPrefsUI(): Promise<void> {
   });
   [els.unicode, els.showBm, els.badge].forEach(ch => ch.addEventListener('change', () => debouncedSave(snapshot())));
   els.prefetch.addEventListener('change', () => {
-    if (els.prefetchOptions) els.prefetchOptions.style.display = els.prefetch.checked ? '' : 'none';
+    if (els.prefetchOptions) els.prefetchOptions.hidden = !els.prefetch.checked;
     debouncedSave(snapshot());
   });
   els.prefetchTopN.addEventListener('input', () => {
@@ -299,7 +358,6 @@ async function initPrefsUI(): Promise<void> {
     els.prefetchDelayVal.textContent = String(val);
     debouncedSave(snapshot());
   });
-  panelRadios.forEach(r => r.addEventListener('change', () => debouncedSave(snapshot())));
 }
 
 // --- Event listeners ---
@@ -337,12 +395,14 @@ function setupEventListeners(): void {
 
   document.getElementById('ah-load-bundle')?.addEventListener('click', async () => {
     try {
-      const remoteUrl = 'https://fastweb.cam/download/bundle.json';
+      const remoteUrl = 'https://raw.githubusercontent.com/investblog/fastweb/main/src/public/bundle.json';
       const remoteData = await fetch(remoteUrl, { cache: 'no-store' }).then(r => {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       });
+      const bundleKeys = Object.keys(remoteData);
       await applyBundle(remoteData);
+      await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys }, r));
     } catch {
       try {
         const localUrl = chrome.runtime.getURL('bundle.json');
@@ -350,17 +410,60 @@ function setupEventListeners(): void {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.json();
         });
+        const bundleKeys = Object.keys(localData);
         await applyBundle(localData);
+        await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys }, r));
       } catch {
         showInlineMessage(_('bundleLoadFailed', 'Could not load sample bundle.'));
       }
     }
   });
+
+  document.getElementById('ah-delete-bundle')?.addEventListener('click', async () => {
+    const { bundleDomains = [] } = await new Promise<Record<string, string[]>>(r =>
+      chrome.storage.sync.get({ bundleDomains: [] }, r));
+    if (!bundleDomains.length) {
+      showInlineMessage(_('bundleNone', 'No bundle loaded'));
+      return;
+    }
+    const map = await getMap();
+    let removed = 0;
+    for (const key of bundleDomains) {
+      if (map[key]) { delete map[key]; removed++; }
+    }
+    await saveMap(map);
+    CACHE = map;
+    await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: [] }, r));
+    const msg = chrome.i18n.getMessage('bundleDeleted', [String(removed)]) || `Removed ${removed} bundle domains`;
+    showInlineMessage(msg);
+    applyFilterAndRender();
+  });
+
+  // Theme toggle
+  document.querySelector('[data-action="toggle-theme"]')?.addEventListener('click', () => {
+    toggleTheme();
+  });
+}
+
+// --- Store link ---
+function initStoreLink(): void {
+  const info = getStoreInfo();
+  if (!info) return;
+  const rateLink = document.getElementById('rate-link') as HTMLAnchorElement | null;
+  const rateIcon = document.getElementById('rate-icon') as HTMLImageElement | null;
+  if (rateLink) {
+    rateLink.href = info.url;
+    if (rateIcon) rateIcon.src = info.icon;
+    rateLink.hidden = false;
+  }
 }
 
 // --- Boot ---
 (async function boot(): Promise<void> {
+  initTheme();
   applyI18n();
+  initNavigation();
+  initStoreLink();
   await initPrefsUI();
   setupEventListeners();
   CACHE = await getMap();

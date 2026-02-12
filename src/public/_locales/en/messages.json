@@ -53,12 +53,6 @@
   "serpTipRestrict": {
     "message": "Try restricting the search to domain:"
   },
-  "serpTipAlternates": {
-    "message": "Official alternates from your settings:"
-  },
-  "serpTipArchive": {
-    "message": "See archived copies:"
-  },
   "serpTipYandex": {
     "message": "Same in Yandex:"
   },
@@ -107,11 +101,11 @@
   "panelModeLabel": {
     "message": "SERP panel mode"
   },
-  "panelModeChip": {
-    "message": "Badge + compact chip"
-  },
   "panelModeOpen": {
-    "message": "Badge + expanded panel"
+    "message": "Auto-expand panel on SERP"
+  },
+  "panelModeBadge": {
+    "message": "Badge only (click icon to toggle)"
   },
   "bundleApplied": {
     "message": "Added $1 new domains from the sample bundle"
@@ -125,10 +119,20 @@
   "settingsTitle": {
     "message": "FastWeb — settings"
   },
-  "chipLabel": {
-    "message": "FastWeb"
+  "deleteBundleBtn": {
+    "message": "Delete bundle"
+  },
+  "bundleDeleted": {
+    "message": "Removed $1 bundle domains",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "No bundle loaded"
   },
   "domainsHeading": {
     "message": "Manage domains"
+  },
+  "rateBtn": {
+    "message": "Rate us"
   }
 }

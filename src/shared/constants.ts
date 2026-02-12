@@ -5,7 +5,7 @@ export const DEFAULT_PREFS: Prefs = {
   showSerpBookmarks: true,
   showBadge: true,
   useUnicodeTokenize: true,
-  panelMode: 'chip',
+  panelMode: 'open',
   enablePrefetch: false,
   prefetchTopN: 5,
   prefetchHoverDelay: 200,
@@ -21,7 +21,11 @@ export const TLD_STOP = new Set([
   'co', 'app', 'dev', 'site', 'online', 'top', 'xyz',
 ]);
 
-export const BADGE_COLOR = '#3b82f6';
+export const BADGE_COLORS = {
+  alts:  '#3b82f6',  // blue — alternates only
+  mixed: '#16a34a',  // green — alternates + bookmarks
+  bm:    '#8b5cf6',  // violet — bookmarks only
+};
 
 export const RU_TO_LAT: Record<string, string> = {
   'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd',
