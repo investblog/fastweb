@@ -106,7 +106,7 @@ export default defineContentScript({
           --ah-shadow-soft: 0 16px 40px rgba(15,23,42,.12);
       }
       #ah-root {
-        position: fixed; top: 64px; right: 86px; z-index: 999999;
+        position: fixed; top: 64px; inset-inline-end: 86px; z-index: 999999;
         font-family: var(--ah-font); font-size: var(--ah-font-size); color: var(--ah-text);
         min-width: 0;
       }
@@ -161,13 +161,13 @@ export default defineContentScript({
       #ah-root .ah-pill-icon { border-radius: calc(var(--ah-radius) / 2); width: 16px; height: 16px; object-fit: cover; }
       #ah-root .ah-search { position: relative; padding: 0 0 8px; }
       #ah-root .ah-search-input {
-        width: 100%; padding: 6px 30px 6px 10px; border-radius: var(--ah-radius-pill);
+        width: 100%; padding-block: 6px; padding-inline: 10px 30px; border-radius: var(--ah-radius-pill);
         border: 1px solid var(--ah-border-subtle); background: var(--ah-card-soft);
         color: var(--ah-text); font-family: inherit; font-size: 12px; outline: none;
       }
       #ah-root .ah-search-input:focus { border-color: var(--ah-accent); }
       #ah-root .ah-search-clear {
-        position: absolute; right: 6px; top: 50%; transform: translateY(calc(-50% - 4px));
+        position: absolute; inset-inline-end: 6px; top: 50%; transform: translateY(calc(-50% - 4px));
         display: none; align-items: center; justify-content: center;
         width: 20px; height: 20px; border-radius: 4px;
         color: var(--ah-muted); cursor: pointer; transition: color .15s ease, background .15s ease;
@@ -193,7 +193,7 @@ export default defineContentScript({
       #ah-root .ah-footer-btn svg { width: 16px; height: 16px; }
       #ah-root.ah-root--inline-hidden { display: none; }
       #ah-serp-toast {
-        position: fixed; top: 16px; right: 16px; z-index: 999999;
+        position: fixed; top: 16px; inset-inline-end: 16px; z-index: 999999;
         background: #0b1020; color: #E7E9F0; border: 1px solid #252c3c;
         border-radius: 12px; padding: 8px 12px; box-shadow: 0 18px 45px rgba(0,0,0,.55);
         opacity: 0; transform: translateY(-8px); transition: opacity .16s ease, transform .16s ease;
@@ -325,6 +325,10 @@ export default defineContentScript({
 
       const panel = h('div', { className: 'ah-panel' }, header, searchWrap, mirrors, bookmarks, footer);
       el = h('div', { id: 'ah-root', className: 'ah-root ah-serp-root' }, panel);
+      try {
+        const lang = chrome.i18n?.getUILanguage?.() || '';
+        if (/^(ar|fa|he|ur|yi|ps|sd|ku)/i.test(lang)) el.dir = 'rtl';
+      } catch { /* ignore */ }
       document.documentElement.appendChild(el);
 
       closeBtn.addEventListener('click', () => dismissPanel(el!));

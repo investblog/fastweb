@@ -491,7 +491,12 @@ function initHeaderScroll(): void {
 
 // --- Boot ---
 (async function boot(): Promise<void> {
-  try { document.documentElement.lang = chrome.i18n.getUILanguage(); } catch { /* ignore */ }
+  try {
+    const lang = chrome.i18n.getUILanguage();
+    document.documentElement.lang = lang;
+    const rtl = /^(ar|fa|he|ur|yi|ps|sd|ku)/i.test(lang);
+    document.documentElement.dir = rtl ? 'rtl' : 'ltr';
+  } catch { /* ignore */ }
   initTheme();
   applyI18n();
   initNavigation();
