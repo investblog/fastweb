@@ -1,0 +1,155 @@
+{
+  "appName": {
+    "message": "FastWeb — Arama Hızlandırıcı"
+  },
+  "appDesc": {
+    "message": "Arama sonuçlarını akıllı ipuçları, yansıma/yer imleri ve isteğe bağlı hover ön yüklemesiyle hızlandırın."
+  },
+  "optTitle": {
+    "message": "FastWeb — Ayarlar"
+  },
+  "domainLabel": {
+    "message": "Alan adı"
+  },
+  "altsLabel": {
+    "message": "Resmi alternatifler (virgülle ayırın)"
+  },
+  "addBtn": {
+    "message": "Ekle"
+  },
+  "exportBtn": {
+    "message": "JSON Dışa Aktar"
+  },
+  "importBtn": {
+    "message": "JSON İçe Aktar"
+  },
+  "loadBundleBtn": {
+    "message": "Örnek paketi yükle"
+  },
+  "jsonFormatHelp": {
+    "message": "JSON formatı: {\"example.com\":[\"example.org\",\"example.net\"]}"
+  },
+  "listEmpty": {
+    "message": "Liste boş."
+  },
+  "deleteBtn": {
+    "message": "Sil"
+  },
+  "serpPanelTitle": {
+    "message": "FastWeb"
+  },
+  "serpHide": {
+    "message": "Gizle"
+  },
+  "altsHeading": {
+    "message": "Alternatifler"
+  },
+  "accelOn": {
+    "message": "Hızlandırma açık"
+  },
+  "accelOff": {
+    "message": "Hızlandırma kapalı"
+  },
+  "serpNoTips": {
+    "message": "Şu anda ipucu yok."
+  },
+  "settingsBtn": {
+    "message": "Ayarlar"
+  },
+  "searchLabel": {
+    "message": "Alan adlarını filtrele"
+  },
+  "searchPlaceholder": {
+    "message": "Filtrelemek için yazın..."
+  },
+  "bookmarksHeading": {
+    "message": "İlgili yer imleri"
+  },
+  "prefsHeading": {
+    "message": "Gelişmiş ayarlar"
+  },
+  "prefSensitivity": {
+    "message": "Hassasiyet (min marka uzunluğu)"
+  },
+  "prefUnicode": {
+    "message": "Unicode ayrıştırma (varsa)"
+  },
+  "prefShowBookmarks": {
+    "message": "SERP'te yer imlerini göster"
+  },
+  "prefShowBadge": {
+    "message": "İpucu sayısı rozeti"
+  },
+  "prefPrefetch": {
+    "message": "Hızlandırma Modu — hover ile bağlantıları ısıt (yalnızca SERP)"
+  },
+  "prefPrefetchTopN": {
+    "message": "Isıtılacak bağlantı sayısı (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "Hover gecikmesi (ms)"
+  },
+  "prefPrefetchWarning": {
+    "message": "İsteğe bağlı. Hover ile Top N sonuç için DNS/TCP/TLS ısıtır (yalnızca SERP). Ek ağ trafiği oluşturabilir. Sayfa indirilmez."
+  },
+  "panelModeLabel": {
+    "message": "SERP panel modu"
+  },
+  "panelModeOpen": {
+    "message": "SERP'te paneli otomatik aç"
+  },
+  "panelModeBadge": {
+    "message": "Yalnızca rozet (açmak için simgeye tıklayın)"
+  },
+  "bundleApplied": {
+    "message": "Örnek paketten $1 yeni alan adı eklendi"
+  },
+  "bundleAppliedNone": {
+    "message": "Örnek paketten yeni alan adı bulunamadı"
+  },
+  "bundleLoadFailed": {
+    "message": "Örnek paket yüklenemedi. Bağlantınızı kontrol edin."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — ayarlar"
+  },
+  "deleteBundleBtn": {
+    "message": "Paketi sil"
+  },
+  "bundleDeleted": {
+    "message": "$1 paket alan adı silindi",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "Yüklü paket yok"
+  },
+  "domainsHeading": {
+    "message": "Alan adlarını yönet"
+  },
+  "rateBtn": {
+    "message": "Bizi değerlendirin"
+  },
+  "badgeAlts": {
+    "message": "$1 alternatif",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "badgeBookmarks": {
+    "message": "$1 yer imi",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "Temayı değiştir"
+  },
+  "serpFilterPlaceholder": {
+    "message": "Filtre..."
+  },
+  "serpOpenSidebar": {
+    "message": "Araç çubuğu simgesinden açın"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
+  }
+}
