@@ -27,14 +27,16 @@ export default defineContentScript({
       else el.classList.remove('ah-light');
     }
 
-    const SUN_SVG = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor"/><path d="M10 1v2m0 14v2M3.5 3.5l1.4 1.4m10.2 10.2l1.4 1.4M1 10h2m14 0h2M3.5 16.5l1.4-1.4m10.2-10.2l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-    const MOON_SVG = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.3 12.3A7.5 7.5 0 0 1 7.7 2.7 7.5 7.5 0 1 0 17.3 12.3z" fill="currentColor"/></svg>';
+    function makeSvg(markup: string): SVGElement {
+      return new DOMParser().parseFromString(markup, 'image/svg+xml').documentElement as unknown as SVGElement;
+    }
+    const SUN_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor"/><path d="M10 1v2m0 14v2M3.5 3.5l1.4 1.4m10.2 10.2l1.4 1.4M1 10h2m14 0h2M3.5 16.5l1.4-1.4m10.2-10.2l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    const MOON_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.3 12.3A7.5 7.5 0 0 1 7.7 2.7 7.5 7.5 0 1 0 17.3 12.3z" fill="currentColor"/></svg>';
 
     function updateThemeIcon(el: HTMLElement): void {
-      const iconEl = el.querySelector('#ah-theme-icon');
-      if (!iconEl) return;
-      const parent = iconEl.parentElement!;
-      parent.innerHTML = resolveTheme() === 'dark' ? SUN_SVG : MOON_SVG;
+      const btn = el.querySelector('#ah-theme');
+      if (!btn) return;
+      btn.replaceChildren(makeSvg(resolveTheme() === 'dark' ? SUN_MARKUP : MOON_MARKUP));
     }
 
     function hasRuntime(): boolean {
@@ -253,49 +255,55 @@ export default defineContentScript({
       });
     }
 
-    // --- Inject panel ---
+    // --- Inject panel (DOM-only, no innerHTML) ---
+    const COG_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z" fill="currentColor"/></svg>';
+
+    function h(tag: string, attrs: Record<string, string>, ...children: (Node | string)[]): HTMLElement {
+      const el = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs)) {
+        if (k === 'className') el.className = v;
+        else el.setAttribute(k, v);
+      }
+      for (const c of children) el.append(typeof c === 'string' ? document.createTextNode(c) : c);
+      return el;
+    }
+
     function injectPanel(): HTMLElement {
       ensurePanelStyles();
       let el = document.getElementById('ah-root');
       if (el) return el;
 
-      const box = document.createElement('div');
-      box.innerHTML = `
-        <div id="ah-root" class="ah-root ah-serp-root">
-          <div class="ah-panel">
-            <div class="ah-panel-header">
-              <div class="ah-panel-title"><span>${_('serpPanelTitle', 'FastWeb')}</span></div>
-              <button id="ah-close-x" class="ah-btn ah-btn-ghost ah-panel-close" type="button" aria-label="${_('serpHide', 'Hide')}">\u00d7</button>
-            </div>
-            <div id="ah-mirrors" class="ah-section"></div>
-            <div id="ah-bookmarks" class="ah-section"></div>
-            <div class="ah-footer">
-              <span id="ah-status" class="ah-footer-status"></span>
-              <div class="ah-footer-actions">
-                <button id="ah-theme" class="ah-footer-cog" type="button" aria-label="Theme"><svg id="ah-theme-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14m0 12.5a5.5 5.5 0 0 1 0-11z" fill="currentColor"/></svg></button>
-                <button id="ah-settings" class="ah-footer-cog" type="button" aria-label="${_('settingsBtn', 'Settings')}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z" fill="currentColor"/></svg></button>
-              </div>
-            </div>
-          </div>
-        </div>`;
+      const titleSpan = h('span', {}, _('serpPanelTitle', 'FastWeb'));
+      const titleDiv = h('div', { className: 'ah-panel-title' }, titleSpan);
+      const closeBtn = h('button', { id: 'ah-close-x', className: 'ah-btn ah-btn-ghost ah-panel-close', type: 'button', 'aria-label': _('serpHide', 'Hide') }, '\u00d7');
+      const header = h('div', { className: 'ah-panel-header' }, titleDiv, closeBtn);
 
-      el = box.firstElementChild as HTMLElement;
+      const mirrors = h('div', { id: 'ah-mirrors', className: 'ah-section' });
+      const bookmarks = h('div', { id: 'ah-bookmarks', className: 'ah-section' });
+
+      const status = h('span', { id: 'ah-status', className: 'ah-footer-status' });
+      const themeBtn = h('button', { id: 'ah-theme', className: 'ah-footer-cog', type: 'button', 'aria-label': 'Theme' });
+      const settingsBtn = h('button', { id: 'ah-settings', className: 'ah-footer-cog', type: 'button', 'aria-label': _('settingsBtn', 'Settings') });
+      settingsBtn.appendChild(makeSvg(COG_MARKUP));
+      const footerActions = h('div', { className: 'ah-footer-actions' }, themeBtn, settingsBtn);
+      const footer = h('div', { className: 'ah-footer' }, status, footerActions);
+
+      const panel = h('div', { className: 'ah-panel' }, header, mirrors, bookmarks, footer);
+      el = h('div', { id: 'ah-root', className: 'ah-root ah-serp-root' }, panel);
       document.documentElement.appendChild(el);
 
-      el.querySelector('#ah-close-x')?.addEventListener('click', () => dismissPanel(el!));
-      el.querySelector('#ah-settings')?.addEventListener('click', () => {
+      closeBtn.addEventListener('click', () => dismissPanel(el!));
+      settingsBtn.addEventListener('click', () => {
         try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
       });
-      el.querySelector('#ah-theme')?.addEventListener('click', () => {
+      themeBtn.addEventListener('click', () => {
         __theme = resolveTheme() === 'dark' ? 'light' : 'dark';
         applyTheme();
         updateThemeIcon(el!);
         try { chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
       });
 
-      const panelTitle = el.querySelector('.ah-panel-title');
-      if (panelTitle) panelTitle.prepend(createIcon('brand', 'sm', 'main'));
-
+      titleDiv.prepend(createIcon('brand', 'sm', 'main'));
       applyTheme();
       updateThemeIcon(el);
 
@@ -349,14 +357,15 @@ export default defineContentScript({
           const label = on
             ? _('accelOn', 'Acceleration on')
             : _('accelOff', 'Acceleration off');
-          statusEl.innerHTML = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 0v11h3v9l7-12H9l4-8m2 13h2v2h-2zm0-8h2v6h-2z" fill="currentColor"/></svg>${label}`;
+          const bolt = makeSvg('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 0v11h3v9l7-12H9l4-8m2 13h2v2h-2zm0-8h2v6h-2z" fill="currentColor"/></svg>');
+          statusEl.replaceChildren(bolt, label);
         }
 
         const mirrorsWrap = el.querySelector('#ah-mirrors') as HTMLElement | null;
         const bmWrap = el.querySelector('#ah-bookmarks') as HTMLElement | null;
 
-        if (mirrorsWrap) { mirrorsWrap.innerHTML = ''; mirrorsWrap.classList.remove('active'); }
-        if (bmWrap) { bmWrap.innerHTML = ''; bmWrap.classList.remove('active'); }
+        if (mirrorsWrap) { mirrorsWrap.replaceChildren(); mirrorsWrap.classList.remove('active'); }
+        if (bmWrap) { bmWrap.replaceChildren(); bmWrap.classList.remove('active'); }
 
         setBadge(keysWithAlts.length, keysWithAlts.length, 0);
 

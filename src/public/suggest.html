@@ -132,20 +132,6 @@
       <a class="ah-btn ah-btn-outline" href="sidepanel.html" target="_blank" rel="noreferrer">Управление доменами</a>
     </div>
   </div>
-  <script>
-    (function(){
-      const btn = document.querySelector('[data-action="open-settings"]');
-      if (!btn) return;
-      btn.addEventListener('click', () => {
-        try {
-          if (chrome?.runtime?.openOptionsPage) {
-            chrome.runtime.openOptionsPage();
-            return;
-          }
-        } catch (e) {}
-        window.open('sidepanel.html', '_blank');
-      });
-    })();
-  </script>
+  <script src="suggest.js"></script>
 </body>
 </html>

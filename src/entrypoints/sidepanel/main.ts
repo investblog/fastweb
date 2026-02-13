@@ -59,7 +59,7 @@ function saveMap(map: AlternatesMap): Promise<void> {
 // --- Rendering ---
 function render(map: AlternatesMap): void {
   const list = $('#list') as HTMLElement;
-  list.innerHTML = '';
+  list.replaceChildren();
   const entries = Object.entries(map).sort(([a], [b]) => a.localeCompare(b));
   for (const [dom, alts] of entries) {
     const wrap = document.createElement('div'); wrap.className = 'domain-item';
@@ -74,7 +74,11 @@ function render(map: AlternatesMap): void {
       const clean = String(a).replace(/^https?:\/\//, '');
       const link = document.createElement('a');
       link.href = `https://${clean}`; link.target = '_blank'; link.rel = 'noreferrer'; link.className = 'pill';
-      link.innerHTML = `${a} <span class="pill__arrow">\u2B62</span>`;
+      const linkText = document.createTextNode(a + ' ');
+      const linkArrow = document.createElement('span');
+      linkArrow.className = 'pill__arrow';
+      linkArrow.textContent = '\u2B62';
+      link.append(linkText, linkArrow);
       mid.appendChild(link);
     });
     wrap.append(header, mid); list.appendChild(wrap);
@@ -119,7 +123,7 @@ function renderBookmarks(tokens: string[]): void {
   const box = $('#bmResults') as HTMLElement | null;
   if (!sec || !box) return;
   fetchBookmarks().then(list => {
-    box.innerHTML = '';
+    box.replaceChildren();
     if (!tokens?.length) { sec.classList.add('is-hidden'); return; }
     const hits: BookmarkEntry[] = []; const seen = new Set<string>();
     const kw = new Set<string>(tokens);
