@@ -27,21 +27,21 @@ export default defineConfig({
     host_permissions: ['*://*/*'],
 
     icons: {
-      16: 'icons/unlock_16.png',
-      32: 'icons/unlock_32.png',
-      48: 'icons/unlock_48.png',
-      64: 'icons/unlock_64.png',
-      128: 'icons/unlock_128.png',
-      256: 'icons/unlock_256.png',
+      16: 'icons/icon-16.png',
+      32: 'icons/icon-32.png',
+      48: 'icons/icon-48.png',
+      64: 'icons/icon-64.png',
+      128: 'icons/icon-128.png',
+      256: 'icons/icon-256.png',
     },
 
     action: {
       default_icon: {
-        16: 'icons/unlock_16.png',
-        32: 'icons/unlock_32.png',
-        48: 'icons/unlock_48.png',
-        64: 'icons/unlock_64.png',
-        128: 'icons/unlock_128.png',
+        16: 'icons/icon-16.png',
+        32: 'icons/icon-32.png',
+        48: 'icons/icon-48.png',
+        64: 'icons/icon-64.png',
+        128: 'icons/icon-128.png',
       },
     },
 
@@ -61,6 +61,17 @@ export default defineConfig({
       },
     }),
   }),
+
+  hooks: {
+    'build:manifestGenerated': (_wxt, manifest) => {
+      // Firefox AMO requires data_collection_permissions (mandatory H1 2026).
+      // Injected via hook because WXT types don't include it yet.
+      if (manifest.browser_specific_settings?.gecko) {
+        (manifest.browser_specific_settings.gecko as Record<string, unknown>)
+          .data_collection_permissions = { required: ['none'] };
+      }
+    },
+  },
 
   browser: 'chrome',
 });

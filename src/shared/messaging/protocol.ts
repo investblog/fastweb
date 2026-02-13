@@ -37,6 +37,15 @@ export interface ToggleSerpPanelResponse {
   hasTips?: boolean;
 }
 
+export interface PrefetchUrlRequest {
+  type: 'PREFETCH_URL';
+  url: string;
+}
+
+export interface PrefetchUrlResponse {
+  ok: boolean;
+}
+
 // ============================================================================
 // Union Types
 // ============================================================================
@@ -45,7 +54,8 @@ export type RequestMessage =
   | OpenSettingsRequest
   | GetBookmarksRequest
   | SetBadgeRequest
-  | ToggleSerpPanelRequest;
+  | ToggleSerpPanelRequest
+  | PrefetchUrlRequest;
 
 // ============================================================================
 // Response Mapping
@@ -56,6 +66,7 @@ export type ResponseMap = {
   GET_BOOKMARKS: GetBookmarksResponse;
   SET_BADGE: SetBadgeResponse;
   TOGGLE_SERP_PANEL: ToggleSerpPanelResponse;
+  PREFETCH_URL: PrefetchUrlResponse;
 };
 
 // ============================================================================

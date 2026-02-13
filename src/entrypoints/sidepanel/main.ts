@@ -65,7 +65,7 @@ function render(map: AlternatesMap): void {
     const wrap = document.createElement('div'); wrap.className = 'domain-item';
     const header = document.createElement('div'); header.className = 'domain-item__header';
     const left = document.createElement('div'); left.className = 'domain-item__name'; left.textContent = dom;
-    const del = document.createElement('button'); del.className = 'btn btn--outline btn--sm'; del.type = 'button';
+    const del = document.createElement('button'); del.className = 'btn btn--outline-danger btn--sm'; del.type = 'button';
     del.textContent = _('deleteBtn', 'Delete');
     del.addEventListener('click', async () => { const cur = await getMap(); delete cur[dom]; await saveMap(cur); CACHE = cur; applyFilterAndRender(); });
     header.append(left, del);

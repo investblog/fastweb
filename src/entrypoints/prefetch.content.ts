@@ -22,10 +22,8 @@ export default defineContentScript({
     });
 
     function setupSerpHoverPrefetch(ctx: SerpContext, topN: number, hoverDelayMs: number): void {
-      const prefetched = new Set<string>();
+      const warmed = new Set<string>();
       let hoverTimer: ReturnType<typeof setTimeout> | undefined;
-      let inflight = 0;
-      const MAX_CONCURRENT = 2;
 
       // Collect candidate result links based on engine-specific selectors
       function collectResultLinks(): HTMLAnchorElement[] {
@@ -71,28 +69,25 @@ export default defineContentScript({
         return candidates.some(c => c === anchor || c.href === anchor.href);
       }
 
-      function prefetchUrl(href: string): void {
-        if (prefetched.has(href)) return;
-        if (inflight >= MAX_CONCURRENT) return;
-        prefetched.add(href);
-        inflight++;
-        const link = document.createElement('link');
-        link.rel = 'prefetch';
-        link.href = href;
-        link.onload = link.onerror = () => { inflight = Math.max(0, inflight - 1); };
-        document.head.appendChild(link);
+      function warmupUrl(href: string): void {
+        if (warmed.has(href)) return;
+        warmed.add(href);
+        // Warm up DNS + TCP + TLS via background fetch (bypasses page CSP)
+        try {
+          chrome.runtime.sendMessage({ type: 'PREFETCH_URL', url: href });
+        } catch { /* ignore */ }
       }
 
       // --- Event listeners ---
       document.addEventListener('mouseover', (e) => {
         const target = (e.target as Element)?.closest?.('a') as HTMLAnchorElement | null;
         if (!target?.href) return;
-        if (prefetched.has(target.href)) return;
+        if (warmed.has(target.href)) return;
         if (!isResultCandidate(target)) return;
 
         clearTimeout(hoverTimer);
         hoverTimer = setTimeout(() => {
-          prefetchUrl(target.href);
+          warmupUrl(target.href);
         }, hoverDelayMs);
       }, { passive: true });
 
@@ -104,7 +99,7 @@ export default defineContentScript({
         const target = (e.target as Element)?.closest?.('a') as HTMLAnchorElement | null;
         if (!target?.href) return;
         if (!isResultCandidate(target)) return;
-        prefetchUrl(target.href);
+        warmupUrl(target.href);
       }, { passive: true });
     }
   },

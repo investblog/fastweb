@@ -113,6 +113,19 @@ a:hover {
   background: color-mix(in srgb, var(--danger) 88%, #000 6%);
 }
 
+/* Outline Danger — neutral by default, danger on hover */
+.btn--outline-danger {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border-strong);
+}
+
+.btn--outline-danger:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
 /* Small variant */
 .btn--sm {
   font-size: calc(var(--fs-control) * 0.9);

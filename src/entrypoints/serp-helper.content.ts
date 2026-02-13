@@ -13,6 +13,29 @@ export default defineContentScript({
     if (!detectSerpContext()) return;
 
     let __prefs: Prefs = { ...DEFAULT_PREFS };
+    let __theme: 'dark' | 'light' | 'auto' = 'auto';
+
+    function resolveTheme(): 'dark' | 'light' {
+      if (__theme === 'dark' || __theme === 'light') return __theme;
+      return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function applyTheme(): void {
+      const el = document.getElementById('ah-root');
+      if (!el) return;
+      if (resolveTheme() === 'light') el.classList.add('ah-light');
+      else el.classList.remove('ah-light');
+    }
+
+    const SUN_SVG = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor"/><path d="M10 1v2m0 14v2M3.5 3.5l1.4 1.4m10.2 10.2l1.4 1.4M1 10h2m14 0h2M3.5 16.5l1.4-1.4m10.2-10.2l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+    const MOON_SVG = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.3 12.3A7.5 7.5 0 0 1 7.7 2.7 7.5 7.5 0 1 0 17.3 12.3z" fill="currentColor"/></svg>';
+
+    function updateThemeIcon(el: HTMLElement): void {
+      const iconEl = el.querySelector('#ah-theme-icon');
+      if (!iconEl) return;
+      const parent = iconEl.parentElement!;
+      parent.innerHTML = resolveTheme() === 'dark' ? SUN_SVG : MOON_SVG;
+    }
 
     function hasRuntime(): boolean {
       try {
@@ -24,9 +47,11 @@ export default defineContentScript({
       const fallback = { alternates: {} as AlternatesMap, prefs: DEFAULT_PREFS };
       try {
         if (!hasRuntime() || !chrome.storage?.sync) throw new Error('no storage');
-        chrome.storage.sync.get(STORAGE_DEFAULTS, (data) => {
+        chrome.storage.sync.get({ ...STORAGE_DEFAULTS, theme: 'auto' }, (data) => {
           try {
             const payload = data && typeof data === 'object' ? data : fallback;
+            const t = (payload as Record<string, unknown>).theme;
+            __theme = (t === 'dark' || t === 'light') ? t : 'auto';
             callback({
               alternates: (payload.alternates || {}) as AlternatesMap,
               prefs: (payload.prefs || DEFAULT_PREFS) as Prefs,
@@ -68,8 +93,7 @@ export default defineContentScript({
         --ah-font: system-ui, -apple-system, "Segoe UI", sans-serif;
         --ah-font-size: 13px;
       }
-      @media (prefers-color-scheme: light) {
-        #ah-root {
+      #ah-root.ah-light {
           --ah-bg: #f8fafc;
           --ah-bg-gradient: radial-gradient(circle at top left, #e2e8f0 0, #f8fafc 55%);
           --ah-card: #ffffff;
@@ -81,7 +105,6 @@ export default defineContentScript({
           --ah-accent: #2563eb;
           --ah-accent-soft: rgba(37,99,235,.12);
           --ah-shadow-soft: 0 16px 40px rgba(15,23,42,.12);
-        }
       }
       #ah-root {
         position: fixed; top: 64px; right: 86px; z-index: 999999;
@@ -145,6 +168,7 @@ export default defineContentScript({
       }
       #ah-root .ah-footer-cog:hover { color: var(--ah-accent); }
       #ah-root .ah-footer-cog svg { width: 14px; height: 14px; }
+      #ah-root .ah-footer-actions { display: inline-flex; align-items: center; gap: 4px; }
       #ah-root.ah-root--inline-hidden { display: none; }
       #ah-serp-toast {
         position: fixed; top: 16px; right: 16px; z-index: 999999;
@@ -247,7 +271,10 @@ export default defineContentScript({
             <div id="ah-bookmarks" class="ah-section"></div>
             <div class="ah-footer">
               <span id="ah-status" class="ah-footer-status"></span>
-              <button id="ah-settings" class="ah-footer-cog" type="button" aria-label="${_('settingsBtn', 'Settings')}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z" fill="currentColor"/></svg></button>
+              <div class="ah-footer-actions">
+                <button id="ah-theme" class="ah-footer-cog" type="button" aria-label="Theme"><svg id="ah-theme-icon" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14m0 12.5a5.5 5.5 0 0 1 0-11z" fill="currentColor"/></svg></button>
+                <button id="ah-settings" class="ah-footer-cog" type="button" aria-label="${_('settingsBtn', 'Settings')}"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z" fill="currentColor"/></svg></button>
+              </div>
             </div>
           </div>
         </div>`;
@@ -259,9 +286,18 @@ export default defineContentScript({
       el.querySelector('#ah-settings')?.addEventListener('click', () => {
         try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
       });
+      el.querySelector('#ah-theme')?.addEventListener('click', () => {
+        __theme = resolveTheme() === 'dark' ? 'light' : 'dark';
+        applyTheme();
+        updateThemeIcon(el!);
+        try { chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
+      });
 
       const panelTitle = el.querySelector('.ah-panel-title');
       if (panelTitle) panelTitle.prepend(createIcon('brand', 'sm', 'main'));
+
+      applyTheme();
+      updateThemeIcon(el);
 
       return el;
     }
@@ -354,6 +390,7 @@ export default defineContentScript({
                 const img = document.createElement('img');
                 img.src = `https://icons.duckduckgo.com/ip3/${obj.host}.ico`;
                 img.className = 'ah-pill-icon'; img.alt = '';
+                img.onerror = () => { img.style.display = 'none'; };
                 const span = document.createElement('span');
                 span.className = 'ah-pill-label';
                 span.textContent = obj.host;
@@ -434,6 +471,7 @@ export default defineContentScript({
                   try { host = new URL(h.url).hostname; } catch { /* ignore */ }
                   img.src = `https://icons.duckduckgo.com/ip3/${host}.ico`;
                   img.className = 'ah-pill-icon'; img.alt = '';
+                  img.onerror = () => { img.style.display = 'none'; };
                   const span = document.createElement('span');
                   span.className = 'ah-pill-label';
                   const t = h.title?.trim() || ((() => { try { return new URL(h.url).hostname; } catch { return h.url; } })());
@@ -458,6 +496,13 @@ export default defineContentScript({
       if (chrome.storage?.onChanged) {
         chrome.storage.onChanged.addListener((changes, area) => {
           if (area !== 'sync') return;
+          if (changes.theme) {
+            const v = changes.theme.newValue;
+            __theme = (v === 'dark' || v === 'light') ? v : 'auto';
+            applyTheme();
+            const el = document.getElementById('ah-root');
+            if (el) updateThemeIcon(el);
+          }
           if (changes.alternates || changes.prefs) {
             clearTimeout(storageDebounce);
             storageDebounce = setTimeout(() => {

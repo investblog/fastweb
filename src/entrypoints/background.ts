@@ -130,6 +130,16 @@ export default defineBackground(() => {
           }
           break;
 
+        case 'PREFETCH_URL': {
+          const url = msg.url;
+          if (url && /^https?:\/\//.test(url)) {
+            // redirect: 'manual' — warmup only needs DNS+TCP+TLS, don't follow redirect chains
+            fetch(url, { mode: 'no-cors', credentials: 'omit', redirect: 'manual' }).catch(() => {});
+          }
+          sendResponse?.({ ok: true });
+          break;
+        }
+
         case 'SET_BADGE': {
           const n = Math.max(0, parseInt(String(msg.count || 0), 10) || 0);
           const tabId = sender?.tab?.id;

@@ -81,16 +81,16 @@
     "message": "Show bookmarks on SERP"
   },
   "prefPrefetch": {
-    "message": "Acceleration Mode — prefetch top results on hover (SERP only)"
+    "message": "Acceleration Mode — warm up connections on hover (SERP only)"
   },
   "prefPrefetchTopN": {
-    "message": "Number of links to prefetch (Top N)"
+    "message": "Number of links to warm up (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Hover delay (ms)"
   },
   "prefPrefetchWarning": {
-    "message": "Prefetching may increase data usage. Only active on search result pages (Google, Bing, DuckDuckGo, Yandex)."
+    "message": "Warms up DNS/TCP/TLS for top results on hover. No pages are downloaded. Only active on search result pages."
   },
   "panelModeLabel": {
     "message": "SERP panel mode"
