@@ -65,47 +65,64 @@ export default defineBackground(() => {
     return flat;
   }
 
-  // --- Auto-load bundle on first install ---
-  async function autoLoadBundle(): Promise<void> {
+  // --- Bundle sync (remote-first, daily auto-update) ---
+  const BUNDLE_ALARM = 'bundle-sync';
+  const BUNDLE_URL = 'https://raw.githubusercontent.com/investblog/fastweb/main/src/public/bundle.json';
+
+  async function syncBundle(bundle: Record<string, unknown>): Promise<void> {
+    if (!bundle || typeof bundle !== 'object') return;
+    const data = await browser.storage.sync.get({ alternates: {}, bundleDomains: [] });
+    const map = (data.alternates || {}) as Record<string, string[]>;
+    const oldBundleKeys = new Set<string>(
+      Array.isArray(data.bundleDomains) ? data.bundleDomains : [],
+    );
+    const newBundleKeys: string[] = [];
+
+    // Remove domains that were part of old bundle but absent from new one
+    for (const key of oldBundleKeys) {
+      if (!bundle[key]) delete map[key];
+    }
+
+    // Add/overwrite all domains from new bundle
+    for (const [key, alts] of Object.entries(bundle)) {
+      if (Array.isArray(alts)) {
+        newBundleKeys.push(key);
+        if (oldBundleKeys.has(key) || !map[key]) {
+          map[key] = alts as string[];
+        }
+      }
+    }
+
+    await browser.storage.sync.set({
+      alternates: map,
+      bundleDomains: newBundleKeys,
+      bundleLastSync: Date.now(),
+    });
+  }
+
+  async function fetchAndSyncBundle(): Promise<void> {
     try {
-      const resp = await fetch('https://raw.githubusercontent.com/investblog/fastweb/main/src/public/bundle.json', { cache: 'no-store' });
+      const resp = await fetch(BUNDLE_URL, { cache: 'no-store' });
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const bundle = await resp.json();
-      await mergeBundle(bundle);
+      await syncBundle(await resp.json());
     } catch {
+      // Offline fallback — use local copy shipped with extension
       try {
         const local = await fetch(browser.runtime.getURL('/bundle.json'));
-        const bundle = await local.json();
-        await mergeBundle(bundle);
+        await syncBundle(await local.json());
       } catch { /* silent */ }
     }
   }
 
-  async function mergeBundle(bundle: Record<string, unknown>): Promise<void> {
-    if (!bundle || typeof bundle !== 'object') return;
-    const data = await browser.storage.sync.get({ alternates: {} });
-    const map = (data.alternates || {}) as Record<string, string[]>;
-    const bundleKeys: string[] = [];
-    for (const [key, alts] of Object.entries(bundle)) {
-      bundleKeys.push(key);
-      if (!map[key] && Array.isArray(alts)) {
-        map[key] = alts as string[];
-      }
-    }
-    await browser.storage.sync.set({ alternates: map, bundleDomains: bundleKeys });
-  }
+  // Daily alarm — sync bundle every 24 h
+  browser.alarms.create(BUNDLE_ALARM, { periodInMinutes: 24 * 60 });
+  browser.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === BUNDLE_ALARM) fetchAndSyncBundle();
+  });
 
-  browser.runtime.onInstalled.addListener(async ({ reason }) => {
-    if (reason === 'install') {
-      autoLoadBundle();
-    } else if (reason === 'update') {
-      // Auto-load bundle on update/reload if alternates are empty
-      try {
-        const data = await browser.storage.sync.get({ alternates: {} });
-        if (!data.alternates || !Object.keys(data.alternates).length) {
-          autoLoadBundle();
-        }
-      } catch { /* ignore */ }
+  browser.runtime.onInstalled.addListener(({ reason }) => {
+    if (reason === 'install' || reason === 'update') {
+      fetchAndSyncBundle();
     }
   });
 

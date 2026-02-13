@@ -21,8 +21,8 @@ export default defineConfig({
     homepage_url: 'https://fastweb.cam',
 
     permissions: browser === 'firefox'
-      ? ['bookmarks', 'storage', 'tabs']
-      : ['bookmarks', 'storage', 'tabs', 'sidePanel'],
+      ? ['alarms', 'bookmarks', 'storage', 'tabs']
+      : ['alarms', 'bookmarks', 'storage', 'tabs', 'sidePanel'],
 
     host_permissions: ['*://*/*'],
 
