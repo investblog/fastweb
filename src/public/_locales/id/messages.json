@@ -1,0 +1,155 @@
+{
+  "appName": {
+    "message": "FastWeb — Akselerator Pencarian"
+  },
+  "appDesc": {
+    "message": "Percepat pembukaan hasil pencarian dengan tips cerdas, mirror/bookmark, dan prefetch saat hover."
+  },
+  "optTitle": {
+    "message": "FastWeb — Pengaturan"
+  },
+  "domainLabel": {
+    "message": "Domain"
+  },
+  "altsLabel": {
+    "message": "Alternatif resmi (pisahkan dengan koma)"
+  },
+  "addBtn": {
+    "message": "Tambah"
+  },
+  "exportBtn": {
+    "message": "Ekspor JSON"
+  },
+  "importBtn": {
+    "message": "Impor JSON"
+  },
+  "loadBundleBtn": {
+    "message": "Muat contoh bundel"
+  },
+  "jsonFormatHelp": {
+    "message": "Format JSON: {\"example.com\":[\"example.org\",\"example.net\"]}"
+  },
+  "listEmpty": {
+    "message": "Daftar kosong."
+  },
+  "deleteBtn": {
+    "message": "Hapus"
+  },
+  "serpPanelTitle": {
+    "message": "FastWeb"
+  },
+  "serpHide": {
+    "message": "Sembunyikan"
+  },
+  "altsHeading": {
+    "message": "Alternatif"
+  },
+  "accelOn": {
+    "message": "Akselerasi aktif"
+  },
+  "accelOff": {
+    "message": "Akselerasi nonaktif"
+  },
+  "serpNoTips": {
+    "message": "Tidak ada tips saat ini."
+  },
+  "settingsBtn": {
+    "message": "Pengaturan"
+  },
+  "searchLabel": {
+    "message": "Filter domain"
+  },
+  "searchPlaceholder": {
+    "message": "Ketik untuk filter..."
+  },
+  "bookmarksHeading": {
+    "message": "Bookmark terkait"
+  },
+  "prefsHeading": {
+    "message": "Pengaturan lanjutan"
+  },
+  "prefShowBadge": {
+    "message": "Lencana dengan jumlah tips"
+  },
+  "prefUnicode": {
+    "message": "Tokenisasi Unicode (jika tersedia)"
+  },
+  "prefSensitivity": {
+    "message": "Sensitivitas (panjang merek minimum)"
+  },
+  "prefShowBookmarks": {
+    "message": "Tampilkan bookmark di SERP"
+  },
+  "prefPrefetch": {
+    "message": "Mode Akselerasi — pemanasan koneksi saat hover (hanya SERP)"
+  },
+  "prefPrefetchTopN": {
+    "message": "Jumlah tautan untuk dipanaskan (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "Jeda hover (ms)"
+  },
+  "prefPrefetchWarning": {
+    "message": "Opsional. Memanaskan DNS/TCP/TLS untuk Top N hasil saat hover (hanya SERP). Dapat menghasilkan lalu lintas jaringan tambahan. Tidak ada halaman yang diunduh."
+  },
+  "panelModeLabel": {
+    "message": "Mode panel SERP"
+  },
+  "panelModeOpen": {
+    "message": "Buka panel otomatis di SERP"
+  },
+  "panelModeBadge": {
+    "message": "Hanya lencana (klik ikon untuk toggle)"
+  },
+  "bundleApplied": {
+    "message": "Ditambahkan $1 domain baru dari contoh bundel"
+  },
+  "bundleAppliedNone": {
+    "message": "Tidak ada domain baru dari contoh bundel"
+  },
+  "bundleLoadFailed": {
+    "message": "Tidak dapat memuat contoh bundel. Periksa koneksi Anda."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — pengaturan"
+  },
+  "deleteBundleBtn": {
+    "message": "Hapus bundel"
+  },
+  "bundleDeleted": {
+    "message": "$1 domain bundel dihapus",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "Tidak ada bundel dimuat"
+  },
+  "domainsHeading": {
+    "message": "Kelola domain"
+  },
+  "rateBtn": {
+    "message": "Beri nilai"
+  },
+  "badgeAlts": {
+    "message": "$1 alternatif",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "badgeBookmarks": {
+    "message": "$1 bookmark",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "Ganti tema"
+  },
+  "serpFilterPlaceholder": {
+    "message": "Filter..."
+  },
+  "serpOpenSidebar": {
+    "message": "Buka melalui ikon toolbar"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
+  }
+}
