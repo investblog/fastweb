@@ -1,0 +1,155 @@
+{
+  "appName": {
+    "message": "FastWeb — شتاب‌دهنده جستجو"
+  },
+  "appDesc": {
+    "message": "باز کردن نتایج جستجو را با راهنمایی هوشمند، آینه‌ها/نشانک‌ها و پیش‌بارگذاری هنگام هاور سرعت می‌بخشد."
+  },
+  "optTitle": {
+    "message": "FastWeb — تنظیمات"
+  },
+  "domainLabel": {
+    "message": "دامنه"
+  },
+  "altsLabel": {
+    "message": "جایگزین‌های رسمی (با کاما جدا کنید)"
+  },
+  "addBtn": {
+    "message": "افزودن"
+  },
+  "exportBtn": {
+    "message": "خروجی JSON"
+  },
+  "importBtn": {
+    "message": "ورودی JSON"
+  },
+  "loadBundleBtn": {
+    "message": "بارگذاری بسته نمونه"
+  },
+  "jsonFormatHelp": {
+    "message": "قالب JSON: {\"example.com\":[\"example.org\",\"example.net\"]}"
+  },
+  "listEmpty": {
+    "message": "فهرست خالی است."
+  },
+  "deleteBtn": {
+    "message": "حذف"
+  },
+  "serpPanelTitle": {
+    "message": "FastWeb"
+  },
+  "serpHide": {
+    "message": "پنهان"
+  },
+  "altsHeading": {
+    "message": "جایگزین‌ها"
+  },
+  "accelOn": {
+    "message": "شتاب‌دهنده روشن"
+  },
+  "accelOff": {
+    "message": "شتاب‌دهنده خاموش"
+  },
+  "serpNoTips": {
+    "message": "در حال حاضر راهنمایی وجود ندارد."
+  },
+  "settingsBtn": {
+    "message": "تنظیمات"
+  },
+  "searchLabel": {
+    "message": "فیلتر دامنه‌ها"
+  },
+  "searchPlaceholder": {
+    "message": "برای فیلتر تایپ کنید..."
+  },
+  "bookmarksHeading": {
+    "message": "نشانک‌های مرتبط"
+  },
+  "prefsHeading": {
+    "message": "تنظیمات پیشرفته"
+  },
+  "prefSensitivity": {
+    "message": "حساسیت (حداقل طول برند)"
+  },
+  "prefUnicode": {
+    "message": "توکن‌سازی یونیکد (در صورت پشتیبانی)"
+  },
+  "prefShowBookmarks": {
+    "message": "نمایش نشانک‌ها در SERP"
+  },
+  "prefShowBadge": {
+    "message": "نشان با تعداد راهنمایی‌ها"
+  },
+  "prefPrefetch": {
+    "message": "حالت شتاب — گرم کردن اتصال‌ها هنگام هاور (فقط SERP)"
+  },
+  "prefPrefetchTopN": {
+    "message": "تعداد لینک‌ها برای گرم کردن (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "تأخیر هاور (میلی‌ثانیه)"
+  },
+  "prefPrefetchWarning": {
+    "message": "اختیاری. DNS/TCP/TLS را برای Top N نتیجه هنگام هاور گرم می‌کند (فقط SERP). ممکن است ترافیک شبکه اضافی ایجاد کند. هیچ صفحه‌ای دانلود نمی‌شود."
+  },
+  "panelModeLabel": {
+    "message": "حالت پنل SERP"
+  },
+  "panelModeOpen": {
+    "message": "باز شدن خودکار پنل در SERP"
+  },
+  "panelModeBadge": {
+    "message": "فقط نشان (برای تغییر روی آیکون کلیک کنید)"
+  },
+  "bundleApplied": {
+    "message": "$1 دامنه جدید از بسته نمونه اضافه شد"
+  },
+  "bundleAppliedNone": {
+    "message": "دامنه جدیدی از بسته نمونه یافت نشد"
+  },
+  "bundleLoadFailed": {
+    "message": "بارگذاری بسته نمونه ممکن نشد. اتصال خود را بررسی کنید."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — تنظیمات"
+  },
+  "deleteBundleBtn": {
+    "message": "حذف بسته"
+  },
+  "bundleDeleted": {
+    "message": "$1 دامنه بسته حذف شد",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "بسته‌ای بارگذاری نشده"
+  },
+  "domainsHeading": {
+    "message": "مدیریت دامنه‌ها"
+  },
+  "rateBtn": {
+    "message": "امتیاز دهید"
+  },
+  "badgeAlts": {
+    "message": "$1 جایگزین",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "badgeBookmarks": {
+    "message": "$1 نشانک",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "تغییر پوسته"
+  },
+  "serpFilterPlaceholder": {
+    "message": "فیلتر..."
+  },
+  "serpOpenSidebar": {
+    "message": "از طریق آیکون نوار ابزار باز کنید"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
+  }
+}
