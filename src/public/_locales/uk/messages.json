@@ -151,5 +151,11 @@
   },
   "altsPlaceholder": {
     "message": "example.org, example.net"
+  },
+  "reportIssueBtn": {
+    "message": "Повідомити про проблему"
+  },
+  "telegramBtn": {
+    "message": "Спільнота в Telegram"
   }
 }

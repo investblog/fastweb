@@ -245,3 +245,11 @@
   font-weight: var(--fw-medium);
   margin-bottom: var(--space-2);
 }
+
+/* Community links */
+.community-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}

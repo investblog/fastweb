@@ -151,5 +151,11 @@
   },
   "altsPlaceholder": {
     "message": "example.org, example.net"
+  },
+  "reportIssueBtn": {
+    "message": "Report a problem"
+  },
+  "telegramBtn": {
+    "message": "Telegram community"
   }
 }
