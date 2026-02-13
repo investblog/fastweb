@@ -67,7 +67,7 @@ export default defineBackground(() => {
 
   // --- Bundle sync (remote-first, daily auto-update) ---
   const BUNDLE_ALARM = 'bundle-sync';
-  const BUNDLE_URL = 'https://raw.githubusercontent.com/investblog/fastweb/main/src/public/bundle.json';
+  const BUNDLE_URL = 'https://raw.githubusercontent.com/investblog/fastweb/main/data/bundle.json';
 
   async function syncBundle(bundle: Record<string, unknown>): Promise<void> {
     if (!bundle || typeof bundle !== 'object') return;
