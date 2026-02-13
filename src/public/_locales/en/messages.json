@@ -3,16 +3,10 @@
     "message": "FastWeb — Search Accelerator"
   },
   "appDesc": {
-    "message": "Works only on search pages (SERP). Shows official mirrors, related bookmarks and tips. Acceleration Mode (off by default) prefetches top results on hover for instant navigation. No tracking, no data collection."
+    "message": "Speed up opening search results with smart tips, mirrors/bookmarks, and optional hover prefetch"
   },
   "optTitle": {
     "message": "FastWeb — Settings"
-  },
-  "extName": {
-    "message": "FastWeb — Search Accelerator"
-  },
-  "extDesc": {
-    "message": "SERP-only search accelerator. Shows official alternates, tips and bookmarks on search result pages. Optional Acceleration Mode prefetches top links on hover. No tracking. Formerly Unlock.SBS."
   },
   "domainLabel": {
     "message": "Domain"
