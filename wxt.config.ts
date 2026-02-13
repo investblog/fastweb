@@ -55,7 +55,7 @@ export default defineConfig({
     ...(browser === 'firefox' && {
       browser_specific_settings: {
         gecko: {
-          id: 'fastweb@unlock.sbs',
+          id: 'fastweb@fastweb.cam',
           strict_min_version: '140.0',
         },
       },

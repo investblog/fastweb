@@ -30,14 +30,9 @@ export default defineContentScript({
     function makeSvg(markup: string): SVGElement {
       return new DOMParser().parseFromString(markup, 'image/svg+xml').documentElement as unknown as SVGElement;
     }
-    const SUN_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="4" fill="currentColor"/><path d="M10 1v2m0 14v2M3.5 3.5l1.4 1.4m10.2 10.2l1.4 1.4M1 10h2m14 0h2M3.5 16.5l1.4-1.4m10.2-10.2l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
-    const MOON_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17.3 12.3A7.5 7.5 0 0 1 7.7 2.7 7.5 7.5 0 1 0 17.3 12.3z" fill="currentColor"/></svg>';
-
-    function updateThemeIcon(el: HTMLElement): void {
-      const btn = el.querySelector('#ah-theme');
-      if (!btn) return;
-      btn.replaceChildren(makeSvg(resolveTheme() === 'dark' ? SUN_MARKUP : MOON_MARKUP));
-    }
+    const BOLT_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.09 7.7v1.39h3.42l-1.6 3.21v-1.39H7.49zM10.91 0 4.544 12.727H9.09V20l6.364-12.727h-4.546z" fill="currentColor"/></svg>';
+    const BOOKMARK_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.273 0h9.09a1.82 1.82 0 0 1 1.819 1.818v14.546l-1.818-.791V1.818H5.454A1.82 1.82 0 0 1 7.274 0m5.454 17.273V5.455h-9.09v11.818l4.545-1.982zm0-13.637c1.01 0 1.818.819 1.818 1.819V20l-6.363-2.727L1.818 20V5.455a1.82 1.82 0 0 1 1.818-1.819z" fill="currentColor"/></svg>';
+    const THEME_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5.795.51a6.28 6.28 0 0 0-2.883 5.285 6.24 6.24 0 0 0 2.912 5.286C2.874 11.081.51 8.717.51 5.795A5.286 5.286 0 0 1 5.795.51m11.12 1.441 1.374 1.374L3.325 18.29l-1.374-1.374zm-5.94 2.335-1.422-.893-1.384.96.404-1.633L7.237 1.7l1.682-.115L9.476 0l.644 1.567 1.663.028-1.298 1.086zm-3.171 3.47-1.115-.702-1.076.75.326-1.269-1.047-.797 1.307-.087.432-1.24.49 1.22 1.308.03-1.01.836zm9.044 3.806a5.286 5.286 0 0 1-8.42 4.257l7.391-7.39a5.27 5.27 0 0 1 1.029 3.133m-4.23 6.324 2.663-1.106-.23 3.22zm4.162-2.595 1.106-2.662L20 15.069zm1.106-4.767L16.79 7.852l3.21.23zM7.842 16.78l2.663 1.106-2.432 2.104z" fill="currentColor"/></svg>';
 
     function hasRuntime(): boolean {
       try {
@@ -134,14 +129,21 @@ export default defineContentScript({
         background: var(--ah-card); border-radius: var(--ah-radius);
         border: 1px solid var(--ah-border-subtle); box-shadow: var(--ah-shadow-soft);
         padding: 14px 18px; max-width: 90vw; width: 360px;
+        max-height: min(70vh, 520px); overflow-y: auto;
       }
       #ah-root.ah-root--collapsed .ah-panel { display: none; }
       #ah-root .ah-panel-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
-      #ah-root .ah-panel-close { width: 28px; height: 28px; border-radius: var(--ah-radius); }
+      #ah-root .ah-panel-close {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 28px; height: 28px; border-radius: 6px;
+        color: var(--ah-muted); transition: color .15s ease, background .15s ease;
+      }
+      #ah-root .ah-panel-close:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
+      #ah-root .ah-panel-close svg { width: 16px; height: 16px; }
       #ah-root .ah-panel-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ah-text); }
       #ah-root .ah-section { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--ah-border-subtle); }
       #ah-root .ah-section.active { display: block; }
-      #ah-root .ah-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ah-muted); }
+      #ah-root .ah-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: var(--ah-muted); }
       #ah-root .ah-pill-row { display: flex; flex-wrap: wrap; gap: 10px; }
       #ah-root .ah-pill {
         display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
@@ -154,23 +156,26 @@ export default defineContentScript({
       #ah-root .ah-pill-label { display: inline-flex; align-items: center; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #ah-root .ah-pill-arrow { color: var(--ah-muted); font-size: 12px; }
       #ah-root .ah-pill-icon { border-radius: calc(var(--ah-radius) / 2); width: 16px; height: 16px; object-fit: cover; }
+      #ah-root .ah-search { padding: 0 0 8px; }
+      #ah-root .ah-search-input {
+        width: 100%; padding: 6px 10px; border-radius: var(--ah-radius-pill);
+        border: 1px solid var(--ah-border-subtle); background: var(--ah-card-soft);
+        color: var(--ah-text); font-family: inherit; font-size: 12px; outline: none;
+      }
+      #ah-root .ah-search-input:focus { border-color: var(--ah-accent); }
       #ah-root .ah-section-note { margin: 0 0 6px; color: var(--ah-muted); }
       #ah-root .ah-footer {
         margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ah-border-subtle);
-        display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--ah-muted);
+        display: flex; align-items: center; justify-content: flex-end; gap: 2px;
       }
-      #ah-root .ah-footer-status { display: inline-flex; align-items: center; gap: 4px; }
-      #ah-root .ah-footer-status svg { width: 12px; height: 12px; flex-shrink: 0; }
-      #ah-root .ah-footer-status--on svg { color: #22c55e; }
-      #ah-root .ah-footer-status--off svg { color: #64748b; }
-      #ah-root .ah-footer-cog {
+      #ah-root .ah-footer-btn {
         display: inline-flex; align-items: center; justify-content: center;
-        width: 22px; height: 22px; border-radius: 4px; cursor: pointer;
-        color: var(--ah-muted); transition: color .15s ease;
+        width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+        color: var(--ah-muted); transition: color .15s ease, background .15s ease;
       }
-      #ah-root .ah-footer-cog:hover { color: var(--ah-accent); }
-      #ah-root .ah-footer-cog svg { width: 14px; height: 14px; }
-      #ah-root .ah-footer-actions { display: inline-flex; align-items: center; gap: 4px; }
+      #ah-root .ah-footer-btn:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
+      #ah-root .ah-footer-btn.is-active { color: var(--ah-accent); }
+      #ah-root .ah-footer-btn svg { width: 16px; height: 16px; }
       #ah-root.ah-root--inline-hidden { display: none; }
       #ah-serp-toast {
         position: fixed; top: 16px; right: 16px; z-index: 999999;
@@ -275,37 +280,64 @@ export default defineContentScript({
 
       const titleSpan = h('span', {}, _('serpPanelTitle', 'FastWeb'));
       const titleDiv = h('div', { className: 'ah-panel-title' }, titleSpan);
-      const closeBtn = h('button', { id: 'ah-close-x', className: 'ah-btn ah-btn-ghost ah-panel-close', type: 'button', 'aria-label': _('serpHide', 'Hide') }, '\u00d7');
+      const closeBtn = h('button', { id: 'ah-close-x', className: 'ah-panel-close', type: 'button', 'aria-label': _('serpHide', 'Hide') });
+      closeBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></svg>';
       const header = h('div', { className: 'ah-panel-header' }, titleDiv, closeBtn);
+
+      const searchInput = h('input', { type: 'text', placeholder: 'Filter...', className: 'ah-search-input' });
+      const searchWrap = h('div', { id: 'ah-search', className: 'ah-search', hidden: '' }, searchInput);
 
       const mirrors = h('div', { id: 'ah-mirrors', className: 'ah-section' });
       const bookmarks = h('div', { id: 'ah-bookmarks', className: 'ah-section' });
 
-      const status = h('span', { id: 'ah-status', className: 'ah-footer-status' });
-      const themeBtn = h('button', { id: 'ah-theme', className: 'ah-footer-cog', type: 'button', 'aria-label': 'Theme' });
-      const settingsBtn = h('button', { id: 'ah-settings', className: 'ah-footer-cog', type: 'button', 'aria-label': _('settingsBtn', 'Settings') });
+      const boltBtn = h('button', { id: 'ah-bolt', className: 'ah-footer-btn', type: 'button', 'aria-label': _('prefPrefetch', 'Acceleration') });
+      boltBtn.appendChild(makeSvg(BOLT_MARKUP));
+      const bmBtn = h('button', { id: 'ah-bm-toggle', className: 'ah-footer-btn', type: 'button', 'aria-label': _('prefShowBookmarks', 'Bookmarks') });
+      bmBtn.appendChild(makeSvg(BOOKMARK_MARKUP));
+      const themeBtn = h('button', { id: 'ah-theme', className: 'ah-footer-btn', type: 'button', 'aria-label': 'Theme' });
+      themeBtn.appendChild(makeSvg(THEME_MARKUP));
+      const settingsBtn = h('button', { id: 'ah-settings', className: 'ah-footer-btn', type: 'button', 'aria-label': _('settingsBtn', 'Settings') });
       settingsBtn.appendChild(makeSvg(COG_MARKUP));
-      const footerActions = h('div', { className: 'ah-footer-actions' }, themeBtn, settingsBtn);
-      const footer = h('div', { className: 'ah-footer' }, status, footerActions);
+      const footer = h('div', { className: 'ah-footer' }, boltBtn, bmBtn, themeBtn, settingsBtn);
 
-      const panel = h('div', { className: 'ah-panel' }, header, mirrors, bookmarks, footer);
+      const panel = h('div', { className: 'ah-panel' }, header, searchWrap, mirrors, bookmarks, footer);
       el = h('div', { id: 'ah-root', className: 'ah-root ah-serp-root' }, panel);
       document.documentElement.appendChild(el);
 
       closeBtn.addEventListener('click', () => dismissPanel(el!));
-      settingsBtn.addEventListener('click', () => {
-        try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
+
+      // Bolt: toggle acceleration (prefetch)
+      boltBtn.addEventListener('click', () => {
+        __prefs.enablePrefetch = !__prefs.enablePrefetch;
+        boltBtn.classList.toggle('is-active', !!__prefs.enablePrefetch);
+        try { chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
       });
+
+      // Bookmark: toggle bookmarks on SERP
+      bmBtn.addEventListener('click', () => {
+        __prefs.showSerpBookmarks = !__prefs.showSerpBookmarks;
+        bmBtn.classList.toggle('is-active', __prefs.showSerpBookmarks !== false);
+        try { chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
+        // Re-render to show/hide bookmarks section
+        __bmCache = null;
+        el!.remove();
+        renderTips();
+      });
+
+      // Theme toggle
       themeBtn.addEventListener('click', () => {
         __theme = resolveTheme() === 'dark' ? 'light' : 'dark';
         applyTheme();
-        updateThemeIcon(el!);
         try { chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
+      });
+
+      // Settings
+      settingsBtn.addEventListener('click', () => {
+        try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
       });
 
       titleDiv.prepend(createIcon('brand', 'sm', 'main'));
       applyTheme();
-      updateThemeIcon(el);
 
       return el;
     }
@@ -348,24 +380,24 @@ export default defineContentScript({
         // Respect user's manual dismiss — don't re-expand on SPA navigation
         if (!userDismissed) setPanelExpanded(el, isOpenMode);
 
-        // Update acceleration status footer
-        const statusEl = el.querySelector('#ah-status') as HTMLElement | null;
-        if (statusEl) {
-          const on = !!__prefs.enablePrefetch;
-          const cls = on ? 'ah-footer-status--on' : 'ah-footer-status--off';
-          statusEl.className = `ah-footer-status ${cls}`;
-          const label = on
-            ? _('accelOn', 'Acceleration on')
-            : _('accelOff', 'Acceleration off');
-          const bolt = makeSvg('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 0v11h3v9l7-12H9l4-8m2 13h2v2h-2zm0-8h2v6h-2z" fill="currentColor"/></svg>');
-          statusEl.replaceChildren(bolt, label);
-        }
+        // Update footer toggle states
+        const boltEl = el.querySelector('#ah-bolt');
+        if (boltEl) boltEl.classList.toggle('is-active', !!__prefs.enablePrefetch);
+        const bmToggleEl = el.querySelector('#ah-bm-toggle');
+        if (bmToggleEl) bmToggleEl.classList.toggle('is-active', __prefs.showSerpBookmarks !== false);
 
         const mirrorsWrap = el.querySelector('#ah-mirrors') as HTMLElement | null;
         const bmWrap = el.querySelector('#ah-bookmarks') as HTMLElement | null;
 
         if (mirrorsWrap) { mirrorsWrap.replaceChildren(); mirrorsWrap.classList.remove('active'); }
         if (bmWrap) { bmWrap.replaceChildren(); bmWrap.classList.remove('active'); }
+
+        // Count total individual alternates for search threshold
+        let totalAltsCount = 0;
+        keysWithAlts.forEach(key => {
+          const alts = map[key] || map[key.replace(/^www\./, '')] || [];
+          totalAltsCount += Array.isArray(alts) ? alts.length : 0;
+        });
 
         setBadge(keysWithAlts.length, keysWithAlts.length, 0);
 
@@ -492,8 +524,53 @@ export default defineContentScript({
                 });
                 bmWrap.appendChild(row);
               }
+
+              // Show search filter when >10 total items
+              const totalItems = totalAltsCount + bookmarkHits.length;
+              const searchWrapEl = el.querySelector('#ah-search') as HTMLElement;
+              if (searchWrapEl) {
+                if (totalItems > 10) {
+                  searchWrapEl.hidden = false;
+                  const input = searchWrapEl.querySelector('input')!;
+                  input.addEventListener('input', () => {
+                    const q = input.value.toLowerCase().trim();
+                    el.querySelectorAll('.ah-pill').forEach(pill => {
+                      const text = pill.textContent?.toLowerCase() || '';
+                      (pill as HTMLElement).style.display = (!q || text.includes(q)) ? '' : 'none';
+                    });
+                    el.querySelectorAll('.ah-section.active').forEach(sec => {
+                      const visible = sec.querySelectorAll('.ah-pill:not([style*="display: none"])').length;
+                      (sec as HTMLElement).style.display = visible ? '' : 'none';
+                    });
+                  });
+                } else {
+                  searchWrapEl.hidden = true;
+                }
+              }
             } catch { /* ignore */ }
           });
+        } else {
+          // Bookmarks disabled — activate search based on alternates alone
+          const searchWrapEl = el.querySelector('#ah-search') as HTMLElement;
+          if (searchWrapEl) {
+            if (totalAltsCount > 10) {
+              searchWrapEl.hidden = false;
+              const input = searchWrapEl.querySelector('input')!;
+              input.addEventListener('input', () => {
+                const q = input.value.toLowerCase().trim();
+                el.querySelectorAll('.ah-pill').forEach(pill => {
+                  const text = pill.textContent?.toLowerCase() || '';
+                  (pill as HTMLElement).style.display = (!q || text.includes(q)) ? '' : 'none';
+                });
+                el.querySelectorAll('.ah-section.active').forEach(sec => {
+                  const visible = sec.querySelectorAll('.ah-pill:not([style*="display: none"])').length;
+                  (sec as HTMLElement).style.display = visible ? '' : 'none';
+                });
+              });
+            } else {
+              searchWrapEl.hidden = true;
+            }
+          }
         }
 
       });
@@ -509,8 +586,6 @@ export default defineContentScript({
             const v = changes.theme.newValue;
             __theme = (v === 'dark' || v === 'light') ? v : 'auto';
             applyTheme();
-            const el = document.getElementById('ah-root');
-            if (el) updateThemeIcon(el);
           }
           if (changes.alternates || changes.prefs) {
             clearTimeout(storageDebounce);

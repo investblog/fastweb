@@ -17,6 +17,9 @@ function showView(viewName: ViewName): void {
   });
   const target = document.querySelector(`[data-view-content="${viewName}"]`);
   if (target) (target as HTMLElement).hidden = false;
+
+  const controls = document.getElementById('panelControls');
+  if (controls) controls.hidden = (viewName !== 'domains');
 }
 
 function initNavigation(): void {
@@ -159,6 +162,8 @@ let TOKENS: string[] = [];
 function applyFilterAndRender(): void {
   const q = (($('#search') as HTMLInputElement)?.value || '').trim();
   TOKENS = tokenizeQuery(q);
+  const form = $('.domain-form') as HTMLElement | null;
+  if (form) form.hidden = TOKENS.length > 0;
   if (!TOKENS.length) { render(CACHE); renderBookmarks([]); return; }
   const subset: AlternatesMap = {};
   for (const [dom, alts] of Object.entries(CACHE)) { if (matchesBrand(TOKENS, dom, alts)) subset[dom] = alts; }
@@ -462,12 +467,33 @@ function initStoreLink(): void {
   }
 }
 
+// --- Header scroll (tier 2 collapse) ---
+function initHeaderScroll(): void {
+  const body = document.querySelector('.panel__body') as HTMLElement | null;
+  const controls = document.getElementById('panelControls');
+  if (!body || !controls) return;
+
+  const SCROLL_DELTA = 5;
+  let lastScrollTop = 0;
+
+  body.addEventListener('scroll', () => {
+    const st = body.scrollTop;
+    const delta = st - lastScrollTop;
+    if (st <= 0) { controls.classList.remove('controls-hidden'); lastScrollTop = st; return; }
+    if (Math.abs(delta) < SCROLL_DELTA) return;
+    if (delta > 0) controls.classList.add('controls-hidden');
+    else controls.classList.remove('controls-hidden');
+    lastScrollTop = st;
+  }, { passive: true });
+}
+
 // --- Boot ---
 (async function boot(): Promise<void> {
   initTheme();
   applyI18n();
   initNavigation();
   initStoreLink();
+  initHeaderScroll();
   await initPrefsUI();
   setupEventListeners();
   CACHE = await getMap();

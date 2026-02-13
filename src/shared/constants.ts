@@ -6,7 +6,7 @@ export const DEFAULT_PREFS: Prefs = {
   showBadge: true,
   useUnicodeTokenize: true,
   panelMode: 'open',
-  enablePrefetch: false,
+  enablePrefetch: true,
   prefetchTopN: 5,
   prefetchHoverDelay: 200,
 };

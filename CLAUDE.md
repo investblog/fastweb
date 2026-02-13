@@ -46,3 +46,4 @@ src/
 - Content scripts use `defineContentScript()`, background uses `defineBackground()`
 - CSS for SERP panel is injected inline (scoped via `#ah-root`)
 - Firefox compatibility: sidePanel → sidebarAction fallback in background
+- **Settings must ONLY open in the sidebar panel** (Chrome `sidePanel.open()`, Firefox `sidebarAction.open()`). Never fall back to `tabs.create` or `windows.create` — if the sidebar can't be opened programmatically (e.g. no user gesture in Firefox), do nothing or show a toast instead.

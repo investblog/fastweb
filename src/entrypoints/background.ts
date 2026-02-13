@@ -10,27 +10,19 @@ export default defineBackground(() => {
     (browser as any).action || (browser as any).browserAction;
 
   // --- Side panel / sidebar ---
-  // Chrome/Edge: setPanelBehavior({ openPanelOnActionClick: true }) — icon click opens side panel.
-  // Firefox: sidebarAction.open() from onClicked (has user gesture).
-
   // Chrome/Edge: icon click → side panel opens directly (no onClicked needed)
-  try {
-    if ((browser as any).sidePanel?.setPanelBehavior) {
-      (browser as any).sidePanel.setPanelBehavior({ openPanelOnActionClick: true });
-    }
-  } catch { /* not available */ }
+  if (!import.meta.env.FIREFOX) {
+    try {
+      (browser as any).sidePanel?.setPanelBehavior?.({ openPanelOnActionClick: true });
+    } catch { /* not available */ }
+  }
 
-  // Firefox: onClicked fires (no sidePanel API) → open sidebar
-  if (actionApi?.onClicked) {
+  // Firefox: onClicked fires → open sidebar (has user gesture)
+  if (import.meta.env.FIREFOX && actionApi?.onClicked) {
     actionApi.onClicked.addListener(async () => {
       try {
-        if ((browser as any).sidebarAction?.open) {
-          await (browser as any).sidebarAction.open();
-          return;
-        }
-      } catch { /* fallback */ }
-      // Fallback: open as tab
-      await browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
+        await (browser as any).sidebarAction.open();
+      } catch { /* ignore */ }
     });
   }
 
@@ -97,25 +89,16 @@ export default defineBackground(() => {
 
       switch (msg.type) {
         case 'OPEN_SETTINGS': {
-          // Async: sidebarAction.open() returns a promise that rejects without user gesture
-          (async () => {
-            // Firefox: sidebarAction.open() — works only if user gesture context
-            try {
-              if ((browser as any).sidebarAction?.open) {
-                await (browser as any).sidebarAction.open();
-                return;
-              }
-            } catch { /* no gesture — fall through */ }
-            // Chrome/Edge: sidePanel.open({ tabId }) — no gesture needed
-            try {
-              if ((browser as any).sidePanel?.open && sender?.tab?.id) {
-                await (browser as any).sidePanel.open({ tabId: sender.tab.id });
-                return;
-              }
-            } catch { /* ignore */ }
-            // Fallback: open as tab
-            browser.tabs.create({ url: browser.runtime.getURL('/sidepanel.html') });
-          })();
+          if (import.meta.env.FIREFOX) {
+            // Firefox: try sidebarAction.open() — resolves but may not open without user gesture.
+            try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
+          } else {
+            // Chrome/Edge: sidePanel.open() works without user gesture.
+            const sp = (browser as any).sidePanel;
+            if (sp?.open && sender?.tab?.id) {
+              sp.open({ tabId: sender.tab.id }).catch(() => {});
+            }
+          }
           break;
         }
 

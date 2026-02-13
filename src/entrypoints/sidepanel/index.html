@@ -31,6 +31,20 @@
       <button class="nav-tab" data-tab="preferences" data-i18n="prefsHeading">Advanced settings</button>
     </nav>
 
+    <!-- Tier 2: collapsible controls -->
+    <div class="panel__controls" id="panelControls">
+      <div class="actions-row">
+        <button id="exportBtn" type="button" class="btn btn--outline" data-i18n="exportBtn">Export JSON</button>
+        <button id="importBtn" type="button" class="btn btn--outline" data-i18n="importBtn">Import JSON</button>
+        <button id="ah-load-bundle" type="button" class="btn btn--ghost" data-i18n="loadBundleBtn">Load bundle</button>
+        <button id="ah-delete-bundle" type="button" class="btn btn--outline-danger" data-i18n="deleteBundleBtn">Delete bundle</button>
+      </div>
+      <div id="ah-inline-msg" class="inline-msg" role="status" aria-live="polite"></div>
+      <div class="field">
+        <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" />
+      </div>
+    </div>
+
     <!-- Views -->
     <main class="panel__body">
 
@@ -52,24 +66,6 @@
               <button id="add" type="button" class="btn btn--primary" data-i18n="addBtn">Add</button>
             </div>
           </div>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="actions-row">
-          <button id="exportBtn" type="button" class="btn btn--outline" data-i18n="exportBtn">Export JSON</button>
-          <button id="importBtn" type="button" class="btn btn--outline" data-i18n="importBtn">Import JSON</button>
-          <button id="ah-load-bundle" type="button" class="btn btn--ghost" data-i18n="loadBundleBtn">Load bundle</button>
-          <button id="ah-delete-bundle" type="button" class="btn btn--outline-danger" data-i18n="deleteBundleBtn">Delete bundle</button>
-          <span class="text-muted text-sm" data-i18n="jsonFormatHelp">JSON format: {"example.com":["example.org","example.net"]}</span>
-        </div>
-
-        <!-- Inline message -->
-        <div id="ah-inline-msg" class="inline-msg" role="status" aria-live="polite"></div>
-
-        <!-- Search -->
-        <div class="field" style="margin-top: var(--space-4)">
-          <label class="field__label" for="search" data-i18n="searchLabel">Filter domains</label>
-          <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" />
         </div>
 
         <!-- Domain list -->

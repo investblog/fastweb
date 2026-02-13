@@ -87,6 +87,26 @@
   background: var(--border);
 }
 
+/* Tier 2: collapsible controls */
+.panel__controls {
+  flex-shrink: 0;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: var(--space-2) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  overflow: hidden;
+  transition: max-height 0.3s ease, padding 0.3s ease, border-color 0.3s ease;
+  max-height: 10rem;
+}
+
+.panel__controls.controls-hidden {
+  max-height: 0;
+  padding-block: 0;
+  border-color: transparent;
+}
+
 /* Body / scrollable area */
 .panel__body {
   flex: 1;
@@ -133,7 +153,6 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   align-items: center;
-  margin-top: var(--space-3);
 }
 
 .actions-row .text-muted {
