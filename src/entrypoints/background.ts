@@ -101,6 +101,12 @@ export default defineBackground(() => {
   }
 
   async function fetchAndSyncBundle(): Promise<void> {
+    // Respect user opt-out — if they deleted the bundle, don't re-add it
+    try {
+      const { bundleDisabled } = await browser.storage.sync.get({ bundleDisabled: false });
+      if (bundleDisabled) return;
+    } catch { /* ignore */ }
+
     try {
       const resp = await fetch(BUNDLE_URL, { cache: 'no-store' });
       if (!resp.ok) throw new Error('HTTP ' + resp.status);

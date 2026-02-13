@@ -406,14 +406,14 @@ function setupEventListeners(): void {
 
   document.getElementById('ah-load-bundle')?.addEventListener('click', async () => {
     try {
-      const remoteUrl = 'https://raw.githubusercontent.com/investblog/fastweb/main/src/public/bundle.json';
+      const remoteUrl = 'https://raw.githubusercontent.com/investblog/fastweb/main/data/bundle.json';
       const remoteData = await fetch(remoteUrl, { cache: 'no-store' }).then(r => {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       });
       const bundleKeys = Object.keys(remoteData);
       await applyBundle(remoteData);
-      await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys }, r));
+      await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabled: false }, r));
     } catch {
       try {
         const localUrl = chrome.runtime.getURL('bundle.json');
@@ -423,7 +423,7 @@ function setupEventListeners(): void {
         });
         const bundleKeys = Object.keys(localData);
         await applyBundle(localData);
-        await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys }, r));
+        await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabled: false }, r));
       } catch {
         showInlineMessage(_('bundleLoadFailed', 'Could not load sample bundle.'));
       }
@@ -444,7 +444,7 @@ function setupEventListeners(): void {
     }
     await saveMap(map);
     CACHE = map;
-    await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: [] }, r));
+    await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: [], bundleDisabled: true }, r));
     const msg = chrome.i18n.getMessage('bundleDeleted', [String(removed)]) || `Removed ${removed} bundle domains`;
     showInlineMessage(msg);
     applyFilterAndRender();
