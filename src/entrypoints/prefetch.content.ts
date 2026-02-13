@@ -95,12 +95,6 @@ export default defineContentScript({
         clearTimeout(hoverTimer);
       }, { passive: true });
 
-      document.addEventListener('touchstart', (e) => {
-        const target = (e.target as Element)?.closest?.('a') as HTMLAnchorElement | null;
-        if (!target?.href) return;
-        if (!isResultCandidate(target)) return;
-        warmupUrl(target.href);
-      }, { passive: true });
     }
   },
 });

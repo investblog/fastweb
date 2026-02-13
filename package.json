@@ -1,6 +1,6 @@
 {
   "name": "fastweb",
-  "version": "0.7.0",
+  "version": "0.7.3",
   "description": "Search accelerator — official alternates, bookmarks & prefetch right on SERP",
   "type": "module",
   "scripts": {
