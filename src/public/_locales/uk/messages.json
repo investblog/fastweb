@@ -1,0 +1,155 @@
+{
+  "appName": {
+    "message": "FastWeb — Прискорювач пошуку"
+  },
+  "appDesc": {
+    "message": "Прискорює відкриття результатів пошуку: дзеркала, закладки та попереднє завантаження при наведенні."
+  },
+  "optTitle": {
+    "message": "FastWeb — налаштування"
+  },
+  "domainLabel": {
+    "message": "Домен"
+  },
+  "altsLabel": {
+    "message": "Офіційні альтернативи (домен або повний URL, через кому)"
+  },
+  "addBtn": {
+    "message": "Додати"
+  },
+  "exportBtn": {
+    "message": "Експорт JSON"
+  },
+  "importBtn": {
+    "message": "Імпорт JSON"
+  },
+  "loadBundleBtn": {
+    "message": "Завантажити приклад"
+  },
+  "jsonFormatHelp": {
+    "message": "Формат JSON: {\"example.com\":[\"example.org\",\"https://ya.ru/internet\"]}"
+  },
+  "listEmpty": {
+    "message": "Список порожній."
+  },
+  "deleteBtn": {
+    "message": "Видалити"
+  },
+  "serpPanelTitle": {
+    "message": "FastWeb"
+  },
+  "serpHide": {
+    "message": "Сховати"
+  },
+  "altsHeading": {
+    "message": "Альтернативи"
+  },
+  "accelOn": {
+    "message": "Прискорення увімк."
+  },
+  "accelOff": {
+    "message": "Прискорення вимк."
+  },
+  "serpNoTips": {
+    "message": "Підказок немає"
+  },
+  "settingsBtn": {
+    "message": "Налаштування"
+  },
+  "searchLabel": {
+    "message": "Пошук по доменах"
+  },
+  "searchPlaceholder": {
+    "message": "Почніть введення для фільтра..."
+  },
+  "bookmarksHeading": {
+    "message": "Схожі закладки"
+  },
+  "prefsHeading": {
+    "message": "Розширені налаштування"
+  },
+  "prefSensitivity": {
+    "message": "Чутливість (мін. довжина бренду)"
+  },
+  "prefUnicode": {
+    "message": "Юнікод-розбір (якщо підтримується)"
+  },
+  "prefShowBookmarks": {
+    "message": "Показувати закладки на сторінці пошуку"
+  },
+  "prefShowBadge": {
+    "message": "Значок із кількістю підказок"
+  },
+  "prefPrefetch": {
+    "message": "Режим прискорення — прогрів з'єднань при наведенні (лише SERP)"
+  },
+  "prefPrefetchTopN": {
+    "message": "Кількість посилань для прогріву (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "Затримка при наведенні (мс)"
+  },
+  "prefPrefetchWarning": {
+    "message": "Опціонально. Прогріває DNS/TCP/TLS для Top N результатів при наведенні (лише SERP). Може створювати додатковий мережевий трафік. Сторінки не завантажуються."
+  },
+  "panelModeLabel": {
+    "message": "Режим панелі на SERP"
+  },
+  "panelModeOpen": {
+    "message": "Авторозгортання панелі на SERP"
+  },
+  "panelModeBadge": {
+    "message": "Лише значок (клік для показу)"
+  },
+  "bundleApplied": {
+    "message": "Додано $1 нових доменів із прикладу"
+  },
+  "bundleAppliedNone": {
+    "message": "Нових доменів із прикладу не знайдено"
+  },
+  "bundleLoadFailed": {
+    "message": "Не вдалося завантажити приклад бандлу. Перевірте з'єднання."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — налаштування"
+  },
+  "deleteBundleBtn": {
+    "message": "Видалити бандл"
+  },
+  "bundleDeleted": {
+    "message": "Видалено $1 доменів із бандлу",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "Бандл не завантажено"
+  },
+  "domainsHeading": {
+    "message": "Керування доменами"
+  },
+  "rateBtn": {
+    "message": "Оцінити"
+  },
+  "badgeAlts": {
+    "message": "$1 альт.",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "badgeBookmarks": {
+    "message": "$1 закл.",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "Змінити тему"
+  },
+  "serpFilterPlaceholder": {
+    "message": "Фільтр..."
+  },
+  "serpOpenSidebar": {
+    "message": "Відкрийте через іконку на панелі"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
+  }
+}
