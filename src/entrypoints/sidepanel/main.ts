@@ -413,7 +413,7 @@ function setupEventListeners(): void {
       });
       const bundleKeys = Object.keys(remoteData);
       await applyBundle(remoteData);
-      await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabled: false }, r));
+      await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabledUntil: 0 }, r));
     } catch {
       try {
         const localUrl = chrome.runtime.getURL('bundle.json');
@@ -423,7 +423,7 @@ function setupEventListeners(): void {
         });
         const bundleKeys = Object.keys(localData);
         await applyBundle(localData);
-        await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabled: false }, r));
+        await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabledUntil: 0 }, r));
       } catch {
         showInlineMessage(_('bundleLoadFailed', 'Could not load sample bundle.'));
       }
@@ -444,7 +444,7 @@ function setupEventListeners(): void {
     }
     await saveMap(map);
     CACHE = map;
-    await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: [], bundleDisabled: true }, r));
+    await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: [], bundleDisabledUntil: Date.now() + 30 * 24 * 60 * 60 * 1000 }, r));
     const msg = chrome.i18n.getMessage('bundleDeleted', [String(removed)]) || `Removed ${removed} bundle domains`;
     showInlineMessage(msg);
     applyFilterAndRender();

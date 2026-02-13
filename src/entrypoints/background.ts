@@ -100,24 +100,34 @@ export default defineBackground(() => {
     });
   }
 
-  async function fetchAndSyncBundle(): Promise<void> {
-    // Respect user opt-out — if they deleted the bundle, don't re-add it
-    try {
-      const { bundleDisabled } = await browser.storage.sync.get({ bundleDisabled: false });
-      if (bundleDisabled) return;
-    } catch { /* ignore */ }
-
+  async function fetchRemoteBundle(): Promise<void> {
     try {
       const resp = await fetch(BUNDLE_URL, { cache: 'no-store' });
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       await syncBundle(await resp.json());
-    } catch {
-      // Offline fallback — use local copy shipped with extension
-      try {
-        const local = await fetch(browser.runtime.getURL('/bundle.json'));
-        await syncBundle(await local.json());
-      } catch { /* silent */ }
-    }
+    } catch { /* silent — will retry on next alarm */ }
+  }
+
+  async function loadLocalBundle(): Promise<void> {
+    try {
+      const local = await fetch(browser.runtime.getURL('/bundle.json'));
+      await syncBundle(await local.json());
+    } catch { /* silent */ }
+  }
+
+  async function fetchAndSyncBundle(): Promise<void> {
+    // Respect cooldown — user deleted bundle, retry after 30 days
+    try {
+      const data = await browser.storage.sync.get({ bundleDisabledUntil: 0 });
+      const until = Number(data.bundleDisabledUntil) || 0;
+      if (until && Date.now() < until) return;
+      // Cooldown expired — clear flag and proceed
+      if (until) {
+        await browser.storage.sync.set({ bundleDisabledUntil: 0 });
+      }
+    } catch { /* ignore */ }
+
+    await fetchRemoteBundle();
   }
 
   // Daily alarm — sync bundle every 24 h
@@ -127,7 +137,10 @@ export default defineBackground(() => {
   });
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
-    if (reason === 'install' || reason === 'update') {
+    if (reason === 'install') {
+      // First date — local demo only, remote will come on first alarm
+      loadLocalBundle();
+    } else if (reason === 'update') {
       fetchAndSyncBundle();
     }
   });
