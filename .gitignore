@@ -4,4 +4,4 @@ dist/
 .wxt/
 *.zip
 temp/
-.claude/settings.local.json
+.claude/
