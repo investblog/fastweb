@@ -9,6 +9,32 @@ export default defineBackground(() => {
   const actionApi: typeof browser.action =
     (browser as any).action || (browser as any).browserAction;
 
+  const PREFETCH_CONCURRENCY = 2;
+  const prefetchQueue: string[] = [];
+  const queuedPrefetch = new Set<string>();
+  let activePrefetch = 0;
+
+  function drainPrefetchQueue(): void {
+    if (activePrefetch >= PREFETCH_CONCURRENCY) return;
+    const next = prefetchQueue.shift();
+    if (!next) return;
+    queuedPrefetch.delete(next);
+    activePrefetch += 1;
+    fetch(next, { mode: 'no-cors', credentials: 'omit', redirect: 'manual' })
+      .catch(() => {})
+      .finally(() => {
+        activePrefetch = Math.max(0, activePrefetch - 1);
+        drainPrefetchQueue();
+      });
+  }
+
+  function enqueuePrefetch(url: string): void {
+    if (queuedPrefetch.has(url)) return;
+    queuedPrefetch.add(url);
+    prefetchQueue.push(url);
+    drainPrefetchQueue();
+  }
+
   // --- Side panel / sidebar ---
   // Chrome/Edge: icon click → side panel opens directly (no onClicked needed)
   if (!import.meta.env.FIREFOX) {
@@ -117,7 +143,7 @@ export default defineBackground(() => {
           const url = msg.url;
           if (url && /^https?:\/\//.test(url)) {
             // redirect: 'manual' — warmup only needs DNS+TCP+TLS, don't follow redirect chains
-            fetch(url, { mode: 'no-cors', credentials: 'omit', redirect: 'manual' }).catch(() => {});
+            enqueuePrefetch(url);
           }
           sendResponse?.({ ok: true });
           break;

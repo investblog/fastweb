@@ -3,7 +3,7 @@
     "message": "FastWeb — Search Accelerator"
   },
   "appDesc": {
-    "message": "Speed up opening search results with smart tips, mirrors/bookmarks, and optional hover prefetch"
+    "message": "Speed up opening search results with smart tips, mirrors/bookmarks, and optional hover prefetch."
   },
   "optTitle": {
     "message": "FastWeb — Settings"
@@ -81,7 +81,7 @@
     "message": "Show bookmarks on SERP"
   },
   "prefPrefetch": {
-    "message": "Acceleration Mode — warm up connections on hover (SERP only)"
+    "message": "Acceleration Mode (optional, OFF by default) — warm up Top N result connections on hover (SERP only)."
   },
   "prefPrefetchTopN": {
     "message": "Number of links to warm up (Top N)"
@@ -90,7 +90,7 @@
     "message": "Hover delay (ms)"
   },
   "prefPrefetchWarning": {
-    "message": "Warms up DNS/TCP/TLS for top results on hover. No pages are downloaded. Only active on search result pages."
+    "message": "Optional and OFF by default. Warms up DNS/TCP/TLS for Top N results on hover (SERP only). May generate extra network traffic."
   },
   "panelModeLabel": {
     "message": "SERP panel mode"
