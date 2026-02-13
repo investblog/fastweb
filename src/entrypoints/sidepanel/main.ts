@@ -501,6 +501,21 @@ function initHeaderScroll(): void {
   setupEventListeners();
   CACHE = await getMap();
   const s = $('#search') as HTMLInputElement | null;
-  if (s) s.addEventListener('input', applyFilterAndRender);
+  const sWrap = $('#searchWrap') as HTMLElement | null;
+  const sClear = $('#searchClear') as HTMLButtonElement | null;
+  if (s) {
+    s.addEventListener('input', () => {
+      sWrap?.classList.toggle('has-value', s.value.length > 0);
+      applyFilterAndRender();
+    });
+  }
+  if (sClear && s) {
+    sClear.addEventListener('click', () => {
+      s.value = '';
+      sWrap?.classList.remove('has-value');
+      s.focus();
+      applyFilterAndRender();
+    });
+  }
   applyFilterAndRender();
 })();

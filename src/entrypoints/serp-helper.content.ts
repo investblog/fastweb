@@ -159,13 +159,23 @@ export default defineContentScript({
       #ah-root .ah-pill-label { display: inline-flex; align-items: center; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #ah-root .ah-pill-arrow { color: var(--ah-muted); font-size: 12px; }
       #ah-root .ah-pill-icon { border-radius: calc(var(--ah-radius) / 2); width: 16px; height: 16px; object-fit: cover; }
-      #ah-root .ah-search { padding: 0 0 8px; }
+      #ah-root .ah-search { position: relative; padding: 0 0 8px; }
       #ah-root .ah-search-input {
-        width: 100%; padding: 6px 10px; border-radius: var(--ah-radius-pill);
+        width: 100%; padding: 6px 30px 6px 10px; border-radius: var(--ah-radius-pill);
         border: 1px solid var(--ah-border-subtle); background: var(--ah-card-soft);
         color: var(--ah-text); font-family: inherit; font-size: 12px; outline: none;
       }
       #ah-root .ah-search-input:focus { border-color: var(--ah-accent); }
+      #ah-root .ah-search-clear {
+        position: absolute; right: 6px; top: 50%; transform: translateY(calc(-50% - 4px));
+        display: none; align-items: center; justify-content: center;
+        width: 20px; height: 20px; border-radius: 4px;
+        color: var(--ah-muted); cursor: pointer; transition: color .15s ease, background .15s ease;
+      }
+      #ah-root .ah-search-clear:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
+      #ah-root .ah-search-clear:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
+      #ah-root .ah-search-clear svg { width: 12px; height: 12px; }
+      #ah-root .ah-search.has-value .ah-search-clear { display: inline-flex; }
       #ah-root .ah-section-note { margin: 0 0 6px; color: var(--ah-muted); }
       #ah-root .ah-footer {
         margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ah-border-subtle);
@@ -282,6 +292,7 @@ export default defineContentScript({
       ensurePanelStyles();
       let el = document.getElementById('ah-root');
       if (el) return el;
+      searchFilterBound = false;
 
       const titleSpan = h('span', {}, _('serpPanelTitle', 'FastWeb'));
       const titleDiv = h('div', { className: 'ah-panel-title' }, titleSpan);
@@ -291,7 +302,9 @@ export default defineContentScript({
       const header = h('div', { className: 'ah-panel-header' }, titleDiv, closeBtn);
 
       const searchInput = h('input', { type: 'text', placeholder: _('serpFilterPlaceholder', 'Filter...'), className: 'ah-search-input', 'aria-label': _('searchLabel', 'Filter domains') });
-      const searchWrap = h('div', { id: 'ah-search', className: 'ah-search', hidden: '' }, searchInput);
+      const searchClear = h('button', { type: 'button', className: 'ah-search-clear', 'aria-label': 'Clear' });
+      searchClear.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></svg>';
+      const searchWrap = h('div', { id: 'ah-search', className: 'ah-search', hidden: '' }, searchInput, searchClear);
 
       const mirrors = h('div', { id: 'ah-mirrors', className: 'ah-section' });
       const bookmarks = h('div', { id: 'ah-bookmarks', className: 'ah-section' });
@@ -365,6 +378,41 @@ export default defineContentScript({
       applyTheme();
 
       return el;
+    }
+
+    // --- Search filter for SERP popup ---
+    let searchFilterBound = false;
+    function initSearchFilter(el: HTMLElement, totalItems: number): void {
+      const wrap = el.querySelector('#ah-search') as HTMLElement;
+      if (!wrap) return;
+      if (totalItems <= 10) { wrap.hidden = true; return; }
+      wrap.hidden = false;
+      if (searchFilterBound) return;
+      searchFilterBound = true;
+      const input = wrap.querySelector('input')!;
+      const clearBtn = wrap.querySelector('.ah-search-clear') as HTMLElement | null;
+
+      function doFilter(): void {
+        const q = input.value.toLowerCase().trim();
+        wrap.classList.toggle('has-value', input.value.length > 0);
+        el.querySelectorAll('.ah-pill').forEach(pill => {
+          const text = pill.textContent?.toLowerCase() || '';
+          (pill as HTMLElement).style.display = (!q || text.includes(q)) ? '' : 'none';
+        });
+        el.querySelectorAll('.ah-section.active').forEach(sec => {
+          const visible = sec.querySelectorAll('.ah-pill:not([style*="display: none"])').length;
+          (sec as HTMLElement).style.display = visible ? '' : 'none';
+        });
+      }
+
+      input.addEventListener('input', doFilter);
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          input.value = '';
+          doFilter();
+          input.focus();
+        });
+      }
     }
 
     // --- Main render ---
@@ -559,51 +607,12 @@ export default defineContentScript({
               }
 
               // Show search filter when >10 total items
-              const totalItems = totalAltsCount + bookmarkHits.length;
-              const searchWrapEl = el.querySelector('#ah-search') as HTMLElement;
-              if (searchWrapEl) {
-                if (totalItems > 10) {
-                  searchWrapEl.hidden = false;
-                  const input = searchWrapEl.querySelector('input')!;
-                  input.addEventListener('input', () => {
-                    const q = input.value.toLowerCase().trim();
-                    el.querySelectorAll('.ah-pill').forEach(pill => {
-                      const text = pill.textContent?.toLowerCase() || '';
-                      (pill as HTMLElement).style.display = (!q || text.includes(q)) ? '' : 'none';
-                    });
-                    el.querySelectorAll('.ah-section.active').forEach(sec => {
-                      const visible = sec.querySelectorAll('.ah-pill:not([style*="display: none"])').length;
-                      (sec as HTMLElement).style.display = visible ? '' : 'none';
-                    });
-                  });
-                } else {
-                  searchWrapEl.hidden = true;
-                }
-              }
+              initSearchFilter(el, totalAltsCount + bookmarkHits.length);
             } catch { /* ignore */ }
           });
         } else {
           // Bookmarks disabled — activate search based on alternates alone
-          const searchWrapEl = el.querySelector('#ah-search') as HTMLElement;
-          if (searchWrapEl) {
-            if (totalAltsCount > 10) {
-              searchWrapEl.hidden = false;
-              const input = searchWrapEl.querySelector('input')!;
-              input.addEventListener('input', () => {
-                const q = input.value.toLowerCase().trim();
-                el.querySelectorAll('.ah-pill').forEach(pill => {
-                  const text = pill.textContent?.toLowerCase() || '';
-                  (pill as HTMLElement).style.display = (!q || text.includes(q)) ? '' : 'none';
-                });
-                el.querySelectorAll('.ah-section.active').forEach(sec => {
-                  const visible = sec.querySelectorAll('.ah-pill:not([style*="display: none"])').length;
-                  (sec as HTMLElement).style.display = visible ? '' : 'none';
-                });
-              });
-            } else {
-              searchWrapEl.hidden = true;
-            }
-          }
+          initSearchFilter(el, totalAltsCount);
         }
 
       });

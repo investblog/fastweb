@@ -209,6 +209,53 @@ a:hover {
   opacity: 0.9;
 }
 
+/* Input wrapper with clear button */
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrap .input {
+  padding-inline-end: calc(var(--control-pad-x) + 24px);
+}
+
+.input-wrap__clear {
+  position: absolute;
+  inset-inline-end: 6px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--text-subtle);
+  cursor: pointer;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.input-wrap__clear:hover {
+  color: var(--text);
+  background: var(--border-subtle);
+}
+
+.input-wrap__clear:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.input-wrap__clear svg {
+  width: 14px;
+  height: 14px;
+}
+
+.input-wrap.has-value .input-wrap__clear {
+  display: inline-flex;
+}
+
 /* ============================================================================
    Field
    ============================================================================ */
@@ -310,12 +357,22 @@ a:hover {
 }
 
 .range__slider {
+  -webkit-appearance: none;
+  appearance: none;
   flex: 1;
   min-width: 0;
+  height: 4px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--r-pill);
+  background: var(--border-strong);
   accent-color: var(--primary);
+  cursor: pointer;
 }
 
 .range__slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
   appearance: none;
   width: 16px;
   height: 16px;
@@ -333,7 +390,12 @@ a:hover {
   border: none;
 }
 
-.range__slider::-webkit-slider-runnable-track,
+.range__slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--border-strong);
+}
+
 .range__slider::-moz-range-track {
   height: 4px;
   border-radius: var(--r-pill);

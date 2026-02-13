@@ -41,7 +41,12 @@
       </div>
       <div id="ah-inline-msg" class="inline-msg" role="status" aria-live="polite"></div>
       <div class="field">
-        <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" aria-label="Filter domains" data-i18n-aria-label="searchLabel" />
+        <div class="input-wrap" id="searchWrap">
+          <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" aria-label="Filter domains" data-i18n-aria-label="searchLabel" />
+          <button type="button" class="input-wrap__clear" id="searchClear" aria-label="Clear">
+            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></svg>
+          </button>
+        </div>
       </div>
     </div>
 
