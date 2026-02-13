@@ -28,7 +28,9 @@ export default defineContentScript({
     }
 
     function makeSvg(markup: string): SVGElement {
-      return new DOMParser().parseFromString(markup, 'image/svg+xml').documentElement as unknown as SVGElement;
+      const svg = new DOMParser().parseFromString(markup, 'image/svg+xml').documentElement as unknown as SVGElement;
+      svg.setAttribute('aria-hidden', 'true');
+      return svg;
     }
     const BOLT_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M9.09 7.7v1.39h3.42l-1.6 3.21v-1.39H7.49zM10.91 0 4.544 12.727H9.09V20l6.364-12.727h-4.546z" fill="currentColor"/></svg>';
     const BOOKMARK_MARKUP = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M7.273 0h9.09a1.82 1.82 0 0 1 1.819 1.818v14.546l-1.818-.791V1.818H5.454A1.82 1.82 0 0 1 7.274 0m5.454 17.273V5.455h-9.09v11.818l4.545-1.982zm0-13.637c1.01 0 1.818.819 1.818 1.819V20l-6.363-2.727L1.818 20V5.455a1.82 1.82 0 0 1 1.818-1.819z" fill="currentColor"/></svg>';
@@ -119,8 +121,8 @@ export default defineContentScript({
       #ah-root .ah-btn:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
       #ah-root .ah-btn-outline { background: transparent; border-color: var(--ah-border-strong); color: var(--ah-text); }
       #ah-root .ah-btn-outline:hover { color: var(--ah-accent); border-color: var(--ah-accent); background: var(--ah-accent-soft); }
-      #ah-root .ah-btn-ghost { background: rgba(255,255,255,.03); border-color: var(--ah-border-subtle); color: var(--ah-muted); }
-      #ah-root .ah-btn-ghost:hover { color: var(--ah-text); border-color: rgba(94,139,255,.4); }
+      #ah-root .ah-btn-ghost { background: var(--ah-card-soft); border-color: var(--ah-border-subtle); color: var(--ah-muted); }
+      #ah-root .ah-btn-ghost:hover { color: var(--ah-text); border-color: var(--ah-accent); }
       .ah-icon { display: inline-flex; width: 16px; height: 16px; vertical-align: middle; flex: 0 0 auto; }
       .ah-icon img, .ah-icon svg { width: 100%; height: 100%; display: block; }
       .ah-icon--sm { width: 14px; height: 14px; }
@@ -139,6 +141,7 @@ export default defineContentScript({
         color: var(--ah-muted); transition: color .15s ease, background .15s ease;
       }
       #ah-root .ah-panel-close:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
+      #ah-root .ah-panel-close:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
       #ah-root .ah-panel-close svg { width: 16px; height: 16px; }
       #ah-root .ah-panel-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ah-text); }
       #ah-root .ah-section { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--ah-border-subtle); }
@@ -148,11 +151,11 @@ export default defineContentScript({
       #ah-root .ah-pill {
         display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
         border-radius: var(--ah-radius-pill); border: 1px solid var(--ah-border-subtle);
-        background: rgba(255,255,255,.02); color: var(--ah-text); text-decoration: none; font-size: 12px;
+        background: var(--ah-card-soft); color: var(--ah-text); text-decoration: none; font-size: 12px;
         transition: border-color .15s ease, color .15s ease, background .15s ease;
       }
-      #ah-root .ah-pill:hover { border-color: rgba(94,139,255,.8); color: var(--ah-accent); }
-      #ah-root .ah-pill-rich { background: rgba(255,255,255,.04); }
+      #ah-root .ah-pill:hover { border-color: var(--ah-accent); color: var(--ah-accent); }
+      #ah-root .ah-pill:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
       #ah-root .ah-pill-label { display: inline-flex; align-items: center; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       #ah-root .ah-pill-arrow { color: var(--ah-muted); font-size: 12px; }
       #ah-root .ah-pill-icon { border-radius: calc(var(--ah-radius) / 2); width: 16px; height: 16px; object-fit: cover; }
@@ -166,7 +169,7 @@ export default defineContentScript({
       #ah-root .ah-section-note { margin: 0 0 6px; color: var(--ah-muted); }
       #ah-root .ah-footer {
         margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--ah-border-subtle);
-        display: flex; align-items: center; justify-content: flex-end; gap: 2px;
+        display: flex; align-items: center; justify-content: flex-end; gap: 6px;
       }
       #ah-root .ah-footer-btn {
         display: inline-flex; align-items: center; justify-content: center;
@@ -174,15 +177,17 @@ export default defineContentScript({
         color: var(--ah-muted); transition: color .15s ease, background .15s ease;
       }
       #ah-root .ah-footer-btn:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
+      #ah-root .ah-footer-btn:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
       #ah-root .ah-footer-btn.is-active { color: var(--ah-accent); }
+      #ah-root .ah-footer-btn.is-disabled { opacity: 0.4; cursor: default; pointer-events: none; }
       #ah-root .ah-footer-btn svg { width: 16px; height: 16px; }
       #ah-root.ah-root--inline-hidden { display: none; }
       #ah-serp-toast {
         position: fixed; top: 16px; right: 16px; z-index: 999999;
-        background: var(--ah-card); color: var(--ah-text); border: 1px solid var(--ah-border-strong);
-        border-radius: var(--ah-radius); padding: 8px 12px; box-shadow: var(--ah-shadow-soft);
+        background: #0b1020; color: #E7E9F0; border: 1px solid #252c3c;
+        border-radius: 12px; padding: 8px 12px; box-shadow: 0 18px 45px rgba(0,0,0,.55);
         opacity: 0; transform: translateY(-8px); transition: opacity .16s ease, transform .16s ease;
-        pointer-events: none; font-family: var(--ah-font); font-size: var(--ah-font-size);
+        pointer-events: none; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 13px;
       }
       #ah-serp-toast.visible { opacity: 1; transform: translateY(0); }
     `;
@@ -280,23 +285,28 @@ export default defineContentScript({
 
       const titleSpan = h('span', {}, _('serpPanelTitle', 'FastWeb'));
       const titleDiv = h('div', { className: 'ah-panel-title' }, titleSpan);
-      const closeBtn = h('button', { id: 'ah-close-x', className: 'ah-panel-close', type: 'button', 'aria-label': _('serpHide', 'Hide') });
-      closeBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></svg>';
+      const closeTip = _('serpHide', 'Hide');
+      const closeBtn = h('button', { id: 'ah-close-x', className: 'ah-panel-close', type: 'button', 'aria-label': closeTip, title: closeTip });
+      closeBtn.innerHTML = '<svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></svg>';
       const header = h('div', { className: 'ah-panel-header' }, titleDiv, closeBtn);
 
-      const searchInput = h('input', { type: 'text', placeholder: 'Filter...', className: 'ah-search-input' });
+      const searchInput = h('input', { type: 'text', placeholder: _('serpFilterPlaceholder', 'Filter...'), className: 'ah-search-input', 'aria-label': _('searchLabel', 'Filter domains') });
       const searchWrap = h('div', { id: 'ah-search', className: 'ah-search', hidden: '' }, searchInput);
 
       const mirrors = h('div', { id: 'ah-mirrors', className: 'ah-section' });
       const bookmarks = h('div', { id: 'ah-bookmarks', className: 'ah-section' });
 
-      const boltBtn = h('button', { id: 'ah-bolt', className: 'ah-footer-btn', type: 'button', 'aria-label': _('prefPrefetch', 'Acceleration') });
+      const boltTip = _('accelOn', 'Acceleration');
+      const boltBtn = h('button', { id: 'ah-bolt', className: 'ah-footer-btn', type: 'button', 'aria-label': boltTip, title: boltTip, 'aria-pressed': 'false' });
       boltBtn.appendChild(makeSvg(BOLT_MARKUP));
-      const bmBtn = h('button', { id: 'ah-bm-toggle', className: 'ah-footer-btn', type: 'button', 'aria-label': _('prefShowBookmarks', 'Bookmarks') });
+      const bmTip = _('prefShowBookmarks', 'Bookmarks');
+      const bmBtn = h('button', { id: 'ah-bm-toggle', className: 'ah-footer-btn', type: 'button', 'aria-label': bmTip, title: bmTip, 'aria-pressed': 'false' });
       bmBtn.appendChild(makeSvg(BOOKMARK_MARKUP));
-      const themeBtn = h('button', { id: 'ah-theme', className: 'ah-footer-btn', type: 'button', 'aria-label': 'Theme' });
+      const themeTip = _('themeBtn', 'Toggle theme');
+      const themeBtn = h('button', { id: 'ah-theme', className: 'ah-footer-btn', type: 'button', 'aria-label': themeTip, title: themeTip });
       themeBtn.appendChild(makeSvg(THEME_MARKUP));
-      const settingsBtn = h('button', { id: 'ah-settings', className: 'ah-footer-btn', type: 'button', 'aria-label': _('settingsBtn', 'Settings') });
+      const settingsTip = _('settingsBtn', 'Settings');
+      const settingsBtn = h('button', { id: 'ah-settings', className: 'ah-footer-btn', type: 'button', 'aria-label': settingsTip, title: settingsTip });
       settingsBtn.appendChild(makeSvg(COG_MARKUP));
       const footer = h('div', { className: 'ah-footer' }, boltBtn, bmBtn, themeBtn, settingsBtn);
 
@@ -305,18 +315,25 @@ export default defineContentScript({
       document.documentElement.appendChild(el);
 
       closeBtn.addEventListener('click', () => dismissPanel(el!));
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && el && !el.classList.contains('ah-root--collapsed')) dismissPanel(el);
+      });
 
       // Bolt: toggle acceleration (prefetch)
       boltBtn.addEventListener('click', () => {
         __prefs.enablePrefetch = !__prefs.enablePrefetch;
-        boltBtn.classList.toggle('is-active', !!__prefs.enablePrefetch);
+        const on = !!__prefs.enablePrefetch;
+        boltBtn.classList.toggle('is-active', on);
+        boltBtn.setAttribute('aria-pressed', String(on));
         try { chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
       });
 
       // Bookmark: toggle bookmarks on SERP
       bmBtn.addEventListener('click', () => {
         __prefs.showSerpBookmarks = !__prefs.showSerpBookmarks;
-        bmBtn.classList.toggle('is-active', __prefs.showSerpBookmarks !== false);
+        const on = __prefs.showSerpBookmarks !== false;
+        bmBtn.classList.toggle('is-active', on);
+        bmBtn.setAttribute('aria-pressed', String(on));
         try { chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
         // Re-render to show/hide bookmarks section
         __bmCache = null;
@@ -331,10 +348,18 @@ export default defineContentScript({
         try { chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
       });
 
-      // Settings
-      settingsBtn.addEventListener('click', () => {
-        try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
-      });
+      // Settings — on Firefox sidebarAction.open() needs user gesture from toolbar icon,
+      // so disable the button and show a hint instead.
+      const isFirefox = /Firefox\//i.test(navigator.userAgent);
+      if (isFirefox) {
+        settingsBtn.classList.add('is-disabled');
+        settingsBtn.title = _('serpOpenSidebar', 'Open via toolbar icon');
+        settingsBtn.setAttribute('aria-label', _('serpOpenSidebar', 'Open via toolbar icon'));
+      } else {
+        settingsBtn.addEventListener('click', () => {
+          try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
+        });
+      }
 
       titleDiv.prepend(createIcon('brand', 'sm', 'main'));
       applyTheme();
@@ -382,9 +407,17 @@ export default defineContentScript({
 
         // Update footer toggle states
         const boltEl = el.querySelector('#ah-bolt');
-        if (boltEl) boltEl.classList.toggle('is-active', !!__prefs.enablePrefetch);
+        if (boltEl) {
+          const on = !!__prefs.enablePrefetch;
+          boltEl.classList.toggle('is-active', on);
+          boltEl.setAttribute('aria-pressed', String(on));
+        }
         const bmToggleEl = el.querySelector('#ah-bm-toggle');
-        if (bmToggleEl) bmToggleEl.classList.toggle('is-active', __prefs.showSerpBookmarks !== false);
+        if (bmToggleEl) {
+          const on = __prefs.showSerpBookmarks !== false;
+          bmToggleEl.classList.toggle('is-active', on);
+          bmToggleEl.setAttribute('aria-pressed', String(on));
+        }
 
         const mirrorsWrap = el.querySelector('#ah-mirrors') as HTMLElement | null;
         const bmWrap = el.querySelector('#ah-bookmarks') as HTMLElement | null;
@@ -436,7 +469,7 @@ export default defineContentScript({
                 span.className = 'ah-pill-label';
                 span.textContent = obj.host;
                 const arrow = document.createElement('span');
-                arrow.textContent = '\u2B62'; arrow.className = 'ah-pill-arrow';
+                arrow.textContent = '\u2B62'; arrow.className = 'ah-pill-arrow'; arrow.setAttribute('aria-hidden', 'true');
                 link.append(img, span, arrow);
                 row.appendChild(link);
               });
@@ -518,7 +551,7 @@ export default defineContentScript({
                   const t = h.title?.trim() || ((() => { try { return new URL(h.url).hostname; } catch { return h.url; } })());
                   span.textContent = t.length > 28 ? t.slice(0, 25) + '\u2026' : t;
                   const arrow = document.createElement('span');
-                  arrow.textContent = '\u2B62'; arrow.className = 'ah-pill-arrow';
+                  arrow.textContent = '\u2B62'; arrow.className = 'ah-pill-arrow'; arrow.setAttribute('aria-hidden', 'true');
                   a.append(img, span, arrow);
                   row.appendChild(a);
                 });

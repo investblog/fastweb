@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" id="html-root">
 <head>
   <meta charset="utf-8" />
   <title data-i18n="settingsTitle">FastWeb — settings</title>
@@ -19,7 +19,7 @@
         <h1 class="panel__title">FastWeb</h1>
       </div>
       <div class="panel__actions">
-        <button class="btn-icon" type="button" data-action="toggle-theme" title="Toggle theme">
+        <button class="btn-icon" type="button" data-action="toggle-theme" data-i18n-title="themeBtn" title="Toggle theme">
           <span class="ah-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
         </button>
       </div>
@@ -41,7 +41,7 @@
       </div>
       <div id="ah-inline-msg" class="inline-msg" role="status" aria-live="polite"></div>
       <div class="field">
-        <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" />
+        <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" aria-label="Filter domains" data-i18n-aria-label="searchLabel" />
       </div>
     </div>
 
@@ -55,13 +55,13 @@
         <div class="domain-form">
           <div class="field">
             <label class="field__label" for="domain" data-i18n="domainLabel">Domain</label>
-            <input id="domain" class="input" placeholder="example.com →" />
+            <input id="domain" class="input" placeholder="example.com →" data-i18n-placeholder="domainPlaceholder" />
           </div>
           <div class="field">
             <label class="field__label" for="alts" data-i18n="altsLabel">Official alternates (comma-separated)</label>
             <div class="domain-form__row">
               <div class="domain-form__field">
-                <input id="alts" class="input" placeholder="example.org, example.net" />
+                <input id="alts" class="input" placeholder="example.org, example.net" data-i18n-placeholder="altsPlaceholder" />
               </div>
               <button id="add" type="button" class="btn btn--primary" data-i18n="addBtn">Add</button>
             </div>
@@ -115,7 +115,7 @@
               </span>
             </label>
             <label class="toggle">
-              <span class="toggle__text" data-i18n="prefPrefetch">Acceleration Mode — prefetch top results on hover (SERP only)</span>
+              <span class="toggle__text" data-i18n="prefPrefetch">Acceleration Mode — warm up connections on hover (SERP only)</span>
               <span class="toggle__control">
                 <input id="prefPrefetch" type="checkbox" />
                 <span class="toggle__track" aria-hidden="true"></span>
@@ -125,7 +125,7 @@
             <!-- Prefetch sub-options -->
             <div id="prefetch-options" class="prefetch-options" hidden>
               <div class="range">
-                <span class="range__label" data-i18n="prefPrefetchTopN">Number of links to prefetch (Top N)</span>
+                <span class="range__label" data-i18n="prefPrefetchTopN">Number of links to warm up (Top N)</span>
                 <div class="range__control">
                   <input id="ah-prefetchTopN" class="range__slider" type="range" min="1" max="15" step="1" value="5" />
                   <span id="ah-prefetchTopN-value" class="range__value">5</span>
@@ -139,7 +139,7 @@
                 </div>
               </div>
               <p class="panel-note" data-i18n="prefPrefetchWarning">
-                Prefetching may increase data usage. Only active on search result pages (Google, Bing, DuckDuckGo, Yandex).
+                Warms up DNS/TCP/TLS for top results on hover. No pages are downloaded. Only active on search result pages.
               </p>
             </div>
           </div>

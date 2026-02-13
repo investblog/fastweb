@@ -79,9 +79,10 @@ function render(map: AlternatesMap): void {
       link.href = `https://${clean}`; link.target = '_blank'; link.rel = 'noreferrer'; link.className = 'pill';
       const linkText = document.createTextNode(a + ' ');
       const linkArrow = document.createElement('span');
-      linkArrow.className = 'pill__arrow';
+      linkArrow.className = 'pill__arrow'; linkArrow.setAttribute('aria-hidden', 'true');
       linkArrow.textContent = '\u2B62';
       link.append(linkText, linkArrow);
+      link.title = link.href;
       mid.appendChild(link);
     });
     wrap.append(header, mid); list.appendChild(wrap);
@@ -150,7 +151,8 @@ function renderBookmarks(tokens: string[]): void {
       const span = document.createElement('span');
       const t = h.title?.trim() || (() => { try { return new URL(h.url).hostname; } catch { return h.url; } })();
       span.textContent = t.length > 28 ? t.slice(0, 25) + '\u2026' : t;
-      const arrow = document.createElement('span'); arrow.textContent = '\u2B62'; arrow.className = 'pill__arrow';
+      const arrow = document.createElement('span'); arrow.textContent = '\u2B62'; arrow.className = 'pill__arrow'; arrow.setAttribute('aria-hidden', 'true');
+      a.title = h.url;
       a.append(img, span, arrow); box.appendChild(a);
     });
   });
@@ -489,6 +491,7 @@ function initHeaderScroll(): void {
 
 // --- Boot ---
 (async function boot(): Promise<void> {
+  try { document.documentElement.lang = chrome.i18n.getUILanguage(); } catch { /* ignore */ }
   initTheme();
   applyI18n();
   initNavigation();

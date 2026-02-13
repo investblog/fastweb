@@ -136,5 +136,20 @@
   "badgeBookmarks": {
     "message": "$1 закл.",
     "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "Сменить тему"
+  },
+  "serpFilterPlaceholder": {
+    "message": "Фильтр..."
+  },
+  "serpOpenSidebar": {
+    "message": "Откройте через иконку на панели"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
   }
 }

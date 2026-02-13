@@ -136,5 +136,20 @@
   "badgeBookmarks": {
     "message": "$1 bookmarks",
     "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "Toggle theme"
+  },
+  "serpFilterPlaceholder": {
+    "message": "Filter..."
+  },
+  "serpOpenSidebar": {
+    "message": "Open via toolbar icon"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
   }
 }

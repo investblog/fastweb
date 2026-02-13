@@ -20,4 +20,18 @@ export function applyI18n(): void {
     const val = _(key);
     if (val) el.setAttribute('placeholder', val);
   });
+
+  document.querySelectorAll<HTMLElement>('[data-i18n-title]').forEach(el => {
+    const key = el.getAttribute('data-i18n-title');
+    if (!key) return;
+    const val = _(key);
+    if (val) el.setAttribute('title', val);
+  });
+
+  document.querySelectorAll<HTMLElement>('[data-i18n-aria-label]').forEach(el => {
+    const key = el.getAttribute('data-i18n-aria-label');
+    if (!key) return;
+    const val = _(key);
+    if (val) el.setAttribute('aria-label', val);
+  });
 }
