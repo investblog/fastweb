@@ -1,0 +1,155 @@
+{
+  "appName": {
+    "message": "FastWeb — Acelerador de búsqueda"
+  },
+  "appDesc": {
+    "message": "Acelera la apertura de resultados de búsqueda con consejos inteligentes, espejos/marcadores y precarga al pasar el cursor."
+  },
+  "optTitle": {
+    "message": "FastWeb — Configuración"
+  },
+  "domainLabel": {
+    "message": "Dominio"
+  },
+  "altsLabel": {
+    "message": "Alternativas oficiales (separadas por comas)"
+  },
+  "addBtn": {
+    "message": "Añadir"
+  },
+  "exportBtn": {
+    "message": "Exportar JSON"
+  },
+  "importBtn": {
+    "message": "Importar JSON"
+  },
+  "loadBundleBtn": {
+    "message": "Cargar paquete de ejemplo"
+  },
+  "jsonFormatHelp": {
+    "message": "Formato JSON: {\"example.com\":[\"example.org\",\"example.net\"]}"
+  },
+  "listEmpty": {
+    "message": "La lista está vacía."
+  },
+  "deleteBtn": {
+    "message": "Eliminar"
+  },
+  "serpPanelTitle": {
+    "message": "FastWeb"
+  },
+  "serpHide": {
+    "message": "Ocultar"
+  },
+  "altsHeading": {
+    "message": "Alternativas"
+  },
+  "accelOn": {
+    "message": "Aceleración activada"
+  },
+  "accelOff": {
+    "message": "Aceleración desactivada"
+  },
+  "serpNoTips": {
+    "message": "No hay consejos en este momento."
+  },
+  "settingsBtn": {
+    "message": "Configuración"
+  },
+  "searchLabel": {
+    "message": "Filtrar dominios"
+  },
+  "searchPlaceholder": {
+    "message": "Escriba para filtrar..."
+  },
+  "bookmarksHeading": {
+    "message": "Marcadores relacionados"
+  },
+  "prefsHeading": {
+    "message": "Configuración avanzada"
+  },
+  "prefSensitivity": {
+    "message": "Sensibilidad (longitud mínima de marca)"
+  },
+  "prefUnicode": {
+    "message": "Tokenización Unicode (si está disponible)"
+  },
+  "prefShowBookmarks": {
+    "message": "Mostrar marcadores en SERP"
+  },
+  "prefShowBadge": {
+    "message": "Insignia con número de consejos"
+  },
+  "prefPrefetch": {
+    "message": "Modo aceleración — precalentar conexiones al pasar el cursor (solo SERP)"
+  },
+  "prefPrefetchTopN": {
+    "message": "Número de enlaces a precalentar (Top N)"
+  },
+  "prefPrefetchDelay": {
+    "message": "Retraso de hover (ms)"
+  },
+  "prefPrefetchWarning": {
+    "message": "Opcional. Precalienta DNS/TCP/TLS para los Top N resultados al pasar el cursor (solo SERP). Puede generar tráfico de red adicional. No se descargan páginas."
+  },
+  "panelModeLabel": {
+    "message": "Modo de panel SERP"
+  },
+  "panelModeOpen": {
+    "message": "Expandir panel automáticamente en SERP"
+  },
+  "panelModeBadge": {
+    "message": "Solo insignia (clic en el icono para alternar)"
+  },
+  "bundleApplied": {
+    "message": "Se añadieron $1 dominios nuevos del paquete de ejemplo"
+  },
+  "bundleAppliedNone": {
+    "message": "No se encontraron dominios nuevos en el paquete de ejemplo"
+  },
+  "bundleLoadFailed": {
+    "message": "No se pudo cargar el paquete de ejemplo. Verifique su conexión."
+  },
+  "settingsTitle": {
+    "message": "FastWeb — configuración"
+  },
+  "deleteBundleBtn": {
+    "message": "Eliminar paquete"
+  },
+  "bundleDeleted": {
+    "message": "Se eliminaron $1 dominios del paquete",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "bundleNone": {
+    "message": "No hay paquete cargado"
+  },
+  "domainsHeading": {
+    "message": "Administrar dominios"
+  },
+  "rateBtn": {
+    "message": "Califícanos"
+  },
+  "badgeAlts": {
+    "message": "$1 alternativas",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "badgeBookmarks": {
+    "message": "$1 marcadores",
+    "placeholders": { "1": { "content": "$1" } }
+  },
+  "themeBtn": {
+    "message": "Cambiar tema"
+  },
+  "serpFilterPlaceholder": {
+    "message": "Filtrar..."
+  },
+  "serpOpenSidebar": {
+    "message": "Abrir desde el icono de la barra"
+  },
+  "domainPlaceholder": {
+    "message": "example.com \u2192"
+  },
+  "altsPlaceholder": {
+    "message": "example.org, example.net"
+  }
+}
