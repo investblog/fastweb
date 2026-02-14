@@ -21,7 +21,7 @@ const STORES: Record<string, StoreInfo> = {
     label: 'Firefox Add-ons',
   },
   opera: {
-    url: 'https://addons.opera.com/extensions/details/fastweb/',
+    url: 'https://addons.opera.com/extensions/details/fastweb-search-accelerator/',
     icon: '/icons/opera.svg',
     label: 'Opera Add-ons',
   },
