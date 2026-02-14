@@ -50,9 +50,6 @@
   "accelOff": {
     "message": "شتاب‌دهنده خاموش"
   },
-  "serpNoTips": {
-    "message": "در حال حاضر راهنمایی وجود ندارد."
-  },
   "settingsBtn": {
     "message": "تنظیمات"
   },
@@ -91,15 +88,6 @@
   },
   "prefPrefetchWarning": {
     "message": "اختیاری. DNS/TCP/TLS را برای Top N نتیجه هنگام هاور گرم می‌کند (فقط SERP). ممکن است ترافیک شبکه اضافی ایجاد کند. هیچ صفحه‌ای دانلود نمی‌شود."
-  },
-  "panelModeLabel": {
-    "message": "حالت پنل SERP"
-  },
-  "panelModeOpen": {
-    "message": "باز شدن خودکار پنل در SERP"
-  },
-  "panelModeBadge": {
-    "message": "فقط نشان (برای تغییر روی آیکون کلیک کنید)"
   },
   "bundleApplied": {
     "message": "$1 دامنه جدید از بسته نمونه اضافه شد"

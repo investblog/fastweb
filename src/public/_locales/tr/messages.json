@@ -50,9 +50,6 @@
   "accelOff": {
     "message": "Hızlandırma kapalı"
   },
-  "serpNoTips": {
-    "message": "Şu anda ipucu yok."
-  },
   "settingsBtn": {
     "message": "Ayarlar"
   },
@@ -91,15 +88,6 @@
   },
   "prefPrefetchWarning": {
     "message": "İsteğe bağlı. Hover ile Top N sonuç için DNS/TCP/TLS ısıtır (yalnızca SERP). Ek ağ trafiği oluşturabilir. Sayfa indirilmez."
-  },
-  "panelModeLabel": {
-    "message": "SERP panel modu"
-  },
-  "panelModeOpen": {
-    "message": "SERP'te paneli otomatik aç"
-  },
-  "panelModeBadge": {
-    "message": "Yalnızca rozet (açmak için simgeye tıklayın)"
   },
   "bundleApplied": {
     "message": "Örnek paketten $1 yeni alan adı eklendi"

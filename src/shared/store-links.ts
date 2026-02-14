@@ -20,6 +20,11 @@ const STORES: Record<string, StoreInfo> = {
     icon: '/icons/mozilla.svg',
     label: 'Firefox Add-ons',
   },
+  opera: {
+    url: 'https://addons.opera.com/extensions/details/fastweb/',
+    icon: '/icons/opera.svg',
+    label: 'Opera Add-ons',
+  },
 };
 
 export function getStoreInfo(): StoreInfo | null {

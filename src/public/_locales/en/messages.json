@@ -50,9 +50,6 @@
   "accelOff": {
     "message": "Acceleration off"
   },
-  "serpNoTips": {
-    "message": "No tips right now."
-  },
   "settingsBtn": {
     "message": "Settings"
   },
@@ -91,15 +88,6 @@
   },
   "prefPrefetchWarning": {
     "message": "Optional. Warms up DNS/TCP/TLS for Top N results on hover (SERP only). May generate extra network traffic. No pages are downloaded."
-  },
-  "panelModeLabel": {
-    "message": "SERP panel mode"
-  },
-  "panelModeOpen": {
-    "message": "Auto-expand panel on SERP"
-  },
-  "panelModeBadge": {
-    "message": "Badge only (click icon to toggle)"
   },
   "bundleApplied": {
     "message": "Added $1 new domains from the sample bundle"

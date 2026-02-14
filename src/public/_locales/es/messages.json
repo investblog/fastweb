@@ -50,9 +50,6 @@
   "accelOff": {
     "message": "Aceleración desactivada"
   },
-  "serpNoTips": {
-    "message": "No hay consejos en este momento."
-  },
   "settingsBtn": {
     "message": "Configuración"
   },
@@ -91,15 +88,6 @@
   },
   "prefPrefetchWarning": {
     "message": "Opcional. Precalienta DNS/TCP/TLS para los Top N resultados al pasar el cursor (solo SERP). Puede generar tráfico de red adicional. No se descargan páginas."
-  },
-  "panelModeLabel": {
-    "message": "Modo de panel SERP"
-  },
-  "panelModeOpen": {
-    "message": "Expandir panel automáticamente en SERP"
-  },
-  "panelModeBadge": {
-    "message": "Solo insignia (clic en el icono para alternar)"
   },
   "bundleApplied": {
     "message": "Se añadieron $1 dominios nuevos del paquete de ejemplo"

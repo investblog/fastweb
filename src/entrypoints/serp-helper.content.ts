@@ -64,11 +64,6 @@ export default defineContentScript({
 
     // --- Panel styles ---
     const PANEL_STYLE_ID = 'ah-serp-style';
-    const TOAST_ID = 'ah-serp-toast';
-
-    function normalizePanelMode(mode: string): 'open' | 'badge-only' {
-      return mode === 'badge-only' ? 'badge-only' : 'open';
-    }
 
     function ensurePanelStyles(): void {
       if (document.getElementById(PANEL_STYLE_ID)) return;
@@ -189,42 +184,11 @@ export default defineContentScript({
       #ah-root .ah-footer-btn:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
       #ah-root .ah-footer-btn:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
       #ah-root .ah-footer-btn.is-active { color: var(--ah-accent); }
-      #ah-root .ah-footer-btn.is-disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+      #ah-root .ah-footer-btn.is-disabled { opacity: 0.4; cursor: default; }
       #ah-root .ah-footer-btn svg { width: 16px; height: 16px; }
       #ah-root.ah-root--inline-hidden { display: none; }
-      #ah-serp-toast {
-        position: fixed; top: 16px; inset-inline-end: 16px; z-index: 999999;
-        background: #0b1020; color: #E7E9F0; border: 1px solid #252c3c;
-        border-radius: 12px; padding: 8px 12px; box-shadow: 0 18px 45px rgba(0,0,0,.55);
-        opacity: 0; transform: translateY(-8px); transition: opacity .16s ease, transform .16s ease;
-        pointer-events: none; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 13px;
-      }
-      #ah-serp-toast.visible { opacity: 1; transform: translateY(0); }
     `;
       (document.head || document.documentElement).appendChild(style);
-    }
-
-    // --- Toast ---
-    let toastTimer: ReturnType<typeof setTimeout> | undefined;
-    function showToast(message: string): void {
-      if (!message) return;
-      ensurePanelStyles();
-      let toast = document.getElementById(TOAST_ID);
-      if (!toast) {
-        toast = document.createElement('div');
-        toast.id = TOAST_ID;
-        toast.setAttribute('role', 'status');
-        toast.setAttribute('aria-live', 'polite');
-        document.documentElement.appendChild(toast);
-      }
-      toast.textContent = message;
-      toast.classList.add('visible');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast!.classList.remove('visible'), 2400);
-    }
-
-    function showNoTipsToast(): void {
-      showToast(_('serpNoTips', 'No tips right now'));
     }
 
     // --- Panel state ---
@@ -236,7 +200,6 @@ export default defineContentScript({
     }
     function collapsePanel(el: HTMLElement): void { setPanelExpanded(el, false); }
     function dismissPanel(el: HTMLElement): void { userDismissed = true; collapsePanel(el); }
-    function togglePanel(el: HTMLElement): void { setPanelExpanded(el, !el.classList.contains('ah-root--collapsed')); }
 
     function setBadge(count: number, altsCount: number, bmCount: number): void {
       try {
@@ -365,10 +328,10 @@ export default defineContentScript({
         try { chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
       });
 
-      // Settings — on Firefox sidebarAction.open() needs user gesture from toolbar icon,
+      // Settings — Firefox/Opera can't open sidebar/popup programmatically from content script,
       // so disable the button and show a hint instead.
-      const isFirefox = /Firefox\//i.test(navigator.userAgent);
-      if (isFirefox) {
+      const noInPageSettings = /Firefox\//i.test(navigator.userAgent) || /OPR\//i.test(navigator.userAgent);
+      if (noInPageSettings) {
         settingsBtn.classList.add('is-disabled');
         settingsBtn.title = _('serpOpenSidebar', 'Open via toolbar icon');
         settingsBtn.setAttribute('aria-label', _('serpOpenSidebar', 'Open via toolbar icon'));
@@ -435,14 +398,18 @@ export default defineContentScript({
         const matchedKeys = matchAlternatesByBrandTokens(tokens, map);
         const domainTokens = findDomainsInQuery(q).map(s => s.toLowerCase());
         for (const d of domainTokens) {
-          if (map[d] && !matchedKeys.includes(d)) matchedKeys.push(d);
+          const dk = map[d] ? d : map['www.' + d] ? 'www.' + d : null;
+          if (dk && !matchedKeys.includes(dk)) matchedKeys.push(dk);
+        }
+
+        // Resolve key → actual map key (handles www. mismatch)
+        function resolveKey(key: string): string[] {
+          const k = map[key] || map[key.replace(/^www\./, '')] || map['www.' + key.replace(/^www\./, '')];
+          return Array.isArray(k) ? k : [];
         }
 
         // Only keep keys that have actual alternates
-        const keysWithAlts = matchedKeys.filter(key => {
-          const alts = map[key] || map[key.replace(/^www\./, '')] || [];
-          return Array.isArray(alts) && alts.length > 0;
-        });
+        const keysWithAlts = matchedKeys.filter(key => resolveKey(key).length > 0);
 
         const existing = document.getElementById('ah-root');
         if (!keysWithAlts.length) {
@@ -451,11 +418,9 @@ export default defineContentScript({
           return;
         }
 
-        const panelMode = normalizePanelMode(__prefs.panelMode || 'open');
-        const isOpenMode = panelMode === 'open';
         const el = injectPanel();
         // Respect user's manual dismiss — don't re-expand on SPA navigation
-        if (!userDismissed) setPanelExpanded(el, isOpenMode);
+        if (!userDismissed) setPanelExpanded(el, true);
 
         // Update footer toggle states
         const boltEl = el.querySelector('#ah-bolt');
@@ -480,7 +445,7 @@ export default defineContentScript({
         // Count total individual alternates for search threshold
         let totalAltsCount = 0;
         keysWithAlts.forEach(key => {
-          const alts = map[key] || map[key.replace(/^www\./, '')] || [];
+          const alts = resolveKey(key);
           totalAltsCount += Array.isArray(alts) ? alts.length : 0;
         });
 
@@ -490,7 +455,7 @@ export default defineContentScript({
         if (mirrorsWrap) {
           let showedMirrors = false;
           keysWithAlts.forEach((key) => {
-            const alts = map[key] || map[key.replace(/^www\./, '')] || [];
+            const alts = resolveKey(key);
             if (Array.isArray(alts) && alts.length) {
               if (!showedMirrors) {
                 showedMirrors = true;
@@ -502,7 +467,7 @@ export default defineContentScript({
               }
               const note = document.createElement('div');
               note.className = 'ah-section-note';
-              note.textContent = key;
+              note.textContent = key.replace(/^www\./, '');
               mirrorsWrap.appendChild(note);
 
               const row = document.createElement('div');
@@ -556,7 +521,7 @@ export default defineContentScript({
               keysWithAlts.forEach((key) => {
                 addKw(key);
                 slds.add((key.split('.')[0] || key).toLowerCase());
-                const alts = map[key] || map[key.replace(/^www\./, '')] || [];
+                const alts = resolveKey(key);
                 (alts as string[]).forEach((a: string) => { const d = toHost(a); addKw(d); slds.add((d.split('.')[0] || d)); });
               });
               slds.forEach(addKw);
@@ -673,26 +638,5 @@ export default defineContentScript({
     // this only catches edge-cases (e.g. location.assign, hash changes).
     setInterval(onUrlMaybeChanged, 4000);
 
-    // --- Listen for TOGGLE_SERP_PANEL from background ---
-    try {
-      if (hasRuntime() && chrome.runtime.onMessage) {
-        chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-          if (msg?.type === 'TOGGLE_SERP_PANEL') {
-            try {
-              const panel = document.getElementById('ah-root');
-              if (panel) {
-                togglePanel(panel);
-                sendResponse?.({ ok: true, hasTips: true });
-              } else {
-                showNoTipsToast();
-                sendResponse?.({ ok: true, hasTips: false });
-              }
-            } catch {
-              sendResponse?.({ ok: false });
-            }
-          }
-        });
-      }
-    } catch { /* ignore */ }
   },
 });

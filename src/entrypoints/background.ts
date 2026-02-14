@@ -37,14 +37,16 @@ export default defineBackground(() => {
   }
 
   // --- Side panel / sidebar ---
-  // Chrome/Edge: icon click → side panel opens directly (no onClicked needed)
-  if (!import.meta.env.FIREFOX) {
+  const OPERA = import.meta.env.BROWSER === 'opera';
+
+  // Chrome/Edge: icon click → side panel opens directly
+  if (!import.meta.env.FIREFOX && !OPERA) {
     try {
       (browser as any).sidePanel?.setPanelBehavior?.({ openPanelOnActionClick: true });
     } catch { /* not available */ }
   }
 
-  // Firefox: onClicked fires → open sidebar (has user gesture)
+  // Firefox: onClicked → open sidebar
   if (import.meta.env.FIREFOX && actionApi?.onClicked) {
     actionApi.onClicked.addListener(async () => {
       try {
@@ -52,6 +54,8 @@ export default defineBackground(() => {
       } catch { /* ignore */ }
     });
   }
+
+  // Opera: sidebar_action handles left panel; toolbar uses default_popup
 
   function flattenBookmarks(nodes: chrome.bookmarks.BookmarkTreeNode[]): BookmarkEntry[] {
     const flat: BookmarkEntry[] = [];
@@ -168,10 +172,9 @@ export default defineBackground(() => {
       switch (msg.type) {
         case 'OPEN_SETTINGS': {
           if (import.meta.env.FIREFOX) {
-            // Firefox: try sidebarAction.open() — resolves but may not open without user gesture.
             try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
-          } else {
-            // Chrome/Edge: sidePanel.open() works without user gesture.
+          } else if (!OPERA) {
+            // Chrome/Edge: sidePanel.open()
             const sp = (browser as any).sidePanel;
             if (sp?.open && sender?.tab?.id) {
               sp.open({ tabId: sender.tab.id }).catch(() => {});

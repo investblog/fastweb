@@ -6,7 +6,6 @@ export interface Prefs {
   showSerpBookmarks: boolean;
   showBadge: boolean;
   useUnicodeTokenize: boolean;
-  panelMode: 'open' | 'badge-only';
   enablePrefetch: boolean;
   prefetchTopN: number;
   prefetchHoverDelay: number;

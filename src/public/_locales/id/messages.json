@@ -50,9 +50,6 @@
   "accelOff": {
     "message": "Akselerasi nonaktif"
   },
-  "serpNoTips": {
-    "message": "Tidak ada tips saat ini."
-  },
   "settingsBtn": {
     "message": "Pengaturan"
   },
@@ -91,15 +88,6 @@
   },
   "prefPrefetchWarning": {
     "message": "Opsional. Memanaskan DNS/TCP/TLS untuk Top N hasil saat hover (hanya SERP). Dapat menghasilkan lalu lintas jaringan tambahan. Tidak ada halaman yang diunduh."
-  },
-  "panelModeLabel": {
-    "message": "Mode panel SERP"
-  },
-  "panelModeOpen": {
-    "message": "Buka panel otomatis di SERP"
-  },
-  "panelModeBadge": {
-    "message": "Hanya lencana (klik ikon untuk toggle)"
   },
   "bundleApplied": {
     "message": "Ditambahkan $1 domain baru dari contoh bundel"

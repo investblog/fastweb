@@ -1,6 +1,6 @@
 {
   "name": "fastweb",
-  "version": "0.8.1",
+  "version": "0.9.0",
   "description": "Search accelerator — official alternates, bookmarks & prefetch right on SERP",
   "type": "module",
   "scripts": {
@@ -13,7 +13,10 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "zip:edge": "wxt zip -b edge",
-    "zip:all": "wxt zip && wxt zip -b firefox && wxt zip -b edge",
+    "dev:opera": "wxt -b opera",
+    "build:opera": "wxt build -b opera",
+    "zip:opera": "wxt zip -b opera",
+    "zip:all": "wxt zip && wxt zip -b firefox && wxt zip -b edge && wxt zip -b opera",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

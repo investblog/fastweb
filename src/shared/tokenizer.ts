@@ -40,7 +40,7 @@ export function matchAlternatesByBrandTokens(tokens: string[], map: AlternatesMa
       else if (sld.includes(t)) score = Math.max(score, 2);
       else if (t.includes(sld)) score = Math.max(score, 1);
     }
-    if (score > 0 && !seen.has(d)) { seen.add(d); scored.push({ key: d, score }); }
+    if (score > 0 && !seen.has(d)) { seen.add(d); scored.push({ key: dom.toLowerCase(), score }); }
   }
 
   scored.sort((a, b) => b.score - a.score || a.key.length - b.key.length);

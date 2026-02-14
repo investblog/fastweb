@@ -50,9 +50,6 @@
   "accelOff": {
     "message": "Прискорення вимк."
   },
-  "serpNoTips": {
-    "message": "Підказок немає"
-  },
   "settingsBtn": {
     "message": "Налаштування"
   },
@@ -91,15 +88,6 @@
   },
   "prefPrefetchWarning": {
     "message": "Опціонально. Прогріває DNS/TCP/TLS для Top N результатів при наведенні (лише SERP). Може створювати додатковий мережевий трафік. Сторінки не завантажуються."
-  },
-  "panelModeLabel": {
-    "message": "Режим панелі на SERP"
-  },
-  "panelModeOpen": {
-    "message": "Авторозгортання панелі на SERP"
-  },
-  "panelModeBadge": {
-    "message": "Лише значок (клік для показу)"
   },
   "bundleApplied": {
     "message": "Додано $1 нових доменів із прикладу"

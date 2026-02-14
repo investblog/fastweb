@@ -237,44 +237,6 @@ function loadPrefs(): Promise<Prefs> {
 function savePrefs(p: Prefs): Promise<void> { return new Promise(r => chrome.storage.sync.set({ prefs: p }, r)); }
 
 async function initPrefsUI(): Promise<void> {
-  // --- Panel mode dropdown ---
-  const modeDropdown = document.getElementById('panelModeDropdown');
-  const modeChipLabel = document.getElementById('panelModeChipLabel');
-  const modeItems = modeDropdown ? Array.from(modeDropdown.querySelectorAll<HTMLButtonElement>('.dropdown__item')) : [];
-  let currentMode: 'open' | 'badge-only' = 'open';
-
-  function setMode(val: string): void {
-    currentMode = val === 'badge-only' ? 'badge-only' : 'open';
-    modeItems.forEach(it => {
-      it.classList.toggle('is-active', it.dataset.value === currentMode);
-    });
-    const active = modeItems.find(it => it.dataset.value === currentMode);
-    if (modeChipLabel && active) modeChipLabel.textContent = active.textContent || '';
-  }
-
-  // Dropdown toggle
-  if (modeDropdown) {
-    const trigger = modeDropdown.querySelector('.dropdown__trigger');
-    trigger?.addEventListener('click', () => {
-      const open = modeDropdown.classList.toggle('dropdown--open');
-      trigger.setAttribute('aria-expanded', String(open));
-    });
-    modeItems.forEach(item => {
-      item.addEventListener('click', () => {
-        setMode(item.dataset.value || 'open');
-        modeDropdown.classList.remove('dropdown--open');
-        trigger?.setAttribute('aria-expanded', 'false');
-        debouncedSave(snapshot());
-      });
-    });
-    document.addEventListener('click', (e) => {
-      if (!modeDropdown.contains(e.target as Node)) {
-        modeDropdown.classList.remove('dropdown--open');
-        trigger?.setAttribute('aria-expanded', 'false');
-      }
-    });
-  }
-
   const els = {
     min: document.querySelector('#ah-minBrand') as HTMLInputElement,
     minVal: document.querySelector('#ah-minBrand-value') as HTMLElement,
@@ -290,10 +252,6 @@ async function initPrefsUI(): Promise<void> {
   };
   if (!els.min) return;
   const prefs = await loadPrefs();
-  if (prefs.panelMode !== 'open' && prefs.panelMode !== 'badge-only') {
-    prefs.panelMode = 'open';
-    chrome.storage.sync.set({ prefs: { ...prefs } });
-  }
   const minBrand = Math.max(1, Math.min(10, prefs.minBrandLength ?? 2));
   els.min.value = String(minBrand);
   els.minVal.textContent = String(minBrand);
@@ -308,7 +266,6 @@ async function initPrefsUI(): Promise<void> {
   els.prefetchDelay.value = String(delay);
   els.prefetchDelayVal.textContent = String(delay);
   if (els.prefetchOptions) els.prefetchOptions.hidden = !els.prefetch.checked;
-  setMode(prefs.panelMode);
 
   const debouncedSave = (() => {
     let t: ReturnType<typeof setTimeout> | null = null;
@@ -336,7 +293,6 @@ async function initPrefsUI(): Promise<void> {
         if (!Number.isFinite(n)) return 200;
         return Math.max(50, Math.min(2000, n));
       })(),
-      panelMode: currentMode,
     };
   }
 

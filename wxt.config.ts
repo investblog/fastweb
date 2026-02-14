@@ -20,7 +20,7 @@ export default defineConfig({
     default_locale: 'en',
     homepage_url: 'https://fastweb.cam',
 
-    permissions: browser === 'firefox'
+    permissions: (browser === 'firefox' || browser === 'opera')
       ? ['alarms', 'bookmarks', 'storage', 'tabs']
       : ['alarms', 'bookmarks', 'storage', 'tabs', 'sidePanel'],
 
@@ -63,12 +63,28 @@ export default defineConfig({
   }),
 
   hooks: {
-    'build:manifestGenerated': (_wxt, manifest) => {
+    'build:manifestGenerated': (wxt, manifest) => {
       // Firefox AMO requires data_collection_permissions (mandatory H1 2026).
-      // Injected via hook because WXT types don't include it yet.
       if (manifest.browser_specific_settings?.gecko) {
         (manifest.browser_specific_settings.gecko as Record<string, unknown>)
           .data_collection_permissions = { required: ['none'] };
+      }
+      // Opera: no sidePanel support — use sidebar_action + action popup fallback
+      if (wxt.config.browser === 'opera') {
+        delete (manifest as unknown as Record<string, unknown>).side_panel;
+        if (manifest.permissions) {
+          manifest.permissions = manifest.permissions.filter(p => p !== 'sidePanel');
+        }
+        // Left sidebar panel (Opera proprietary)
+        (manifest as unknown as Record<string, unknown>).sidebar_action = {
+          default_panel: 'sidepanel.html',
+          default_icon: 'icons/icon-48.png',
+          default_title: 'FastWeb',
+        };
+        // Toolbar icon opens popup; sidebar icon opens panel automatically
+        if (manifest.action) {
+          manifest.action.default_popup = 'sidepanel.html';
+        }
       }
     },
   },

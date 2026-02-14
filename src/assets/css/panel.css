@@ -8,8 +8,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
+  min-width: 360px;
+  min-height: max(600px, 100dvh);
   background: var(--bg);
 
   /*  Responsive typography — vw = panel viewport width.

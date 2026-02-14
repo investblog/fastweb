@@ -28,15 +28,6 @@ export interface SetBadgeResponse {
   ok: boolean;
 }
 
-export interface ToggleSerpPanelRequest {
-  type: 'TOGGLE_SERP_PANEL';
-}
-
-export interface ToggleSerpPanelResponse {
-  ok: boolean;
-  hasTips?: boolean;
-}
-
 export interface PrefetchUrlRequest {
   type: 'PREFETCH_URL';
   url: string;
@@ -54,7 +45,6 @@ export type RequestMessage =
   | OpenSettingsRequest
   | GetBookmarksRequest
   | SetBadgeRequest
-  | ToggleSerpPanelRequest
   | PrefetchUrlRequest;
 
 // ============================================================================
@@ -65,7 +55,6 @@ export type ResponseMap = {
   OPEN_SETTINGS: void;
   GET_BOOKMARKS: GetBookmarksResponse;
   SET_BADGE: SetBadgeResponse;
-  TOGGLE_SERP_PANEL: ToggleSerpPanelResponse;
   PREFETCH_URL: PrefetchUrlResponse;
 };
 

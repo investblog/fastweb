@@ -5,7 +5,6 @@ export const DEFAULT_PREFS: Prefs = {
   showSerpBookmarks: true,
   showBadge: true,
   useUnicodeTokenize: true,
-  panelMode: 'open',
   enablePrefetch: true,
   prefetchTopN: 5,
   prefetchHoverDelay: 200,
