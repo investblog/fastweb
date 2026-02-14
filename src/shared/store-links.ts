@@ -15,6 +15,11 @@ const STORES: Record<string, StoreInfo> = {
     icon: '/icons/edge.svg',
     label: 'Edge Add-ons',
   },
+  firefox: {
+    url: 'https://addons.mozilla.org/firefox/addon/fastweb/',
+    icon: '/icons/mozilla.svg',
+    label: 'Firefox Add-ons',
+  },
 };
 
 export function getStoreInfo(): StoreInfo | null {
