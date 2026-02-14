@@ -2,8 +2,11 @@
 
 ## English
 
-### Short Description (132 chars)
-Speed up search results with smart alternate domains, bookmarks on SERP, and optional hover prefetch. Runs locally, no data collected.
+### Short Description — Chrome/Edge (119/132)
+Speed up search results with tips, alternates (mirrors), bookmark hints, and lightweight hover warm-up (on by default).
+
+### AMO Summary — Firefox (229/250)
+FastWeb upgrades search result pages with smart tips, trusted alternates (mirrors), and bookmark hints—so you open the right page faster. Includes a lightweight hover warm-up (enabled by default) that you can disable in settings.
 
 ### Detailed Description
 
@@ -31,8 +34,11 @@ https://github.com/investblog/fastweb
 
 ## Russian
 
-### Short Description (132 chars)
-Ускоряет поиск: альтернативные домены, закладки на SERP и прогрев соединений. Работает локально, данные не собираются.
+### Short Description — Chrome/Edge (128/132)
+Ускоряет открытие результатов поиска: подсказки, зеркала, подсказки по закладкам и лёгкий прогрев по наведению (вкл. по умолч.).
+
+### AMO Summary — Firefox (242/250)
+FastWeb улучшает страницы выдачи: умные подсказки, проверенные альтернативы (зеркала) и подсказки по закладкам, чтобы быстрее открыть нужную страницу. Есть лёгкий прогрев по наведению (включён по умолчанию) — его можно отключить в настройках.
 
 ### Detailed Description
 
@@ -60,8 +66,11 @@ https://github.com/investblog/fastweb
 
 ## Ukrainian
 
-### Short Description (132 chars)
-Прискорює пошук: альтернативні домени, закладки на SERP та прогрів з'єднань. Працює локально, дані не збираються.
+### Short Description — Chrome/Edge (129/132)
+Прискорює відкриття результатів: підказки, альтернативи (дзеркала), підказки закладок і легкий прогрів при наведенні (увімкнено).
+
+### AMO Summary — Firefox (243/250)
+FastWeb покращує сторінки видачі: розумні підказки, надійні альтернативи (дзеркала) та підказки закладок, щоб швидше відкрити потрібну сторінку. Є легкий прогрів при наведенні (увімкнено за замовчуванням) — його можна вимкнути в налаштуваннях.
 
 ### Detailed Description
 
@@ -89,8 +98,11 @@ https://github.com/investblog/fastweb
 
 ## Turkish
 
-### Short Description (132 chars)
-Arama sonuçlarını hızlandırın: alternatif alan adları, SERP'te yer imleri ve bağlantı ısıtma. Yerel çalışır, veri toplanmaz.
+### Short Description — Chrome/Edge (125/132)
+Arama sonuçlarını hızlandırın: ipuçları, alternatifler (mirror), yer imi önerileri ve hafif hover ısınması (varsayılan açık).
+
+### AMO Summary — Firefox (245/250)
+FastWeb arama sonuç sayfalarını akıllı ipuçları, güvenilir alternatifler (mirror) ve yer imi önerileriyle geliştirir; doğru sayfayı daha hızlı açmanıza yardımcı olur. Varsayılan açık hafif bir "hover ısınması" içerir ve ayarlardan kapatılabilir.
 
 ### Detailed Description
 
@@ -118,8 +130,11 @@ https://github.com/investblog/fastweb
 
 ## Spanish
 
-### Short Description (132 chars)
-Acelera la búsqueda: dominios alternativos, marcadores en SERP y precalentamiento de conexiones. Funciona localmente, sin rastreo.
+### Short Description — Chrome/Edge (130/132)
+Acelera resultados de búsqueda: consejos, alternativas (mirrors), sugerencias de marcadores y calentamiento hover ligero (activo).
+
+### AMO Summary — Firefox (247/250)
+FastWeb mejora las páginas de resultados con consejos inteligentes, alternativas confiables (mirrors) y sugerencias de marcadores para abrir la página correcta más rápido. Incluye calentamiento hover ligero (activo por defecto) que puedes desactivar en ajustes.
 
 ### Detailed Description
 
@@ -147,8 +162,11 @@ https://github.com/investblog/fastweb
 
 ## Indonesian
 
-### Short Description (132 chars)
-Percepat pencarian: domain alternatif, bookmark di SERP, dan pemanasan koneksi. Berjalan lokal, tidak ada data yang dikumpulkan.
+### Short Description — Chrome/Edge (119/132)
+Percepat hasil pencarian dengan tips, alternatif (mirror), petunjuk bookmark, dan hover warm-up ringan (aktif default).
+
+### AMO Summary — Firefox (248/250)
+FastWeb meningkatkan halaman hasil pencarian dengan tips cerdas, alternatif tepercaya (mirror), dan petunjuk bookmark—agar Anda membuka halaman yang tepat lebih cepat. Termasuk hover warm-up ringan (aktif default) yang bisa dimatikan di pengaturan.
 
 ### Detailed Description
 
@@ -176,8 +194,11 @@ https://github.com/investblog/fastweb
 
 ## Persian (فارسی)
 
-### Short Description (132 chars)
-جستجو را سرعت ببخشید: دامنه‌های جایگزین، نشانک‌ها در SERP و گرم کردن اتصال. محلی اجرا می‌شود، داده‌ای جمع‌آوری نمی‌شود.
+### Short Description — Chrome/Edge (129/132)
+نتایج جستجو را سریع‌تر باز کنید: نکته‌ها، دامنه‌های جایگزین (Mirror)، یادآوری بوکمارک و گرم‌کردن سبک با رفتن ماوس (پیش‌فرض روشن).
+
+### AMO Summary — Firefox (239/250)
+FastWeb صفحه نتایج جستجو را با نکته‌های هوشمند، دامنه‌های جایگزینِ قابل‌اعتماد (Mirror) و یادآوری بوکمارک‌ها بهتر می‌کند تا سریع‌تر به نتیجه درست برسید. «گرم‌کردن» سبک با رفتن ماوس به‌صورت پیش‌فرض روشن است و در تنظیمات قابل خاموش‌کردن است.
 
 ### Detailed Description
 
