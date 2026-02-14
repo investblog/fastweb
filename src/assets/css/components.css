@@ -365,14 +365,18 @@ a:hover {
   appearance: none;
   flex: 1;
   min-width: 0;
-  height: 4px;
+  height: 20px;
   margin: 0;
   padding: 0;
   border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.range__slider::-webkit-slider-runnable-track {
+  height: 4px;
   border-radius: var(--r-pill);
   background: var(--border-strong);
-  accent-color: var(--primary);
-  cursor: pointer;
 }
 
 .range__slider::-webkit-slider-thumb {
@@ -383,6 +387,13 @@ a:hover {
   border-radius: 50%;
   background: var(--primary);
   cursor: pointer;
+  margin-top: -6px;
+}
+
+.range__slider::-moz-range-track {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--border-strong);
 }
 
 .range__slider::-moz-range-thumb {
@@ -392,18 +403,6 @@ a:hover {
   background: var(--primary);
   cursor: pointer;
   border: none;
-}
-
-.range__slider::-webkit-slider-runnable-track {
-  height: 4px;
-  border-radius: var(--r-pill);
-  background: var(--border-strong);
-}
-
-.range__slider::-moz-range-track {
-  height: 4px;
-  border-radius: var(--r-pill);
-  background: var(--border-strong);
 }
 
 .range__value {
