@@ -1,0 +1,5 @@
+{
+  "www.speedtest.net": ["https://fast.com"],
+  "duckduckgo.com": ["https://start.duckduckgo.com", "https://lite.duckduckgo.com"],
+  "archive.org": ["https://web.archive.org"]
+}

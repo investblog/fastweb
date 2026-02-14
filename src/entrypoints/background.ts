@@ -67,7 +67,14 @@ export default defineBackground(() => {
 
   // --- Bundle sync (remote-first, daily auto-update) ---
   const BUNDLE_ALARM = 'bundle-sync';
-  const BUNDLE_URL = 'https://raw.githubusercontent.com/investblog/fastweb/main/data/bundle.json';
+  const BUNDLE_BASE = 'https://raw.githubusercontent.com/investblog/fastweb/main/data';
+
+  function getBrowserLocale(): string {
+    try {
+      const lang = chrome.i18n.getUILanguage();
+      return (lang || 'en').split(/[-_]/)[0].toLowerCase();
+    } catch { return 'en'; }
+  }
 
   async function syncBundle(bundle: Record<string, unknown>): Promise<void> {
     if (!bundle || typeof bundle !== 'object') return;
@@ -101,11 +108,19 @@ export default defineBackground(() => {
   }
 
   async function fetchRemoteBundle(): Promise<void> {
-    try {
-      const resp = await fetch(BUNDLE_URL, { cache: 'no-store' });
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      await syncBundle(await resp.json());
-    } catch { /* silent — will retry on next alarm */ }
+    const locale = getBrowserLocale();
+    const urls = [
+      `${BUNDLE_BASE}/bundle-${locale}.json`,
+      ...(locale !== 'en' ? [`${BUNDLE_BASE}/bundle-en.json`] : []),
+    ];
+    for (const url of urls) {
+      try {
+        const resp = await fetch(url, { cache: 'no-store' });
+        if (!resp.ok) continue;
+        await syncBundle(await resp.json());
+        return;
+      } catch { /* try next */ }
+    }
   }
 
   async function loadLocalBundle(): Promise<void> {

@@ -405,16 +405,29 @@ function setupEventListeners(): void {
   });
 
   document.getElementById('ah-load-bundle')?.addEventListener('click', async () => {
-    try {
-      const remoteUrl = 'https://raw.githubusercontent.com/investblog/fastweb/main/data/bundle.json';
-      const remoteData = await fetch(remoteUrl, { cache: 'no-store' }).then(r => {
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        return r.json();
-      });
-      const bundleKeys = Object.keys(remoteData);
-      await applyBundle(remoteData);
-      await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabledUntil: 0 }, r));
-    } catch {
+    const locale = (chrome.i18n.getUILanguage() || 'en').split(/[-_]/)[0].toLowerCase();
+    const base = 'https://raw.githubusercontent.com/investblog/fastweb/main/data';
+    const remoteUrls = [
+      `${base}/bundle-${locale}.json`,
+      ...(locale !== 'en' ? [`${base}/bundle-en.json`] : []),
+    ];
+
+    let loaded = false;
+    for (const url of remoteUrls) {
+      try {
+        const data = await fetch(url, { cache: 'no-store' }).then(r => {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.json();
+        });
+        const bundleKeys = Object.keys(data);
+        await applyBundle(data);
+        await new Promise<void>(r => chrome.storage.sync.set({ bundleDomains: bundleKeys, bundleDisabledUntil: 0 }, r));
+        loaded = true;
+        break;
+      } catch { /* try next */ }
+    }
+
+    if (!loaded) {
       try {
         const localUrl = chrome.runtime.getURL('bundle.json');
         const localData = await fetch(localUrl).then(r => {
