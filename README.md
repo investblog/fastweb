@@ -1,78 +1,53 @@
-# FastWeb — Search Accelerator
+![FastWeb](assets/banner-1400x560.jpg)
 
-Browser extension that enhances search engine result pages (SERP) with official alternate domains, related bookmarks, and smart tips. Optional **Acceleration Mode** prefetches top results on hover for instant page loads.
+# FastWeb
 
-Works on **Google, Bing, DuckDuckGo, Yandex**. Chrome + Firefox.
+Search accelerator browser extension — alternate domains, bookmarks, smart tips & hover prefetch right on search results pages.
 
-> Formerly [Unlock.SBS](https://unlock.sbs) v0.5.x — rewritten with WXT + TypeScript.
+[![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/ldimjibdnbccpjgndkealkhojebhjdbh)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/firefox/addon/fastweb/)
+[![Edge Add-ons](https://img.shields.io/badge/Edge-Add--ons-0078D7?logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/apmjcckdjbblamplalcnnapejapjaobe)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## Features
 
-- **Alternate domains** — add official mirrors / alternate URLs for any domain; they appear as chips on the SERP when the query matches
-- **Related bookmarks** — surfaces your bookmarks matching the current search query
-- **Search tips** — spelling hints, `site:` suggestions, archive links, cross-engine search
-- **Acceleration Mode** (off by default) — prefetches top N result links on hover using `<link rel="prefetch">`, SERP pages only
-- **Badge** — shows hint count on the extension icon
-- **Privacy** — runs entirely locally, no tracking, no data collection, no remote servers (except optional sample bundle download)
+- **Alternate domains** — maintain your own list or use the built-in bundle of known mirrors and official alternates
+- **Bookmarks on SERP** — see related bookmarks right on the search page, no digging through folders
+- **Hover warm-up** — DNS/TCP/TLS connection prefetch on hover so pages load faster when you click
+- **Smart tips** — spelling hints, `site:` suggestions, archive links, cross-engine search
+- **Works everywhere** — Google, Bing, DuckDuckGo, and Yandex
+- **Dark & light theme** — with auto-detection
+- **Import/export** — domain list as JSON
+- **7 languages** — English, Russian, Ukrainian, Turkish, Spanish, Indonesian, Persian (RTL)
+- **Fully local** — no accounts, no tracking, no data leaves your browser
 
 ## Install
 
-### From source
+| Browser | Link |
+|---------|------|
+| Chrome | [Chrome Web Store](https://chromewebstore.google.com/detail/ldimjibdnbccpjgndkealkhojebhjdbh) |
+| Firefox | [Firefox Add-ons](https://addons.mozilla.org/firefox/addon/fastweb/) |
+| Edge | [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/apmjcckdjbblamplalcnnapejapjaobe) |
+
+## How it works
+
+When you search on a supported engine, FastWeb checks if any results have known alternate domains or mirrors. If so, a compact panel appears with direct links — saving you clicks and helping you reach the right site faster.
+
+The hover warm-up (enabled by default) pre-establishes connections to destinations when you hover over links, making page loads noticeably faster.
+
+## Development
 
 ```bash
 git clone https://github.com/investblog/fastweb.git
 cd fastweb
 npm install
-npx wxt prepare
-npm run dev          # Chrome dev mode
-npm run dev:firefox  # Firefox dev mode
-```
 
-### Build
-
-```bash
-npm run build          # Chrome (dist/chrome-mv3/)
-npm run build:firefox  # Firefox (dist/firefox-mv2/)
-npm run zip:all        # Both zips for distribution
-```
-
-## How it works
-
-The extension activates **only on search result pages** (SERP). A runtime gate (`detectSerpContext()`) checks the current URL against known search engine patterns and bails immediately on non-SERP pages.
-
-| Engine | Host pattern | Query param |
-|--------|-------------|-------------|
-| Google | `www.google.*` | `q` |
-| Bing | `www.bing.com` | `q` |
-| DuckDuckGo | `duckduckgo.com` | `q` |
-| Yandex | `yandex.*`, `ya.ru` | `text` |
-
-### Acceleration Mode
-
-When enabled in settings, prefetches top N search result links when you hover over them (configurable delay, default 200ms). Uses standard `<link rel="prefetch">` with a concurrency limit of 2. Only works on SERP pages — never on regular websites.
-
-## Project structure
-
-```
-src/
-  entrypoints/
-    background.ts            # Service worker
-    serp-helper.content.ts   # SERP overlay panel (tips, alternates, bookmarks)
-    prefetch.content.ts      # Acceleration Mode (hover prefetch)
-    sidepanel/               # Settings UI (Chrome sidePanel / Firefox sidebar)
-    popup/                   # Extension popup
-  shared/
-    types/                   # TypeScript interfaces
-    constants.ts             # Default prefs, patterns
-    url-utils.ts             # SERP detection, URL normalization
-    tokenizer.ts             # Query tokenization, brand matching
-    messaging/               # Type-safe chrome.runtime messaging
-    ui-helpers.ts            # DOM helpers
-    i18n.ts                  # chrome.i18n wrapper
-  public/
-    _locales/{en,ru}/        # Localization
-    icons/                   # PNG + SVG assets
-    bundle.json              # Sample alternates bundle
+npm run dev            # Chrome dev build
+npm run dev:firefox    # Firefox dev build
+npm run build          # Chrome production
+npm run build:firefox  # Firefox production
+npm run zip:all        # Build all platforms
+npm run typecheck      # TypeScript check (run npx wxt prepare first)
 ```
 
 ## Tech stack
@@ -82,15 +57,16 @@ src/
 - Chrome MV3 + Firefox MV2 dual build
 - Zero runtime dependencies
 
-## Storage
+## Privacy
 
-Data is stored in `chrome.storage.sync` with two keys:
+FastWeb runs entirely in your browser. It does not collect, transmit, or store any personal data. The only network requests beyond normal browsing are an optional daily bundle update check from GitHub and favicon loading from DuckDuckGo's public icon service.
 
-- `alternates` — `Record<string, string[]>` mapping domains to their alternates
-- `prefs` — user preferences (panel mode, badge, prefetch settings, etc.)
-
-Storage keys are backward-compatible with Unlock.SBS v0.5.x — existing user data migrates automatically.
+Full privacy policy: [PRIVACY.md](PRIVACY.md)
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
+---
+
+Built by [investblog](https://github.com/investblog) with [Claude](https://claude.ai)
