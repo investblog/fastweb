@@ -55,3 +55,148 @@ FastWeb работает полностью в вашем браузере. Ра
 
 **Открытый исходный код**
 https://github.com/investblog/fastweb
+
+---
+
+## Ukrainian
+
+### Short Description (132 chars)
+Прискорює пошук: альтернативні домени, закладки на SERP та прогрів з'єднань. Працює локально, дані не збираються.
+
+### Detailed Description
+
+FastWeb показує офіційні альтернативні посилання, ваші закладки та прогрів з'єднань — прямо на сторінці результатів пошуку.
+
+**Як це працює**
+Під час пошуку в Google, Bing, DuckDuckGo або Яндексі FastWeb перевіряє, чи є у результатів відомі альтернативні домени або дзеркала. Якщо так — з'являється компактна панель із прямими посиланнями, що економить ваш час і кліки.
+
+**Основні функції**
+- Альтернативні домени — ведіть власний список або використовуйте вбудований набір відомих дзеркал та офіційних альтернатив
+- Закладки на SERP — бачите свої закладки прямо на сторінці пошуку, не потрібно копатися в папках
+- Режим прискорення — прогрів DNS/TCP/TLS з'єднань при наведенні, щоб сторінки відкривалися швидше
+- Працює в Google, Bing, DuckDuckGo та Яндексі
+- Темна та світла тема з автовизначенням
+- Імпорт/експорт списку доменів у JSON
+- Повністю локальне — без акаунтів, без стеження, дані не залишають ваш браузер
+
+**Конфіденційність**
+FastWeb працює повністю у вашому браузері. Розширення не збирає, не передає і не зберігає жодних персональних даних. Єдиний мережевий запит — опціональна щоденна перевірка оновлень каталогу з публічного репозиторію GitHub.
+
+**Відкритий вихідний код**
+https://github.com/investblog/fastweb
+
+---
+
+## Turkish
+
+### Short Description (132 chars)
+Arama sonuçlarını hızlandırın: alternatif alan adları, SERP'te yer imleri ve bağlantı ısıtma. Yerel çalışır, veri toplanmaz.
+
+### Detailed Description
+
+FastWeb, resmi alternatif bağlantıları, yer imlerinizi ve bağlantı ısıtmayı doğrudan arama sonuçları sayfasında gösterir.
+
+**Nasıl çalışır**
+Google, Bing, DuckDuckGo veya Yandex'te arama yaptığınızda FastWeb, sonuçların bilinen alternatif alan adları veya aynalarının olup olmadığını kontrol eder. Varsa, doğrudan bağlantılar içeren kompakt bir panel görünür — zaman ve tık tasarrufu sağlar.
+
+**Temel özellikler**
+- Alternatif alan adları — kendi listenizi oluşturun veya yerleşik bilinen ayna ve alternatifleri kullanın
+- SERP'te yer imleri — ilgili yer imlerinizi doğrudan arama sayfasında görün
+- Hızlandırma Modu — hover ile DNS/TCP/TLS bağlantılarını ısıtarak sayfaların daha hızlı açılmasını sağlayın
+- Google, Bing, DuckDuckGo ve Yandex'te çalışır
+- Otomatik algılamalı koyu ve açık tema
+- Alan adı listesini JSON olarak içe/dışa aktarın
+- Tamamen yerel — hesap yok, izleme yok, veriler tarayıcınızdan çıkmaz
+
+**Gizlilik**
+FastWeb tamamen tarayıcınızda çalışır. Hiçbir kişisel veri toplanmaz, iletilmez veya depolanmaz. Tek ağ isteği — GitHub'dan isteğe bağlı günlük katalog güncelleme kontrolü.
+
+**Açık kaynak**
+https://github.com/investblog/fastweb
+
+---
+
+## Spanish
+
+### Short Description (132 chars)
+Acelera la búsqueda: dominios alternativos, marcadores en SERP y precalentamiento de conexiones. Funciona localmente, sin rastreo.
+
+### Detailed Description
+
+FastWeb muestra enlaces alternativos oficiales, tus marcadores y precalentamiento de conexiones — directamente en la página de resultados de búsqueda.
+
+**Cómo funciona**
+Al buscar en Google, Bing, DuckDuckGo o Yandex, FastWeb verifica si los resultados tienen dominios alternativos o espejos conocidos. Si los hay, aparece un panel compacto con enlaces directos — ahorrando tiempo y clics.
+
+**Funciones principales**
+- Dominios alternativos — mantén tu propia lista o usa el paquete integrado de espejos y alternativas conocidas
+- Marcadores en SERP — ve tus marcadores relacionados directamente en la página de búsqueda
+- Modo aceleración — precalienta conexiones DNS/TCP/TLS al pasar el cursor para que las páginas carguen más rápido
+- Funciona en Google, Bing, DuckDuckGo y Yandex
+- Tema oscuro y claro con detección automática
+- Importa/exporta tu lista de dominios como JSON
+- Completamente local — sin cuentas, sin rastreo, los datos no salen de tu navegador
+
+**Privacidad**
+FastWeb funciona completamente en tu navegador. No recopila, transmite ni almacena datos personales. La única solicitud de red es una verificación diaria opcional de actualizaciones del catálogo desde un repositorio público de GitHub.
+
+**Código abierto**
+https://github.com/investblog/fastweb
+
+---
+
+## Indonesian
+
+### Short Description (132 chars)
+Percepat pencarian: domain alternatif, bookmark di SERP, dan pemanasan koneksi. Berjalan lokal, tidak ada data yang dikumpulkan.
+
+### Detailed Description
+
+FastWeb menampilkan tautan alternatif resmi, bookmark Anda, dan pemanasan koneksi — langsung di halaman hasil pencarian.
+
+**Cara kerja**
+Saat Anda mencari di Google, Bing, DuckDuckGo, atau Yandex, FastWeb memeriksa apakah hasil pencarian memiliki domain alternatif atau mirror yang dikenal. Jika ada, panel ringkas muncul dengan tautan langsung — menghemat waktu dan klik.
+
+**Fitur utama**
+- Domain alternatif — kelola daftar Anda sendiri atau gunakan bundel bawaan mirror dan alternatif resmi
+- Bookmark di SERP — lihat bookmark terkait langsung di halaman pencarian
+- Mode Akselerasi — panaskan koneksi DNS/TCP/TLS saat hover agar halaman terbuka lebih cepat
+- Bekerja di Google, Bing, DuckDuckGo, dan Yandex
+- Tema gelap dan terang dengan deteksi otomatis
+- Impor/ekspor daftar domain sebagai JSON
+- Sepenuhnya lokal — tanpa akun, tanpa pelacakan, data tidak keluar dari browser Anda
+
+**Privasi**
+FastWeb berjalan sepenuhnya di browser Anda. Tidak mengumpulkan, mengirim, atau menyimpan data pribadi apa pun. Satu-satunya permintaan jaringan adalah pemeriksaan harian opsional untuk pembaruan katalog dari repositori GitHub publik.
+
+**Sumber terbuka**
+https://github.com/investblog/fastweb
+
+---
+
+## Persian (فارسی)
+
+### Short Description (132 chars)
+جستجو را سرعت ببخشید: دامنه‌های جایگزین، نشانک‌ها در SERP و گرم کردن اتصال. محلی اجرا می‌شود، داده‌ای جمع‌آوری نمی‌شود.
+
+### Detailed Description
+
+FastWeb لینک‌های جایگزین رسمی، نشانک‌های شما و گرم کردن اتصال را مستقیماً در صفحه نتایج جستجو نمایش می‌دهد.
+
+**نحوه کار**
+هنگام جستجو در Google، Bing، DuckDuckGo یا Yandex، افزونه بررسی می‌کند که آیا نتایج دارای دامنه‌های جایگزین یا آینه‌های شناخته شده هستند. در صورت وجود، یک پنل فشرده با لینک‌های مستقیم ظاهر می‌شود.
+
+**ویژگی‌های اصلی**
+- دامنه‌های جایگزین — لیست خود را مدیریت کنید یا از بسته داخلی آینه‌ها و جایگزین‌های رسمی استفاده کنید
+- نشانک‌ها در SERP — نشانک‌های مرتبط را مستقیماً در صفحه جستجو ببینید
+- حالت شتاب — اتصالات DNS/TCP/TLS را هنگام هاور گرم کنید تا صفحات سریع‌تر باز شوند
+- در Google، Bing، DuckDuckGo و Yandex کار می‌کند
+- پوسته تاریک و روشن با تشخیص خودکار
+- ورود/خروج لیست دامنه‌ها به صورت JSON
+- کاملاً محلی — بدون حساب کاربری، بدون ردیابی، داده‌ها از مرورگر شما خارج نمی‌شوند
+
+**حریم خصوصی**
+FastWeb کاملاً در مرورگر شما اجرا می‌شود. هیچ داده شخصی جمع‌آوری، ارسال یا ذخیره نمی‌شود. تنها درخواست شبکه — بررسی روزانه اختیاری به‌روزرسانی کاتالوگ از مخزن عمومی GitHub.
+
+**متن‌باز**
+https://github.com/investblog/fastweb
