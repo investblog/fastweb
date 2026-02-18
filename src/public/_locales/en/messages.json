@@ -3,10 +3,7 @@
     "message": "FastWeb — Search Accelerator"
   },
   "appDesc": {
-    "message": "Speed up opening search results with smart tips, mirrors/bookmarks, and optional hover prefetch."
-  },
-  "optTitle": {
-    "message": "FastWeb — Settings"
+    "message": "Revives dead links. Accelerates live ones. Mirrors, bookmarks & prefetch right on the search page."
   },
   "domainLabel": {
     "message": "Domain"
@@ -18,16 +15,13 @@
     "message": "Add"
   },
   "exportBtn": {
-    "message": "Export JSON"
+    "message": "Export"
   },
   "importBtn": {
-    "message": "Import JSON"
+    "message": "Import"
   },
   "loadBundleBtn": {
-    "message": "Load sample bundle"
-  },
-  "jsonFormatHelp": {
-    "message": "JSON format: {\"example.com\":[\"example.org\",\"example.net\"]}"
+    "message": "Load bundle"
   },
   "listEmpty": {
     "message": "List is empty."
@@ -45,10 +39,7 @@
     "message": "Alternates"
   },
   "accelOn": {
-    "message": "Acceleration on"
-  },
-  "accelOff": {
-    "message": "Acceleration off"
+    "message": "Acceleration"
   },
   "settingsBtn": {
     "message": "Settings"
@@ -66,22 +57,22 @@
     "message": "Advanced settings"
   },
   "prefShowBadge": {
-    "message": "Badge with tip count"
+    "message": "Tip counter badge"
   },
   "prefUnicode": {
-    "message": "Unicode tokenization (if available)"
+    "message": "Unicode tokenization"
   },
   "prefSensitivity": {
     "message": "Sensitivity (min brand length)"
   },
   "prefShowBookmarks": {
-    "message": "Show bookmarks on SERP"
+    "message": "Bookmarks in search"
   },
   "prefPrefetch": {
-    "message": "Acceleration Mode — warm up connections on hover (SERP only)"
+    "message": "Acceleration mode"
   },
   "prefPrefetchTopN": {
-    "message": "Number of links to warm up (Top N)"
+    "message": "Links to warm up (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Hover delay (ms)"
@@ -115,7 +106,7 @@
     "message": "Manage domains"
   },
   "rateBtn": {
-    "message": "Rate us"
+    "message": "Rate"
   },
   "badgeAlts": {
     "message": "$1 alts",
@@ -141,9 +132,9 @@
     "message": "example.org, example.net"
   },
   "reportIssueBtn": {
-    "message": "Report a problem"
+    "message": "Report issue"
   },
   "telegramBtn": {
-    "message": "Telegram community"
+    "message": "Telegram"
   }
 }

@@ -3,10 +3,7 @@
     "message": "FastWeb — Akselerator Pencarian"
   },
   "appDesc": {
-    "message": "Percepat pembukaan hasil pencarian dengan tips cerdas, mirror/bookmark, dan prefetch saat hover."
-  },
-  "optTitle": {
-    "message": "FastWeb — Pengaturan"
+    "message": "Menghidupkan tautan mati. Mempercepat yang hidup. Mirror, bookmark & prefetch langsung di halaman pencarian."
   },
   "domainLabel": {
     "message": "Domain"
@@ -18,16 +15,13 @@
     "message": "Tambah"
   },
   "exportBtn": {
-    "message": "Ekspor JSON"
+    "message": "Ekspor"
   },
   "importBtn": {
-    "message": "Impor JSON"
+    "message": "Impor"
   },
   "loadBundleBtn": {
-    "message": "Muat contoh bundel"
-  },
-  "jsonFormatHelp": {
-    "message": "Format JSON: {\"example.com\":[\"example.org\",\"example.net\"]}"
+    "message": "Muat bundel"
   },
   "listEmpty": {
     "message": "Daftar kosong."
@@ -45,10 +39,7 @@
     "message": "Alternatif"
   },
   "accelOn": {
-    "message": "Akselerasi aktif"
-  },
-  "accelOff": {
-    "message": "Akselerasi nonaktif"
+    "message": "Akselerasi"
   },
   "settingsBtn": {
     "message": "Pengaturan"
@@ -66,22 +57,22 @@
     "message": "Pengaturan lanjutan"
   },
   "prefShowBadge": {
-    "message": "Lencana dengan jumlah tips"
+    "message": "Penghitung tips"
   },
   "prefUnicode": {
-    "message": "Tokenisasi Unicode (jika tersedia)"
+    "message": "Tokenisasi Unicode"
   },
   "prefSensitivity": {
     "message": "Sensitivitas (panjang merek minimum)"
   },
   "prefShowBookmarks": {
-    "message": "Tampilkan bookmark di SERP"
+    "message": "Bookmark di pencarian"
   },
   "prefPrefetch": {
-    "message": "Mode Akselerasi — pemanasan koneksi saat hover (hanya SERP)"
+    "message": "Mode akselerasi"
   },
   "prefPrefetchTopN": {
-    "message": "Jumlah tautan untuk dipanaskan (Top N)"
+    "message": "Tautan untuk dipanaskan (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Jeda hover (ms)"
@@ -115,7 +106,7 @@
     "message": "Kelola domain"
   },
   "rateBtn": {
-    "message": "Beri nilai"
+    "message": "Nilai"
   },
   "badgeAlts": {
     "message": "$1 alternatif",
@@ -141,9 +132,9 @@
     "message": "example.org, example.net"
   },
   "reportIssueBtn": {
-    "message": "Laporkan masalah"
+    "message": "Lapor masalah"
   },
   "telegramBtn": {
-    "message": "Komunitas Telegram"
+    "message": "Telegram"
   }
 }

@@ -21,9 +21,10 @@ export const TLD_STOP = new Set([
 ]);
 
 export const BADGE_COLORS = {
-  alts:  '#3b82f6',  // blue — alternates only
-  mixed: '#16a34a',  // green — alternates + bookmarks
-  bm:    '#8b5cf6',  // violet — bookmarks only
+  alts:     '#3b82f6',  // blue — alternates only
+  mixed:    '#16a34a',  // green — alternates + bookmarks
+  bm:       '#8b5cf6',  // violet — bookmarks only
+  prefetch: '#F48120',  // orange — prefetch flash (301-ui --orange-500)
 };
 
 export const RU_TO_LAT: Record<string, string> = {

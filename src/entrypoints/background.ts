@@ -9,6 +9,71 @@ export default defineBackground(() => {
   const actionApi: typeof browser.action =
     (browser as any).action || (browser as any).browserAction;
 
+  // --- Badge flash state ---
+  interface BadgeState { text: string; color: string; title: string }
+  const badgeBase = new Map<number, BadgeState>();       // resting badge per tab
+  const prefetchTimer = new Map<number, ReturnType<typeof setTimeout>>(); // flash restore timer
+
+  function applyBadge(tabId: number, state: BadgeState): void {
+    try {
+      if (!actionApi?.setBadgeText) return;
+      const opts = { tabId };
+      actionApi.setBadgeBackgroundColor({ ...opts, color: state.color });
+      actionApi.setBadgeText({ ...opts, text: state.text });
+      if (actionApi.setTitle) actionApi.setTitle({ ...opts, title: state.title });
+      // Ensure white text on colored badges (Chrome 110+)
+      if ((actionApi as any).setBadgeTextColor) {
+        (actionApi as any).setBadgeTextColor({ ...opts, color: '#FFFFFF' });
+      }
+    } catch { /* ignore */ }
+  }
+
+  const BOLT_ICON = {
+    16: '/icons/icon-bolt-16.png',
+    32: '/icons/icon-bolt-32.png',
+    48: '/icons/icon-bolt-48.png',
+    64: '/icons/icon-bolt-64.png',
+  };
+  const WARM_ICON = {
+    16: '/icons/icon-warm-16.png',
+    32: '/icons/icon-warm-32.png',
+    48: '/icons/icon-warm-48.png',
+    64: '/icons/icon-warm-64.png',
+  };
+  const DEFAULT_ICON = {
+    16: '/icons/icon-16.png',
+    32: '/icons/icon-32.png',
+    48: '/icons/icon-48.png',
+    64: '/icons/icon-64.png',
+  };
+
+  function flashPrefetch(tabId: number): void {
+    // Clear existing restore timer (debounce)
+    const prev = prefetchTimer.get(tabId);
+    if (prev) clearTimeout(prev);
+
+    // Swap icon to orange bolt + hide badge text during flash
+    try {
+      actionApi?.setIcon?.({ tabId, path: BOLT_ICON });
+      actionApi?.setBadgeText?.({ tabId, text: '' });
+    } catch { /* ignore */ }
+
+    // Restore after 1.5 s
+    const timer = setTimeout(() => {
+      prefetchTimer.delete(tabId);
+      const base = badgeBase.get(tabId);
+      if (base && base.text) {
+        // Has alternates — restore default icon + badge
+        try { actionApi?.setIcon?.({ tabId, path: DEFAULT_ICON }); } catch { /* ignore */ }
+        applyBadge(tabId, base);
+      } else {
+        // No alternates — show blue "warm" icon (acceleration active)
+        try { actionApi?.setIcon?.({ tabId, path: WARM_ICON }); } catch { /* ignore */ }
+      }
+    }, 1500);
+    prefetchTimer.set(tabId, timer);
+  }
+
   // --- Prefetch concurrency queue ---
   const PREFETCH_CONCURRENCY = 2;
   const prefetchQueue: string[] = [];
@@ -43,7 +108,14 @@ export default defineBackground(() => {
   // Content script reports 'expanded' | 'dismissed' | 'none' via SET_SERP_STATE.
   // This lets onClicked decide *synchronously* — no async gap before sidePanel.open().
   const serpState = new Map<number, 'expanded' | 'dismissed'>();
-  try { browser.tabs.onRemoved.addListener((tabId) => serpState.delete(tabId)); } catch { /* ignore */ }
+  try {
+    browser.tabs.onRemoved.addListener((tabId) => {
+      serpState.delete(tabId);
+      badgeBase.delete(tabId);
+      const t = prefetchTimer.get(tabId);
+      if (t) { clearTimeout(t); prefetchTimer.delete(tabId); }
+    });
+  } catch { /* ignore */ }
 
   // Chrome/Edge: icon click
   if (!import.meta.env.FIREFOX && !OPERA && actionApi?.onClicked) {
@@ -216,6 +288,9 @@ export default defineBackground(() => {
           const url = msg.url;
           if (url && /^https?:\/\//.test(url)) {
             enqueuePrefetch(url);
+            // Flash ⚡ on the tab badge
+            const tabId = sender?.tab?.id;
+            if (tabId) flashPrefetch(tabId);
           }
           sendResponse?.({ ok: true });
           break;
@@ -233,16 +308,17 @@ export default defineBackground(() => {
         case 'SET_BADGE': {
           const n = Math.max(0, parseInt(String(msg.count || 0), 10) || 0);
           const tabId = sender?.tab?.id;
-          try {
-            if (actionApi?.setBadgeText) {
-              const opts = tabId ? { tabId } : {};
-              actionApi.setBadgeBackgroundColor({ ...opts, color: msg.color || BADGE_COLORS.alts });
-              actionApi.setBadgeText({ ...opts, text: n > 0 ? String(n) : '' });
-              if (actionApi.setTitle) {
-                actionApi.setTitle({ ...opts, title: msg.title || '' });
-              }
-            }
-          } catch { /* ignore */ }
+          const base: BadgeState = {
+            text: n > 0 ? String(n) : '',
+            color: msg.color || BADGE_COLORS.alts,
+            title: msg.title || '',
+          };
+          // Always save base state
+          if (tabId) badgeBase.set(tabId, base);
+          // Apply visually only if no active flash
+          if (!tabId || !prefetchTimer.has(tabId)) {
+            applyBadge(tabId || 0, base);
+          }
           sendResponse?.({ ok: true });
           break;
         }

@@ -3,10 +3,7 @@
     "message": "FastWeb — Ускоритель поиска"
   },
   "appDesc": {
-    "message": "Ускоряет открытие результатов поиска: зеркала, закладки и предзагрузка при наведении"
-  },
-  "optTitle": {
-    "message": "FastWeb — настройки"
+    "message": "Оживляет мёртвые ссылки. Ускоряет живые. Зеркала, закладки и предзагрузка прямо на странице поиска."
   },
   "domainLabel": {
     "message": "Домен"
@@ -18,16 +15,13 @@
     "message": "Добавить"
   },
   "exportBtn": {
-    "message": "Экспорт JSON"
+    "message": "Экспорт"
   },
   "importBtn": {
-    "message": "Импорт JSON"
+    "message": "Импорт"
   },
   "loadBundleBtn": {
-    "message": "Загрузить пример"
-  },
-  "jsonFormatHelp": {
-    "message": "JSON формат: {\"example.com\":[\"example.org\",\"https://ya.ru/internet\"]}"
+    "message": "Загрузить бандл"
   },
   "listEmpty": {
     "message": "Список пуст."
@@ -45,10 +39,7 @@
     "message": "Альтернативы"
   },
   "accelOn": {
-    "message": "Ускорение вкл."
-  },
-  "accelOff": {
-    "message": "Ускорение выкл."
+    "message": "Ускорение"
   },
   "settingsBtn": {
     "message": "Настройки"
@@ -69,19 +60,19 @@
     "message": "Чувствительность (мин. длина бренда)"
   },
   "prefUnicode": {
-    "message": "Юникод-разбор (если поддерживается)"
+    "message": "Юникод-разбор"
   },
   "prefShowBookmarks": {
-    "message": "Показывать закладки на странице поиска"
+    "message": "Закладки в поиске"
   },
   "prefShowBadge": {
-    "message": "Значок с количеством подсказок"
+    "message": "Счётчик подсказок"
   },
   "prefPrefetch": {
-    "message": "Режим ускорения — прогрев соединений при наведении (только SERP)"
+    "message": "Режим ускорения"
   },
   "prefPrefetchTopN": {
-    "message": "Количество ссылок для прогрева (Top N)"
+    "message": "Ссылок для прогрева (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Задержка при наведении (мс)"
@@ -141,9 +132,9 @@
     "message": "example.org, example.net"
   },
   "reportIssueBtn": {
-    "message": "Сообщить о проблеме"
+    "message": "Проблема"
   },
   "telegramBtn": {
-    "message": "Сообщество в Telegram"
+    "message": "Telegram"
   }
 }

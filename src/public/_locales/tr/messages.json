@@ -3,10 +3,7 @@
     "message": "FastWeb — Arama Hızlandırıcı"
   },
   "appDesc": {
-    "message": "Arama sonuçlarını akıllı ipuçları, yansıma/yer imleri ve isteğe bağlı hover ön yüklemesiyle hızlandırın."
-  },
-  "optTitle": {
-    "message": "FastWeb — Ayarlar"
+    "message": "Ölü bağlantıları canlandırır. Canlıları hızlandırır. Aynalar, yer imleri ve ön yükleme arama sayfasında."
   },
   "domainLabel": {
     "message": "Alan adı"
@@ -18,16 +15,13 @@
     "message": "Ekle"
   },
   "exportBtn": {
-    "message": "JSON Dışa Aktar"
+    "message": "Dışa aktar"
   },
   "importBtn": {
-    "message": "JSON İçe Aktar"
+    "message": "İçe aktar"
   },
   "loadBundleBtn": {
-    "message": "Örnek paketi yükle"
-  },
-  "jsonFormatHelp": {
-    "message": "JSON formatı: {\"example.com\":[\"example.org\",\"example.net\"]}"
+    "message": "Paketi yükle"
   },
   "listEmpty": {
     "message": "Liste boş."
@@ -45,10 +39,7 @@
     "message": "Alternatifler"
   },
   "accelOn": {
-    "message": "Hızlandırma açık"
-  },
-  "accelOff": {
-    "message": "Hızlandırma kapalı"
+    "message": "Hızlandırma"
   },
   "settingsBtn": {
     "message": "Ayarlar"
@@ -69,19 +60,19 @@
     "message": "Hassasiyet (min marka uzunluğu)"
   },
   "prefUnicode": {
-    "message": "Unicode ayrıştırma (varsa)"
+    "message": "Unicode ayrıştırma"
   },
   "prefShowBookmarks": {
-    "message": "SERP'te yer imlerini göster"
+    "message": "Aramada yer imleri"
   },
   "prefShowBadge": {
-    "message": "İpucu sayısı rozeti"
+    "message": "İpucu sayacı"
   },
   "prefPrefetch": {
-    "message": "Hızlandırma Modu — hover ile bağlantıları ısıt (yalnızca SERP)"
+    "message": "Hızlandırma modu"
   },
   "prefPrefetchTopN": {
-    "message": "Isıtılacak bağlantı sayısı (Top N)"
+    "message": "Isıtılacak bağlantı (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Hover gecikmesi (ms)"
@@ -115,7 +106,7 @@
     "message": "Alan adlarını yönet"
   },
   "rateBtn": {
-    "message": "Bizi değerlendirin"
+    "message": "Değerlendir"
   },
   "badgeAlts": {
     "message": "$1 alternatif",
@@ -144,6 +135,6 @@
     "message": "Sorun bildir"
   },
   "telegramBtn": {
-    "message": "Telegram topluluğu"
+    "message": "Telegram"
   }
 }

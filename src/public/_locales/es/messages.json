@@ -3,10 +3,7 @@
     "message": "FastWeb — Acelerador de búsqueda"
   },
   "appDesc": {
-    "message": "Acelera la apertura de resultados de búsqueda con consejos inteligentes, espejos/marcadores y precarga al pasar el cursor."
-  },
-  "optTitle": {
-    "message": "FastWeb — Configuración"
+    "message": "Revive enlaces muertos. Acelera los vivos. Espejos, marcadores y precarga en la página de búsqueda."
   },
   "domainLabel": {
     "message": "Dominio"
@@ -18,16 +15,13 @@
     "message": "Añadir"
   },
   "exportBtn": {
-    "message": "Exportar JSON"
+    "message": "Exportar"
   },
   "importBtn": {
-    "message": "Importar JSON"
+    "message": "Importar"
   },
   "loadBundleBtn": {
-    "message": "Cargar paquete de ejemplo"
-  },
-  "jsonFormatHelp": {
-    "message": "Formato JSON: {\"example.com\":[\"example.org\",\"example.net\"]}"
+    "message": "Cargar paquete"
   },
   "listEmpty": {
     "message": "La lista está vacía."
@@ -45,10 +39,7 @@
     "message": "Alternativas"
   },
   "accelOn": {
-    "message": "Aceleración activada"
-  },
-  "accelOff": {
-    "message": "Aceleración desactivada"
+    "message": "Aceleración"
   },
   "settingsBtn": {
     "message": "Configuración"
@@ -69,19 +60,19 @@
     "message": "Sensibilidad (longitud mínima de marca)"
   },
   "prefUnicode": {
-    "message": "Tokenización Unicode (si está disponible)"
+    "message": "Tokenización Unicode"
   },
   "prefShowBookmarks": {
-    "message": "Mostrar marcadores en SERP"
+    "message": "Marcadores en búsqueda"
   },
   "prefShowBadge": {
-    "message": "Insignia con número de consejos"
+    "message": "Contador de consejos"
   },
   "prefPrefetch": {
-    "message": "Modo aceleración — precalentar conexiones al pasar el cursor (solo SERP)"
+    "message": "Modo aceleración"
   },
   "prefPrefetchTopN": {
-    "message": "Número de enlaces a precalentar (Top N)"
+    "message": "Enlaces a precalentar (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Retraso de hover (ms)"
@@ -115,7 +106,7 @@
     "message": "Administrar dominios"
   },
   "rateBtn": {
-    "message": "Califícanos"
+    "message": "Valorar"
   },
   "badgeAlts": {
     "message": "$1 alternativas",
@@ -141,9 +132,9 @@
     "message": "example.org, example.net"
   },
   "reportIssueBtn": {
-    "message": "Reportar un problema"
+    "message": "Reportar"
   },
   "telegramBtn": {
-    "message": "Comunidad en Telegram"
+    "message": "Telegram"
   }
 }

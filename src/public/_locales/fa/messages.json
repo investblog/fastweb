@@ -3,10 +3,7 @@
     "message": "FastWeb — شتاب‌دهنده جستجو"
   },
   "appDesc": {
-    "message": "باز کردن نتایج جستجو را با راهنمایی هوشمند، آینه‌ها/نشانک‌ها و پیش‌بارگذاری هنگام هاور سرعت می‌بخشد."
-  },
-  "optTitle": {
-    "message": "FastWeb — تنظیمات"
+    "message": "پیوندهای مرده را زنده می‌کند. زنده‌ها را سرعت می‌بخشد. آینه‌ها، نشانک‌ها و پیش‌بارگذاری در صفحه جستجو."
   },
   "domainLabel": {
     "message": "دامنه"
@@ -18,16 +15,13 @@
     "message": "افزودن"
   },
   "exportBtn": {
-    "message": "خروجی JSON"
+    "message": "خروجی"
   },
   "importBtn": {
-    "message": "ورودی JSON"
+    "message": "ورودی"
   },
   "loadBundleBtn": {
-    "message": "بارگذاری بسته نمونه"
-  },
-  "jsonFormatHelp": {
-    "message": "قالب JSON: {\"example.com\":[\"example.org\",\"example.net\"]}"
+    "message": "بارگذاری بسته"
   },
   "listEmpty": {
     "message": "فهرست خالی است."
@@ -45,10 +39,7 @@
     "message": "جایگزین‌ها"
   },
   "accelOn": {
-    "message": "شتاب‌دهنده روشن"
-  },
-  "accelOff": {
-    "message": "شتاب‌دهنده خاموش"
+    "message": "شتاب‌دهنده"
   },
   "settingsBtn": {
     "message": "تنظیمات"
@@ -69,19 +60,19 @@
     "message": "حساسیت (حداقل طول برند)"
   },
   "prefUnicode": {
-    "message": "توکن‌سازی یونیکد (در صورت پشتیبانی)"
+    "message": "توکن‌سازی یونیکد"
   },
   "prefShowBookmarks": {
-    "message": "نمایش نشانک‌ها در SERP"
+    "message": "نشانک‌ها در جستجو"
   },
   "prefShowBadge": {
-    "message": "نشان با تعداد راهنمایی‌ها"
+    "message": "شمارنده راهنمایی"
   },
   "prefPrefetch": {
-    "message": "حالت شتاب — گرم کردن اتصال‌ها هنگام هاور (فقط SERP)"
+    "message": "حالت شتاب"
   },
   "prefPrefetchTopN": {
-    "message": "تعداد لینک‌ها برای گرم کردن (Top N)"
+    "message": "لینک‌ها برای گرم کردن (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "تأخیر هاور (میلی‌ثانیه)"
@@ -115,7 +106,7 @@
     "message": "مدیریت دامنه‌ها"
   },
   "rateBtn": {
-    "message": "امتیاز دهید"
+    "message": "امتیاز"
   },
   "badgeAlts": {
     "message": "$1 جایگزین",
@@ -144,6 +135,6 @@
     "message": "گزارش مشکل"
   },
   "telegramBtn": {
-    "message": "انجمن تلگرام"
+    "message": "تلگرام"
   }
 }

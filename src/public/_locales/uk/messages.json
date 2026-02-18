@@ -3,10 +3,7 @@
     "message": "FastWeb — Прискорювач пошуку"
   },
   "appDesc": {
-    "message": "Прискорює відкриття результатів пошуку: дзеркала, закладки та попереднє завантаження при наведенні."
-  },
-  "optTitle": {
-    "message": "FastWeb — налаштування"
+    "message": "Оживляє мертві посилання. Прискорює живі. Дзеркала, закладки та передзавантаження на сторінці пошуку."
   },
   "domainLabel": {
     "message": "Домен"
@@ -18,16 +15,13 @@
     "message": "Додати"
   },
   "exportBtn": {
-    "message": "Експорт JSON"
+    "message": "Експорт"
   },
   "importBtn": {
-    "message": "Імпорт JSON"
+    "message": "Імпорт"
   },
   "loadBundleBtn": {
-    "message": "Завантажити приклад"
-  },
-  "jsonFormatHelp": {
-    "message": "Формат JSON: {\"example.com\":[\"example.org\",\"https://ya.ru/internet\"]}"
+    "message": "Завантажити бандл"
   },
   "listEmpty": {
     "message": "Список порожній."
@@ -45,10 +39,7 @@
     "message": "Альтернативи"
   },
   "accelOn": {
-    "message": "Прискорення увімк."
-  },
-  "accelOff": {
-    "message": "Прискорення вимк."
+    "message": "Прискорення"
   },
   "settingsBtn": {
     "message": "Налаштування"
@@ -69,19 +60,19 @@
     "message": "Чутливість (мін. довжина бренду)"
   },
   "prefUnicode": {
-    "message": "Юнікод-розбір (якщо підтримується)"
+    "message": "Юнікод-розбір"
   },
   "prefShowBookmarks": {
-    "message": "Показувати закладки на сторінці пошуку"
+    "message": "Закладки в пошуку"
   },
   "prefShowBadge": {
-    "message": "Значок із кількістю підказок"
+    "message": "Лічильник підказок"
   },
   "prefPrefetch": {
-    "message": "Режим прискорення — прогрів з'єднань при наведенні (лише SERP)"
+    "message": "Режим прискорення"
   },
   "prefPrefetchTopN": {
-    "message": "Кількість посилань для прогріву (Top N)"
+    "message": "Посилань для прогріву (Top N)"
   },
   "prefPrefetchDelay": {
     "message": "Затримка при наведенні (мс)"
@@ -141,9 +132,9 @@
     "message": "example.org, example.net"
   },
   "reportIssueBtn": {
-    "message": "Повідомити про проблему"
+    "message": "Проблема"
   },
   "telegramBtn": {
-    "message": "Спільнота в Telegram"
+    "message": "Telegram"
   }
 }

@@ -301,37 +301,58 @@ a:hover {
   margin: 0;
   opacity: 0;
   cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .toggle__track {
   position: absolute;
   inset: 0;
   border-radius: var(--r-pill);
-  background: var(--border-strong);
-  border: 1px solid var(--border-subtle);
-  transition: background var(--transition-md), border-color var(--transition-md);
+  background: var(--bg-soft, var(--border-strong));
+  border: 1.5px solid var(--border-strong);
+  pointer-events: none;
+  transition: background var(--transition-md), border-color var(--transition-md), box-shadow var(--transition-md);
 }
 
 .toggle__track::after {
   content: '';
   position: absolute;
-  top: 3px;
-  inset-inline-start: 3px;
-  width: 16px;
-  height: 16px;
+  top: 2px;
+  inset-inline-start: 2px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  background: var(--text);
+  background: var(--text-muted, #999);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
   transition: transform var(--transition-md), background var(--transition-md);
 }
 
+/* Hover — unchecked */
+.toggle__control:hover .toggle__track {
+  border-color: var(--text-muted);
+}
+
 .toggle__control input:checked + .toggle__track {
-  background: var(--primary-soft);
-  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  background: var(--primary);
+  border-color: var(--primary);
 }
 
 .toggle__control input:checked + .toggle__track::after {
   transform: translateX(20px);
   background: #fff;
+}
+
+/* Hover — checked */
+.toggle__control:hover input:checked + .toggle__track {
+  background: var(--primary-hover, var(--primary));
+  border-color: var(--primary-hover, var(--primary));
+}
+
+/* Focus ring */
+.toggle__control input:focus-visible + .toggle__track {
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
 :dir(rtl) .toggle__control input:checked + .toggle__track::after {
@@ -397,12 +418,21 @@ a:hover {
 }
 
 .range__slider::-moz-range-thumb {
+  -moz-appearance: none;
+  appearance: none;
   width: 16px;
   height: 16px;
   border-radius: 50%;
   background: var(--primary);
   cursor: pointer;
   border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+}
+
+.range__slider::-moz-range-progress {
+  height: 4px;
+  border-radius: var(--r-pill);
+  background: var(--primary);
 }
 
 .range__value {

@@ -184,6 +184,7 @@ export default defineContentScript({
       #ah-root .ah-footer-btn:hover { color: var(--ah-text); background: var(--ah-accent-soft); }
       #ah-root .ah-footer-btn:focus-visible { outline: 2px solid var(--ah-accent); outline-offset: 2px; }
       #ah-root .ah-footer-btn.is-active { color: var(--ah-accent); }
+      #ah-root #ah-bolt.is-active { color: #F48120; }
       #ah-root .ah-footer-btn.is-disabled { opacity: 0.4; cursor: default; }
       #ah-root .ah-footer-btn svg { width: 16px; height: 16px; }
       #ah-root.ah-root--inline-hidden { display: none; }
