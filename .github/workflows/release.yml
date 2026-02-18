@@ -28,8 +28,8 @@ jobs:
       - name: Prepare WXT types
         run: npx wxt prepare
 
-      - name: TypeScript check
-        run: npm run typecheck
+      - name: Lint & typecheck
+        run: npm run check
 
       - name: Build and zip all
         run: npm run zip:all
