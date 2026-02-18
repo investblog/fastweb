@@ -136,5 +136,8 @@
   },
   "telegramBtn": {
     "message": "Telegram"
-  }
+  },
+  "prefPanelMode": { "message": "Панель на SERP" },
+  "panelModePanel": { "message": "Панель" },
+  "panelModeIcon": { "message": "Лише іконка" }
 }

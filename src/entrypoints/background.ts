@@ -134,22 +134,9 @@ export default defineBackground(() => {
     });
   }
 
-  // Firefox: icon click
-  if (import.meta.env.FIREFOX && actionApi?.onClicked) {
-    actionApi.onClicked.addListener((tab) => {
-      if (tab?.id && serpState.get(tab.id) === 'dismissed') {
-        browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_SERP_PANEL' }).catch(() => {});
-        serpState.set(tab.id, 'expanded');
-      } else {
-        try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
-      }
-    });
-  }
-
-  // Opera: sidebar_action handles left panel; toolbar uses default_popup.
-  // Smart click: dynamically clear popup when SERP panel is dismissed,
-  // so onClicked fires and we can re-expand it.
-  if (OPERA && actionApi?.onClicked) {
+  // Firefox & Opera: default_popup is set in manifest → dynamically cleared
+  // when SERP panel is dismissed so onClicked fires for smart re-expand.
+  if ((import.meta.env.FIREFOX || OPERA) && actionApi?.onClicked) {
     actionApi.onClicked.addListener((tab) => {
       if (tab?.id && serpState.get(tab.id) === 'dismissed') {
         browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_SERP_PANEL' }).catch(() => {});
@@ -314,8 +301,8 @@ export default defineBackground(() => {
             const st = (msg as any).state;
             if (st === 'none') serpState.delete(tabId);
             else serpState.set(tabId, st);
-            // Opera: clear popup when dismissed so onClicked fires; restore otherwise
-            if (OPERA) {
+            // Firefox & Opera: clear popup when dismissed so onClicked fires; restore otherwise
+            if (import.meta.env.FIREFOX || OPERA) {
               try {
                 void actionApi?.setPopup?.({
                   tabId,

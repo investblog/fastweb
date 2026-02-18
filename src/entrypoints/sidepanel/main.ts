@@ -250,6 +250,8 @@ async function initPrefsUI(): Promise<void> {
     prefetchDelay: document.querySelector('#ah-prefetchDelay') as HTMLInputElement,
     prefetchDelayVal: document.querySelector('#ah-prefetchDelay-value') as HTMLElement,
     prefetchOptions: document.querySelector('#prefetch-options') as HTMLElement,
+    panelModeDropdown: document.querySelector('#panelModeDropdown') as HTMLElement,
+    panelModeChipLabel: document.querySelector('#panelModeChipLabel') as HTMLElement,
   };
   if (!els.min) return;
   const prefs = await loadPrefs();
@@ -267,6 +269,17 @@ async function initPrefsUI(): Promise<void> {
   els.prefetchDelay.value = String(delay);
   els.prefetchDelayVal.textContent = String(delay);
   if (els.prefetchOptions) els.prefetchOptions.hidden = !els.prefetch.checked;
+
+  // Panel mode dropdown
+  if (els.panelModeDropdown) {
+    const mode = prefs.serpPanelMode || 'panel';
+    els.panelModeDropdown.querySelectorAll('.dropdown__item').forEach(btn => {
+      btn.classList.toggle('is-active', btn.getAttribute('data-mode') === mode);
+      if (btn.getAttribute('data-mode') === mode && els.panelModeChipLabel) {
+        els.panelModeChipLabel.textContent = btn.textContent;
+      }
+    });
+  }
 
   const debouncedSave = (() => {
     let t: ReturnType<typeof setTimeout> | null = null;
@@ -294,6 +307,7 @@ async function initPrefsUI(): Promise<void> {
         if (!Number.isFinite(n)) return 200;
         return Math.max(50, Math.min(2000, n));
       })(),
+      serpPanelMode: (els.panelModeDropdown?.querySelector('.dropdown__item.is-active') as HTMLElement)?.dataset.mode === 'icon' ? 'icon' : 'panel',
     };
   }
 
@@ -326,6 +340,31 @@ async function initPrefsUI(): Promise<void> {
     els.prefetchDelayVal.textContent = String(val);
     debouncedSave(snapshot());
   });
+
+  // Panel mode dropdown
+  if (els.panelModeDropdown) {
+    const chip = els.panelModeDropdown.querySelector('.btn-chip') as HTMLElement | null;
+    chip?.addEventListener('click', () => {
+      const open = els.panelModeDropdown.classList.toggle('dropdown--open');
+      chip.setAttribute('aria-expanded', String(open));
+    });
+    els.panelModeDropdown.addEventListener('click', (e) => {
+      const item = (e.target as Element)?.closest('.dropdown__item') as HTMLElement | null;
+      if (!item) return;
+      els.panelModeDropdown.querySelectorAll('.dropdown__item').forEach(b => b.classList.remove('is-active'));
+      item.classList.add('is-active');
+      if (els.panelModeChipLabel) els.panelModeChipLabel.textContent = item.textContent;
+      els.panelModeDropdown.classList.remove('dropdown--open');
+      chip?.setAttribute('aria-expanded', 'false');
+      debouncedSave(snapshot());
+    });
+    document.addEventListener('click', (e) => {
+      if (!els.panelModeDropdown.contains(e.target as Node)) {
+        els.panelModeDropdown.classList.remove('dropdown--open');
+        chip?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
 }
 
 // --- Event listeners ---

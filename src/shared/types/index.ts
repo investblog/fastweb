@@ -9,6 +9,7 @@ export interface Prefs {
   enablePrefetch: boolean;
   prefetchTopN: number;
   prefetchHoverDelay: number;
+  serpPanelMode: 'panel' | 'icon';
 }
 
 export type SerpEngine = 'google' | 'bing' | 'ddg' | 'yandex';

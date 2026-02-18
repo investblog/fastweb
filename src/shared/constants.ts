@@ -8,6 +8,7 @@ export const DEFAULT_PREFS: Prefs = {
   enablePrefetch: true,
   prefetchTopN: 5,
   prefetchHoverDelay: 200,
+  serpPanelMode: 'panel',
 };
 
 export const STORAGE_DEFAULTS: StorageData = {

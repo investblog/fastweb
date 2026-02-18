@@ -444,9 +444,10 @@ export default defineContentScript({
         }
 
         const el = injectPanel();
-        // Respect user's manual dismiss — keep collapsed on pagination
-        setPanelExpanded(el, !userDismissed);
-        reportSerpState(userDismissed ? 'dismissed' : 'expanded');
+        // Respect user's manual dismiss or icon-only mode
+        const startCollapsed = userDismissed || __prefs.serpPanelMode === 'icon';
+        setPanelExpanded(el, !startCollapsed);
+        reportSerpState(startCollapsed ? 'dismissed' : 'expanded');
 
         // Update footer toggle states
         const boltEl = el.querySelector('#ah-bolt');

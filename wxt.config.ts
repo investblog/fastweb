@@ -69,6 +69,12 @@ export default defineConfig({
         (manifest.browser_specific_settings.gecko as Record<string, unknown>)
           .data_collection_permissions = { required: ['none'] };
       }
+      // Firefox: no sidePanel — popup fallback for smart icon click
+      if (wxt.config.browser === 'firefox') {
+        if (manifest.action) {
+          manifest.action.default_popup = 'sidepanel.html';
+        }
+      }
       // Opera: no sidePanel support — use sidebar_action + action popup fallback
       if (wxt.config.browser === 'opera') {
         delete (manifest as unknown as Record<string, unknown>).side_panel;

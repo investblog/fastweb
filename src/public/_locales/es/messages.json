@@ -136,5 +136,8 @@
   },
   "telegramBtn": {
     "message": "Telegram"
-  }
+  },
+  "prefPanelMode": { "message": "Panel SERP" },
+  "panelModePanel": { "message": "Panel auto" },
+  "panelModeIcon": { "message": "Solo icono" }
 }
