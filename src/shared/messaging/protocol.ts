@@ -37,6 +37,18 @@ export interface PrefetchUrlResponse {
   ok: boolean;
 }
 
+export interface ToggleSerpPanelRequest {
+  type: 'TOGGLE_SERP_PANEL';
+}
+
+// Background → content script (fire-and-forget), no response expected.
+// Content script reports state changes via SET_SERP_STATE instead.
+
+export interface SetSerpStateRequest {
+  type: 'SET_SERP_STATE';
+  state: 'expanded' | 'dismissed' | 'none';
+}
+
 // ============================================================================
 // Union Types
 // ============================================================================
@@ -45,7 +57,9 @@ export type RequestMessage =
   | OpenSettingsRequest
   | GetBookmarksRequest
   | SetBadgeRequest
-  | PrefetchUrlRequest;
+  | PrefetchUrlRequest
+  | ToggleSerpPanelRequest
+  | SetSerpStateRequest;
 
 // ============================================================================
 // Response Mapping
@@ -56,6 +70,8 @@ export type ResponseMap = {
   GET_BOOKMARKS: GetBookmarksResponse;
   SET_BADGE: SetBadgeResponse;
   PREFETCH_URL: PrefetchUrlResponse;
+  TOGGLE_SERP_PANEL: void;
+  SET_SERP_STATE: void;
 };
 
 // ============================================================================

@@ -210,10 +210,17 @@ export default defineContentScript({
       else el.classList.add('ah-root--collapsed');
     }
     function collapsePanel(el: HTMLElement): void { setPanelExpanded(el, false); }
+    function reportSerpState(state: 'expanded' | 'dismissed' | 'none'): void {
+      try {
+        if (hasRuntime()) chrome.runtime?.sendMessage?.({ type: 'SET_SERP_STATE', state });
+      } catch { /* ignore */ }
+    }
+
     function dismissPanel(el: HTMLElement): void {
       userDismissed = true;
       try { sessionStorage.setItem(DISMISS_KEY, currentQuery()); } catch { /* ignore */ }
       collapsePanel(el);
+      reportSerpState('dismissed');
     }
 
     function setBadge(count: number, altsCount: number, bmCount: number): void {
@@ -431,12 +438,14 @@ export default defineContentScript({
         if (!keysWithAlts.length) {
           setBadge(0, 0, 0);
           if (existing) existing.remove();
+          reportSerpState('none');
           return;
         }
 
         const el = injectPanel();
         // Respect user's manual dismiss — keep collapsed on pagination
         setPanelExpanded(el, !userDismissed);
+        reportSerpState(userDismissed ? 'dismissed' : 'expanded');
 
         // Update footer toggle states
         const boltEl = el.querySelector('#ah-bolt');
@@ -621,6 +630,23 @@ export default defineContentScript({
               document.getElementById('ah-root')?.remove();
               renderTips();
             }, 300);
+          }
+        });
+      }
+    } catch { /* ignore */ }
+
+    // --- Listen for TOGGLE_SERP_PANEL from background (icon click) ---
+    try {
+      if (chrome.runtime?.onMessage) {
+        chrome.runtime.onMessage.addListener((msg: any) => {
+          if (msg?.type === 'TOGGLE_SERP_PANEL') {
+            const el = document.getElementById('ah-root');
+            if (el && el.classList.contains('ah-root--collapsed')) {
+              userDismissed = false;
+              try { sessionStorage.removeItem(DISMISS_KEY); } catch { /* ignore */ }
+              setPanelExpanded(el, true);
+              reportSerpState('expanded');
+            }
           }
         });
       }

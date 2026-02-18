@@ -39,19 +39,38 @@ export default defineBackground(() => {
   // --- Side panel / sidebar ---
   const OPERA = import.meta.env.BROWSER === 'opera';
 
-  // Chrome/Edge: icon click → side panel opens directly
-  if (!import.meta.env.FIREFOX && !OPERA) {
-    try {
-      (browser as any).sidePanel?.setPanelBehavior?.({ openPanelOnActionClick: true });
-    } catch { /* not available */ }
+  // Track SERP panel state per tab for smart icon click.
+  // Content script reports 'expanded' | 'dismissed' | 'none' via SET_SERP_STATE.
+  // This lets onClicked decide *synchronously* — no async gap before sidePanel.open().
+  const serpState = new Map<number, 'expanded' | 'dismissed'>();
+  try { browser.tabs.onRemoved.addListener((tabId) => serpState.delete(tabId)); } catch { /* ignore */ }
+
+  // Chrome/Edge: icon click
+  if (!import.meta.env.FIREFOX && !OPERA && actionApi?.onClicked) {
+    actionApi.onClicked.addListener((tab) => {
+      if (tab?.id && serpState.get(tab.id) === 'dismissed') {
+        // Re-expand dismissed SERP panel (fire-and-forget)
+        browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_SERP_PANEL' }).catch(() => {});
+        serpState.set(tab.id, 'expanded');
+      } else {
+        // Open settings side panel
+        try {
+          const sp = (browser as any).sidePanel;
+          if (sp?.open && tab?.id) sp.open({ tabId: tab.id }).catch(() => {});
+        } catch { /* ignore */ }
+      }
+    });
   }
 
-  // Firefox: onClicked → open sidebar
+  // Firefox: icon click
   if (import.meta.env.FIREFOX && actionApi?.onClicked) {
-    actionApi.onClicked.addListener(async () => {
-      try {
-        await (browser as any).sidebarAction.open();
-      } catch { /* ignore */ }
+    actionApi.onClicked.addListener((tab) => {
+      if (tab?.id && serpState.get(tab.id) === 'dismissed') {
+        browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_SERP_PANEL' }).catch(() => {});
+        serpState.set(tab.id, 'expanded');
+      } else {
+        try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
+      }
     });
   }
 
@@ -199,6 +218,15 @@ export default defineBackground(() => {
             enqueuePrefetch(url);
           }
           sendResponse?.({ ok: true });
+          break;
+        }
+
+        case 'SET_SERP_STATE': {
+          const tabId = sender?.tab?.id;
+          if (tabId) {
+            if ((msg as any).state === 'none') serpState.delete(tabId);
+            else serpState.set(tabId, (msg as any).state);
+          }
           break;
         }
 
