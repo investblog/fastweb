@@ -192,21 +192,36 @@ export default defineContentScript({
     }
 
     // --- Panel state ---
-    let userDismissed = false;
+    const DISMISS_KEY = 'fw:dismissed';
+    let userDismissed = isDismissedForQuery();
+
+    function currentQuery(): string {
+      return (getQuery() || getQueryFromDom() || '').trim().toLowerCase();
+    }
+    function isDismissedForQuery(): boolean {
+      try {
+        const stored = sessionStorage.getItem(DISMISS_KEY);
+        return stored !== null && stored === currentQuery();
+      } catch { return false; }
+    }
 
     function setPanelExpanded(el: HTMLElement, expanded: boolean): void {
       if (expanded) el.classList.remove('ah-root--collapsed');
       else el.classList.add('ah-root--collapsed');
     }
     function collapsePanel(el: HTMLElement): void { setPanelExpanded(el, false); }
-    function dismissPanel(el: HTMLElement): void { userDismissed = true; collapsePanel(el); }
+    function dismissPanel(el: HTMLElement): void {
+      userDismissed = true;
+      try { sessionStorage.setItem(DISMISS_KEY, currentQuery()); } catch { /* ignore */ }
+      collapsePanel(el);
+    }
 
     function setBadge(count: number, altsCount: number, bmCount: number): void {
       try {
         if (!hasRuntime()) return;
         if (__prefs.showBadge === false) {
           // Clear any previously-set badge
-          chrome.runtime.sendMessage({ type: 'SET_BADGE', count: 0, color: BADGE_COLORS.alts, title: '' });
+          chrome.runtime?.sendMessage?.({ type: 'SET_BADGE', count: 0, color: BADGE_COLORS.alts, title: '' });
           return;
         }
         const color = altsCount > 0 && bmCount > 0
@@ -218,7 +233,7 @@ export default defineContentScript({
         if (altsCount > 0) parts.push(_('badgeAlts', `${altsCount} alts`, [String(altsCount)]));
         if (bmCount > 0) parts.push(_('badgeBookmarks', `${bmCount} bookmarks`, [String(bmCount)]));
         const title = parts.length ? `FastWeb: ${parts.join(', ')}` : '';
-        chrome.runtime.sendMessage({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
+        chrome.runtime?.sendMessage?.({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
       } catch { /* ignore */ }
     }
 
@@ -229,7 +244,7 @@ export default defineContentScript({
         if (__bmCache) return resolve(__bmCache);
         try {
           if (!hasRuntime()) throw new Error('no-runtime');
-          chrome.runtime.sendMessage({ type: 'GET_BOOKMARKS' }, (resp: any) => {
+          chrome.runtime?.sendMessage?.({ type: 'GET_BOOKMARKS' }, (resp: any) => {
             const list = resp?.ok && Array.isArray(resp.items) ? resp.items : [];
             __bmCache = list;
             resolve(list);
@@ -337,7 +352,7 @@ export default defineContentScript({
         settingsBtn.setAttribute('aria-label', _('serpOpenSidebar', 'Open via toolbar icon'));
       } else {
         settingsBtn.addEventListener('click', () => {
-          try { if (hasRuntime()) chrome.runtime.sendMessage({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
+          try { chrome.runtime?.sendMessage?.({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
         });
       }
 
@@ -384,6 +399,7 @@ export default defineContentScript({
 
     // --- Main render ---
     let lastUrl = location.href;
+    let lastQuery = currentQuery();
 
     function renderTips(): void {
       if (!detectSerpContext()) return;
@@ -419,8 +435,8 @@ export default defineContentScript({
         }
 
         const el = injectPanel();
-        // Respect user's manual dismiss — don't re-expand on SPA navigation
-        if (!userDismissed) setPanelExpanded(el, true);
+        // Respect user's manual dismiss — keep collapsed on pagination
+        setPanelExpanded(el, !userDismissed);
 
         // Update footer toggle states
         const boltEl = el.querySelector('#ah-bolt');
@@ -481,7 +497,7 @@ export default defineContentScript({
                 const img = document.createElement('img');
                 img.src = `https://icons.duckduckgo.com/ip3/${obj.host}.ico`;
                 img.className = 'ah-pill-icon'; img.alt = '';
-                img.onerror = () => { img.style.display = 'none'; };
+                img.loading = 'lazy'; img.onerror = () => { img.removeAttribute('src'); img.style.display = 'none'; };
                 const span = document.createElement('span');
                 span.className = 'ah-pill-label';
                 span.textContent = obj.host;
@@ -562,7 +578,7 @@ export default defineContentScript({
                   try { host = new URL(h.url).hostname; } catch { /* ignore */ }
                   img.src = `https://icons.duckduckgo.com/ip3/${host}.ico`;
                   img.className = 'ah-pill-icon'; img.alt = '';
-                  img.onerror = () => { img.style.display = 'none'; };
+                  img.loading = 'lazy'; img.onerror = () => { img.removeAttribute('src'); img.style.display = 'none'; };
                   const span = document.createElement('span');
                   span.className = 'ah-pill-label';
                   const t = h.title?.trim() || ((() => { try { return new URL(h.url).hostname; } catch { return h.url; } })());
@@ -615,8 +631,17 @@ export default defineContentScript({
 
     function onUrlMaybeChanged(): void {
       if (location.href !== lastUrl) {
-        userDismissed = false; // new search → reset dismiss
+        const prevQuery = lastQuery;
         document.getElementById('ah-root')?.remove();
+        lastUrl = location.href;
+        lastQuery = currentQuery();
+        // Reset dismiss only when query actually changed
+        if (lastQuery !== prevQuery) {
+          userDismissed = false;
+          try { sessionStorage.removeItem(DISMISS_KEY); } catch { /* ignore */ }
+        } else {
+          userDismissed = isDismissedForQuery();
+        }
         renderTips();
       }
     }

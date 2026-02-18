@@ -5,3 +5,6 @@ dist/
 *.zip
 temp/
 .claude/
+
+# Internal workers (not public)
+workers/

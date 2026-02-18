@@ -71,7 +71,7 @@ export default defineBackground(() => {
 
   // --- Bundle sync (remote-first, daily auto-update) ---
   const BUNDLE_ALARM = 'bundle-sync';
-  const BUNDLE_BASE = 'https://raw.githubusercontent.com/investblog/fastweb/main/data';
+  const BUNDLE_BASE = 'https://bundle.fastweb.cam';
 
   function getBrowserLocale(): string {
     try {
@@ -114,8 +114,8 @@ export default defineBackground(() => {
   async function fetchRemoteBundle(): Promise<void> {
     const locale = getBrowserLocale();
     const urls = [
-      `${BUNDLE_BASE}/bundle-${locale}.json`,
-      ...(locale !== 'en' ? [`${BUNDLE_BASE}/bundle-en.json`] : []),
+      `${BUNDLE_BASE}/bundle/${locale}.json`,
+      ...(locale !== 'en' ? [`${BUNDLE_BASE}/bundle/en.json`] : []),
     ];
     for (const url of urls) {
       try {
@@ -157,7 +157,6 @@ export default defineBackground(() => {
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason === 'install') {
-      // First date — local demo only, remote will come on first alarm
       loadLocalBundle();
     } else if (reason === 'update') {
       fetchAndSyncBundle();

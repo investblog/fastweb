@@ -74,7 +74,7 @@ export default defineContentScript({
         warmed.add(href);
         // Warm up DNS + TCP + TLS via background fetch (bypasses page CSP)
         try {
-          chrome.runtime.sendMessage({ type: 'PREFETCH_URL', url: href });
+          if (chrome.runtime?.id) chrome.runtime.sendMessage({ type: 'PREFETCH_URL', url: href });
         } catch { /* ignore */ }
       }
 

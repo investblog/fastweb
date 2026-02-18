@@ -147,6 +147,7 @@ function renderBookmarks(tokens: string[]): void {
       const a = document.createElement('a'); a.className = 'pill pill--rich'; a.href = h.url; a.target = '_blank'; a.rel = 'noreferrer';
       const img = document.createElement('img');
       try { img.src = `https://icons.duckduckgo.com/ip3/${new URL(h.url).hostname}.ico`; } catch { img.src = ''; }
+      img.loading = 'lazy'; img.onerror = () => { img.removeAttribute('src'); img.style.display = 'none'; };
       img.width = 16; img.height = 16; img.className = 'pill__icon';
       const span = document.createElement('span');
       const t = h.title?.trim() || (() => { try { return new URL(h.url).hostname; } catch { return h.url; } })();
@@ -362,10 +363,10 @@ function setupEventListeners(): void {
 
   document.getElementById('ah-load-bundle')?.addEventListener('click', async () => {
     const locale = (chrome.i18n.getUILanguage() || 'en').split(/[-_]/)[0].toLowerCase();
-    const base = 'https://raw.githubusercontent.com/investblog/fastweb/main/data';
+    const base = 'https://bundle.fastweb.cam';
     const remoteUrls = [
-      `${base}/bundle-${locale}.json`,
-      ...(locale !== 'en' ? [`${base}/bundle-en.json`] : []),
+      `${base}/bundle/${locale}.json`,
+      ...(locale !== 'en' ? [`${base}/bundle/en.json`] : []),
     ];
 
     let loaded = false;
@@ -474,6 +475,15 @@ function initHeaderScroll(): void {
   await initPrefsUI();
   setupEventListeners();
   CACHE = await getMap();
+
+  // Live-reload when background updates storage (e.g. bundle sync)
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync' && changes.alternates) {
+      CACHE = (changes.alternates.newValue || {}) as AlternatesMap;
+      applyFilterAndRender();
+    }
+  });
+
   const s = $('#search') as HTMLInputElement | null;
   const sWrap = $('#searchWrap') as HTMLElement | null;
   const sClear = $('#searchClear') as HTMLButtonElement | null;
