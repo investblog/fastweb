@@ -18,12 +18,12 @@ export default defineBackground(() => {
     try {
       if (!actionApi?.setBadgeText) return;
       const opts = { tabId };
-      actionApi.setBadgeBackgroundColor({ ...opts, color: state.color });
-      actionApi.setBadgeText({ ...opts, text: state.text });
-      if (actionApi.setTitle) actionApi.setTitle({ ...opts, title: state.title });
+      void actionApi.setBadgeBackgroundColor({ ...opts, color: state.color });
+      void actionApi.setBadgeText({ ...opts, text: state.text });
+      if (actionApi.setTitle) void actionApi.setTitle({ ...opts, title: state.title });
       // Ensure white text on colored badges (Chrome 110+)
       if ((actionApi as any).setBadgeTextColor) {
-        (actionApi as any).setBadgeTextColor({ ...opts, color: '#FFFFFF' });
+        void (actionApi as any).setBadgeTextColor({ ...opts, color: '#FFFFFF' });
       }
     } catch { /* ignore */ }
   }
@@ -54,8 +54,8 @@ export default defineBackground(() => {
 
     // Swap icon to orange bolt + hide badge text during flash
     try {
-      actionApi?.setIcon?.({ tabId, path: BOLT_ICON });
-      actionApi?.setBadgeText?.({ tabId, text: '' });
+      void actionApi?.setIcon?.({ tabId, path: BOLT_ICON });
+      void actionApi?.setBadgeText?.({ tabId, text: '' });
     } catch { /* ignore */ }
 
     // Restore after 1.5 s
@@ -64,11 +64,11 @@ export default defineBackground(() => {
       const base = badgeBase.get(tabId);
       if (base && base.text) {
         // Has alternates — restore default icon + badge
-        try { actionApi?.setIcon?.({ tabId, path: DEFAULT_ICON }); } catch { /* ignore */ }
+        try { void actionApi?.setIcon?.({ tabId, path: DEFAULT_ICON }); } catch { /* ignore */ }
         applyBadge(tabId, base);
       } else {
         // No alternates — show blue "warm" icon (acceleration active)
-        try { actionApi?.setIcon?.({ tabId, path: WARM_ICON }); } catch { /* ignore */ }
+        try { void actionApi?.setIcon?.({ tabId, path: WARM_ICON }); } catch { /* ignore */ }
       }
     }, 1500);
     prefetchTimer.set(tabId, timer);
@@ -86,7 +86,7 @@ export default defineBackground(() => {
     if (!next) return;
     queuedUrls.delete(next);
     activePrefetch += 1;
-    fetch(next, { mode: 'no-cors', credentials: 'omit', redirect: 'manual' })
+    void fetch(next, { mode: 'no-cors', credentials: 'omit', redirect: 'manual' })
       .catch(() => {})
       .finally(() => {
         activePrefetch = Math.max(0, activePrefetch - 1);
@@ -146,7 +146,19 @@ export default defineBackground(() => {
     });
   }
 
-  // Opera: sidebar_action handles left panel; toolbar uses default_popup
+  // Opera: sidebar_action handles left panel; toolbar uses default_popup.
+  // Smart click: dynamically clear popup when SERP panel is dismissed,
+  // so onClicked fires and we can re-expand it.
+  if (OPERA && actionApi?.onClicked) {
+    actionApi.onClicked.addListener((tab) => {
+      if (tab?.id && serpState.get(tab.id) === 'dismissed') {
+        browser.tabs.sendMessage(tab.id, { type: 'TOGGLE_SERP_PANEL' }).catch(() => {});
+        serpState.set(tab.id, 'expanded');
+        // Restore popup so next click opens settings again
+        try { void actionApi.setPopup({ tabId: tab.id, popup: 'sidepanel.html' }); } catch { /* ignore */ }
+      }
+    });
+  }
 
   function flattenBookmarks(nodes: chrome.bookmarks.BookmarkTreeNode[]): BookmarkEntry[] {
     const flat: BookmarkEntry[] = [];
@@ -241,16 +253,16 @@ export default defineBackground(() => {
   }
 
   // Daily alarm — sync bundle every 24 h
-  browser.alarms.create(BUNDLE_ALARM, { periodInMinutes: 24 * 60 });
+  void browser.alarms.create(BUNDLE_ALARM, { periodInMinutes: 24 * 60 });
   browser.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === BUNDLE_ALARM) fetchAndSyncBundle();
+    if (alarm.name === BUNDLE_ALARM) void fetchAndSyncBundle();
   });
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason === 'install') {
-      loadLocalBundle();
+      void loadLocalBundle();
     } else if (reason === 'update') {
-      fetchAndSyncBundle();
+      void fetchAndSyncBundle();
     }
   });
 
@@ -299,8 +311,18 @@ export default defineBackground(() => {
         case 'SET_SERP_STATE': {
           const tabId = sender?.tab?.id;
           if (tabId) {
-            if ((msg as any).state === 'none') serpState.delete(tabId);
-            else serpState.set(tabId, (msg as any).state);
+            const st = (msg as any).state;
+            if (st === 'none') serpState.delete(tabId);
+            else serpState.set(tabId, st);
+            // Opera: clear popup when dismissed so onClicked fires; restore otherwise
+            if (OPERA) {
+              try {
+                void actionApi?.setPopup?.({
+                  tabId,
+                  popup: st === 'dismissed' ? '' : 'sidepanel.html',
+                });
+              } catch { /* ignore */ }
+            }
           }
           break;
         }

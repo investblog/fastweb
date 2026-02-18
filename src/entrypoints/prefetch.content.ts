@@ -65,7 +65,7 @@ export default defineContentScript({
       if (warmed.has(href)) return;
       warmed.add(href);
       try {
-        if (chrome.runtime?.id) chrome.runtime.sendMessage({ type: 'PREFETCH_URL', url: href });
+        if (chrome.runtime?.id) void chrome.runtime.sendMessage({ type: 'PREFETCH_URL', url: href });
       } catch { /* ignore */ }
     }
 

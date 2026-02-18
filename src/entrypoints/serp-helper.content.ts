@@ -213,7 +213,7 @@ export default defineContentScript({
     function collapsePanel(el: HTMLElement): void { setPanelExpanded(el, false); }
     function reportSerpState(state: 'expanded' | 'dismissed' | 'none'): void {
       try {
-        if (hasRuntime()) chrome.runtime?.sendMessage?.({ type: 'SET_SERP_STATE', state });
+        if (hasRuntime()) void chrome.runtime?.sendMessage?.({ type: 'SET_SERP_STATE', state });
       } catch { /* ignore */ }
     }
 
@@ -229,7 +229,7 @@ export default defineContentScript({
         if (!hasRuntime()) return;
         if (__prefs.showBadge === false) {
           // Clear any previously-set badge
-          chrome.runtime?.sendMessage?.({ type: 'SET_BADGE', count: 0, color: BADGE_COLORS.alts, title: '' });
+          void chrome.runtime?.sendMessage?.({ type: 'SET_BADGE', count: 0, color: BADGE_COLORS.alts, title: '' });
           return;
         }
         const color = altsCount > 0 && bmCount > 0
@@ -241,7 +241,7 @@ export default defineContentScript({
         if (altsCount > 0) parts.push(_('badgeAlts', `${altsCount} alts`, [String(altsCount)]));
         if (bmCount > 0) parts.push(_('badgeBookmarks', `${bmCount} bookmarks`, [String(bmCount)]));
         const title = parts.length ? `FastWeb: ${parts.join(', ')}` : '';
-        chrome.runtime?.sendMessage?.({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
+        void chrome.runtime?.sendMessage?.({ type: 'SET_BADGE', count: Math.max(0, count || 0), color, title });
       } catch { /* ignore */ }
     }
 
@@ -328,7 +328,7 @@ export default defineContentScript({
         const on = !!__prefs.enablePrefetch;
         boltBtn.classList.toggle('is-active', on);
         boltBtn.setAttribute('aria-pressed', String(on));
-        try { chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
+        try { void chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
       });
 
       // Bookmark: toggle bookmarks on SERP
@@ -337,7 +337,7 @@ export default defineContentScript({
         const on = __prefs.showSerpBookmarks !== false;
         bmBtn.classList.toggle('is-active', on);
         bmBtn.setAttribute('aria-pressed', String(on));
-        try { chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
+        try { void chrome.storage?.sync?.set({ prefs: { ...__prefs } }); } catch { /* ignore */ }
         // Re-render to show/hide bookmarks section
         __bmCache = null;
         el!.remove();
@@ -348,7 +348,7 @@ export default defineContentScript({
       themeBtn.addEventListener('click', () => {
         __theme = resolveTheme() === 'dark' ? 'light' : 'dark';
         applyTheme();
-        try { chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
+        try { void chrome.storage?.sync?.set({ theme: __theme }); } catch { /* ignore */ }
       });
 
       // Settings — Firefox/Opera can't open sidebar/popup programmatically from content script,
@@ -360,7 +360,7 @@ export default defineContentScript({
         settingsBtn.setAttribute('aria-label', _('serpOpenSidebar', 'Open via toolbar icon'));
       } else {
         settingsBtn.addEventListener('click', () => {
-          try { chrome.runtime?.sendMessage?.({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
+          try { void chrome.runtime?.sendMessage?.({ type: 'OPEN_SETTINGS' }); } catch { /* ignore */ }
         });
       }
 
@@ -523,7 +523,7 @@ export default defineContentScript({
 
         // Render bookmarks
         if (__prefs.showSerpBookmarks !== false) {
-          fetchBookmarksOnce().then(list => {
+          void fetchBookmarksOnce().then(list => {
             try {
               const kw = new Set<string>(tokens);
               const addKw = (s: string) => {

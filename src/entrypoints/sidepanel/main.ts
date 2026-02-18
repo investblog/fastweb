@@ -126,7 +126,7 @@ function renderBookmarks(tokens: string[]): void {
   const sec = $('#bmSection') as HTMLElement | null;
   const box = $('#bmResults') as HTMLElement | null;
   if (!sec || !box) return;
-  fetchBookmarks().then(list => {
+  void fetchBookmarks().then(list => {
     box.replaceChildren();
     if (!tokens?.length) { sec.classList.add('is-hidden'); return; }
     const hits: BookmarkEntry[] = []; const seen = new Set<string>();
@@ -460,7 +460,7 @@ function initHeaderScroll(): void {
 }
 
 // --- Boot ---
-(async function boot(): Promise<void> {
+void (async function boot(): Promise<void> {
   try {
     const lang = chrome.i18n.getUILanguage();
     document.documentElement.lang = lang;

@@ -61,7 +61,7 @@ export function setThemePreference(preference: ThemePreference): void {
   else setTheme(preference);
 
   // Sync to chrome.storage.sync so content scripts can read it
-  try { chrome.storage?.sync?.set({ [SYNC_KEY]: preference }); } catch { /* ignore */ }
+  try { void chrome.storage?.sync?.set({ [SYNC_KEY]: preference }); } catch { /* ignore */ }
 }
 
 /**
@@ -83,7 +83,7 @@ export function initTheme(): void {
   else setTheme(preference);
 
   // Sync initial value from localStorage → chrome.storage
-  try { chrome.storage?.sync?.set({ [SYNC_KEY]: preference }); } catch { /* ignore */ }
+  try { void chrome.storage?.sync?.set({ [SYNC_KEY]: preference }); } catch { /* ignore */ }
 
   try {
     const mql = window.matchMedia('(prefers-color-scheme: dark)');
