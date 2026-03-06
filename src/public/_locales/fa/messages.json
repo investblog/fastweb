@@ -3,7 +3,7 @@
     "message": "FastWeb — شتاب‌دهنده جستجو"
   },
   "appDesc": {
-    "message": "پیوندهای مرده را زنده می‌کند. زنده‌ها را سرعت می‌بخشد. آینه‌ها، نشانک‌ها و پیش‌بارگذاری در صفحه جستجو."
+    "message": "پیوندهای مرده را زنده می‌کند. زنده‌ها را سرعت می‌بخشد. دامنه‌های جایگزین، نشانک‌ها و پیش‌بارگذاری در صفحات جستجو."
   },
   "domainLabel": {
     "message": "دامنه"
@@ -137,7 +137,23 @@
   "telegramBtn": {
     "message": "تلگرام"
   },
+  "tabDomains": { "message": "دامنه‌ها" },
+  "tabPrefs": { "message": "تنظیمات" },
   "prefPanelMode": { "message": "پنل SERP" },
   "panelModePanel": { "message": "پنل خودکار" },
-  "panelModeIcon": { "message": "فقط آیکون" }
+  "panelModeIcon": { "message": "فقط آیکون" },
+  "welcomeTitle": { "message": "به FastWeb خوش آمدید" },
+  "welcomeHeading": { "message": "FastWeb نصب شد!" },
+  "welcomeSub": { "message": "نتایج جستجوی شما اکنون قدرتمندتر شده‌اند." },
+  "welcomeF1Title": { "message": "دامنه‌های جایگزین" },
+  "welcomeF1Desc": { "message": "آینه‌ها و جایگزین‌ها مستقیماً در Google، Bing، DuckDuckGo و Yandex." },
+  "welcomeF2Title": { "message": "نشانک‌های هوشمند" },
+  "welcomeF2Desc": { "message": "نشانک‌های مرتبط در کنار نتایج جستجو نمایش داده می‌شوند." },
+  "welcomeF3Title": { "message": "شتاب‌دهی پیوندها" },
+  "welcomeF3Desc": { "message": "اتصالات را گرم می‌کند — صفحات هنگام کلیک سریع‌تر بارگذاری می‌شوند." },
+  "welcomeTipsTitle": { "message": "نکات" },
+  "welcomeTip1": { "message": "FastWeb را به نوار ابزار پین کنید — روی آیکون پازل کلیک کنید و پین کنید." },
+  "welcomeTip2": { "message": "وقتی شتاب‌دهی فعال است، آیکون رعد و برق را ببینید — هنگام گرم شدن پیوندها چشمک می‌زند." },
+  "welcomeCta": { "message": "باز کردن تنظیمات" },
+  "welcomeMore": { "message": "اطلاعات بیشتر" }
 }

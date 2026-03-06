@@ -3,7 +3,7 @@
     "message": "FastWeb — Akselerator Pencarian"
   },
   "appDesc": {
-    "message": "Menghidupkan tautan mati. Mempercepat yang hidup. Mirror, bookmark & prefetch langsung di halaman pencarian."
+    "message": "Menghidupkan tautan mati. Mempercepat yang hidup. Domain alternatif, bookmark & prefetch di halaman pencarian."
   },
   "domainLabel": {
     "message": "Domain"
@@ -137,7 +137,23 @@
   "telegramBtn": {
     "message": "Telegram"
   },
+  "tabDomains": { "message": "Domain" },
+  "tabPrefs": { "message": "Pengaturan" },
   "prefPanelMode": { "message": "Panel SERP" },
   "panelModePanel": { "message": "Panel otomatis" },
-  "panelModeIcon": { "message": "Ikon saja" }
+  "panelModeIcon": { "message": "Ikon saja" },
+  "welcomeTitle": { "message": "Selamat datang di FastWeb" },
+  "welcomeHeading": { "message": "FastWeb terinstal!" },
+  "welcomeSub": { "message": "Hasil pencarian Anda kini lebih powerful." },
+  "welcomeF1Title": { "message": "Domain alternatif" },
+  "welcomeF1Desc": { "message": "Mirror dan alternatif langsung di Google, Bing, DuckDuckGo & Yandex." },
+  "welcomeF2Title": { "message": "Bookmark pintar" },
+  "welcomeF2Desc": { "message": "Bookmark relevan muncul di samping hasil pencarian." },
+  "welcomeF3Title": { "message": "Akselerasi tautan" },
+  "welcomeF3Desc": { "message": "Memanaskan koneksi — halaman dimuat lebih cepat saat diklik." },
+  "welcomeTipsTitle": { "message": "Tips" },
+  "welcomeTip1": { "message": "Pin FastWeb ke toolbar — klik ikon puzzle dan pin." },
+  "welcomeTip2": { "message": "Saat akselerasi aktif, perhatikan ikon petir — berkedip saat tautan dipanaskan." },
+  "welcomeCta": { "message": "Buka Pengaturan" },
+  "welcomeMore": { "message": "Pelajari lebih lanjut" }
 }
