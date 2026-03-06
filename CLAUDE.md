@@ -40,7 +40,7 @@ src/
     panel.css                   # SERP panel styles (scoped via #ah-root)
     components.css              # Sidebar UI components (toggles, chips, dropdowns)
   public/                       # Static assets copied to dist
-    _locales/                   # 10 locales: en, ru, uk, tr, es, de, fr, pt_BR, fa, id
+    _locales/                   # 24 locales (10 full UI + 14 manifest-only)
     icons/                      # PNG (sizes 16–256) + SVG (brand, store, lock icons)
     bundle.json                 # Fallback local bundle (used on first install)
     suggest.html + suggest.js   # Omnibox suggestion page
@@ -107,8 +107,10 @@ Domain bundles provide curated alternate domain lists. The flow:
 - **Uninstall**: opens locale-aware feedback URL (`fastweb.su` for ru/uk, `fastweb.cam/{locale}/` for others) with `#contact` anchor
 
 ### Localization
-- 10 locales in manifest: en, ru, uk, tr, es, de, fr, pt_BR, fa, id
-- Full UI translation: en, ru, uk, tr, es, fa, id (all keys including welcome page)
-- Manifest-only (appName + appDesc): de, fr, pt_BR
+- 24 locales in manifest (10 full UI + 14 manifest-only)
+- Full UI translation (all keys including welcome page): en, ru, uk, tr, es, de, fr, pt_BR, fa, id
+- Manifest-only (appName + appDesc): zh_CN, ar, hi, vi, it, pl, nl, ja, ko, th, ro, cs, sv, hu
+- Firefox AMO: 40 locale descriptions (24 base + 16 AMO-specific variants like en-ca, es-ar, pt-pt, zh-tw, el, fi, he, hr, nb-no, nn-no, sk, sl, sq)
 - Firefox AMO hard limit: appName max 50 chars (blocks upload if ANY locale exceeds)
 - Chrome Web Store: appDesc max 132 chars
+- Store descriptions: temp/store-chrome.md, temp/store-edge.md, temp/store-firefox.md, temp/store-i18n.md (all in .gitignore)

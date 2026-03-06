@@ -8,3 +8,6 @@ temp/
 
 # Internal workers (not public)
 workers/
+
+# Windows artifacts
+nul
