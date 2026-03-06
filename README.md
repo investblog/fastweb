@@ -2,7 +2,7 @@
 
 # FastWeb
 
-Search accelerator browser extension — alternate domains, bookmarks, smart tips & hover prefetch right on search results pages.
+Search accelerator browser extension — alternate domains, bookmarks & link prefetch right on search results pages.
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome-Web%20Store-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/ldimjibdnbccpjgndkealkhojebhjdbh)
 [![Firefox Add-ons](https://img.shields.io/badge/Firefox-Add--ons-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/firefox/addon/fastweb/)
@@ -14,12 +14,12 @@ Search accelerator browser extension — alternate domains, bookmarks, smart tip
 
 - **Alternate domains** — maintain your own list or use the built-in bundle of known mirrors and official alternates
 - **Bookmarks on SERP** — see related bookmarks right on the search page, no digging through folders
-- **Hover warm-up** — DNS/TCP/TLS connection prefetch on hover so pages load faster when you click
-- **Smart tips** — spelling hints, `site:` suggestions, archive links, cross-engine search
+- **Link acceleration** — DNS/TCP/TLS connection prefetch on hover so pages load faster when you click
 - **Works everywhere** — Google, Bing, DuckDuckGo, and Yandex
+- **Flexible display** — full panel or compact icon-only badge on search results
 - **Dark & light theme** — with auto-detection
-- **Import/export** — domain list as JSON
-- **7 languages** — English, Russian, Ukrainian, Turkish, Spanish, Indonesian, Persian (RTL)
+- **Import/export** — domain list as JSON, curated bundles with daily auto-sync
+- **24 languages** — global store coverage
 - **Fully local** — no accounts, no tracking, no data leaves your browser
 
 ## Install
@@ -35,7 +35,7 @@ Search accelerator browser extension — alternate domains, bookmarks, smart tip
 
 When you search on a supported engine, FastWeb checks if any results have known alternate domains or mirrors. If so, a compact panel appears with direct links — saving you clicks and helping you reach the right site faster.
 
-The hover warm-up (enabled by default) pre-establishes connections to destinations when you hover over links, making page loads noticeably faster.
+Link acceleration (enabled by default) pre-establishes DNS/TCP/TLS connections when you hover over links, making page loads noticeably faster. Watch for the lightning icon in the toolbar when it's active.
 
 ## Development
 
@@ -61,7 +61,7 @@ npm run typecheck      # TypeScript check (run npx wxt prepare first)
 
 ## Privacy
 
-FastWeb runs entirely in your browser. It does not collect, transmit, or store any personal data. The only network requests beyond normal browsing are an optional daily bundle update check from GitHub and favicon loading from DuckDuckGo's public icon service.
+FastWeb runs entirely in your browser. It does not collect, transmit, or store any personal data. The only network requests beyond normal browsing are a daily bundle sync from bundle.fastweb.cam and favicon loading from DuckDuckGo's public icon service.
 
 Full privacy policy: [PRIVACY.md](PRIVACY.md)
 
