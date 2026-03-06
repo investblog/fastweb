@@ -3,7 +3,7 @@
     "message": "FastWeb — Прискорювач пошуку"
   },
   "appDesc": {
-    "message": "Оживляє мертві посилання. Прискорює живі. Дзеркала, закладки та передзавантаження на сторінці пошуку."
+    "message": "Відновлює мертві посилання. Прискорює живі. Альтернативні домени, закладки й передзавантаження в пошуку."
   },
   "domainLabel": {
     "message": "Домен"
@@ -137,7 +137,23 @@
   "telegramBtn": {
     "message": "Telegram"
   },
+  "tabDomains": { "message": "Домени" },
+  "tabPrefs": { "message": "Налаштування" },
   "prefPanelMode": { "message": "Панель на SERP" },
   "panelModePanel": { "message": "Панель" },
-  "panelModeIcon": { "message": "Лише іконка" }
+  "panelModeIcon": { "message": "Лише іконка" },
+  "welcomeTitle": { "message": "Ласкаво просимо до FastWeb" },
+  "welcomeHeading": { "message": "FastWeb встановлено!" },
+  "welcomeSub": { "message": "Ваші результати пошуку стали потужнішими." },
+  "welcomeF1Title": { "message": "Альтернативні домени" },
+  "welcomeF1Desc": { "message": "Дзеркала та альтернативи прямо в Google, Bing, DuckDuckGo та Яндекс." },
+  "welcomeF2Title": { "message": "Розумні закладки" },
+  "welcomeF2Desc": { "message": "Релевантні закладки з'являються поруч із результатами пошуку." },
+  "welcomeF3Title": { "message": "Прискорення посилань" },
+  "welcomeF3Desc": { "message": "Прогріває з'єднання — сторінки відкриваються швидше." },
+  "welcomeTipsTitle": { "message": "Поради" },
+  "welcomeTip1": { "message": "Закріпіть FastWeb на панелі інструментів — натисніть на пазл і закріпіть іконку." },
+  "welcomeTip2": { "message": "При увімкненому прискоренні слідкуйте за іконкою блискавки — вона блимає при прогріві посилань." },
+  "welcomeCta": { "message": "Відкрити налаштування" },
+  "welcomeMore": { "message": "Дізнатися більше" }
 }

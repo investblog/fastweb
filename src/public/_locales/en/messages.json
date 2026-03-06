@@ -3,7 +3,7 @@
     "message": "FastWeb — Search Accelerator"
   },
   "appDesc": {
-    "message": "Revives dead links. Accelerates live ones. Mirrors, bookmarks & prefetch right on the search page."
+    "message": "Revives dead links. Accelerates live ones. Alternate domains, bookmarks & link prefetch on search pages."
   },
   "domainLabel": {
     "message": "Domain"

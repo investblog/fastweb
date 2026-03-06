@@ -1,9 +1,9 @@
 {
   "appName": {
-    "message": "FastWeb — Acelerador de búsqueda"
+    "message": "FastWeb — Acelerador de Búsqueda"
   },
   "appDesc": {
-    "message": "Revive enlaces muertos. Acelera los vivos. Espejos, marcadores y precarga en la página de búsqueda."
+    "message": "Revive enlaces muertos. Acelera los vivos. Dominios alternativos, marcadores y precarga en páginas de búsqueda."
   },
   "domainLabel": {
     "message": "Dominio"
@@ -137,7 +137,23 @@
   "telegramBtn": {
     "message": "Telegram"
   },
+  "tabDomains": { "message": "Dominios" },
+  "tabPrefs": { "message": "Configuración" },
   "prefPanelMode": { "message": "Panel SERP" },
   "panelModePanel": { "message": "Panel auto" },
-  "panelModeIcon": { "message": "Solo icono" }
+  "panelModeIcon": { "message": "Solo icono" },
+  "welcomeTitle": { "message": "Bienvenido a FastWeb" },
+  "welcomeHeading": { "message": "¡FastWeb instalado!" },
+  "welcomeSub": { "message": "Tus resultados de búsqueda ahora son más potentes." },
+  "welcomeF1Title": { "message": "Dominios alternativos" },
+  "welcomeF1Desc": { "message": "Espejos y alternativas directamente en Google, Bing, DuckDuckGo y Yandex." },
+  "welcomeF2Title": { "message": "Marcadores inteligentes" },
+  "welcomeF2Desc": { "message": "Los marcadores relevantes aparecen junto a los resultados de búsqueda." },
+  "welcomeF3Title": { "message": "Aceleración de enlaces" },
+  "welcomeF3Desc": { "message": "Precalienta conexiones — las páginas cargan más rápido al hacer clic." },
+  "welcomeTipsTitle": { "message": "Consejos" },
+  "welcomeTip1": { "message": "Fija FastWeb en la barra de herramientas — haz clic en el icono del puzzle y fíjalo." },
+  "welcomeTip2": { "message": "Con la aceleración activada, observa el icono del rayo — parpadea cuando los enlaces se precalientan." },
+  "welcomeCta": { "message": "Abrir configuración" },
+  "welcomeMore": { "message": "Más información" }
 }

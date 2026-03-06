@@ -3,7 +3,7 @@
     "message": "FastWeb — Arama Hızlandırıcı"
   },
   "appDesc": {
-    "message": "Ölü bağlantıları canlandırır. Canlıları hızlandırır. Aynalar, yer imleri ve ön yükleme arama sayfasında."
+    "message": "Ölü bağlantıları canlandırır. Canlıları hızlandırır. Alternatif domainler, yer imleri ve ön yükleme arama sayfasında."
   },
   "domainLabel": {
     "message": "Alan adı"
@@ -137,7 +137,23 @@
   "telegramBtn": {
     "message": "Telegram"
   },
+  "tabDomains": { "message": "Alan adları" },
+  "tabPrefs": { "message": "Ayarlar" },
   "prefPanelMode": { "message": "SERP paneli" },
   "panelModePanel": { "message": "Otomatik panel" },
-  "panelModeIcon": { "message": "Yalnızca simge" }
+  "panelModeIcon": { "message": "Yalnızca simge" },
+  "welcomeTitle": { "message": "FastWeb'e hoş geldiniz" },
+  "welcomeHeading": { "message": "FastWeb yüklendi!" },
+  "welcomeSub": { "message": "Arama sonuçlarınız artık daha güçlü." },
+  "welcomeF1Title": { "message": "Alternatif alan adları" },
+  "welcomeF1Desc": { "message": "Google, Bing, DuckDuckGo ve Yandex'te aynalar ve alternatifler." },
+  "welcomeF2Title": { "message": "Akıllı yer imleri" },
+  "welcomeF2Desc": { "message": "İlgili yer imleri arama sonuçlarının yanında görünür." },
+  "welcomeF3Title": { "message": "Bağlantı hızlandırma" },
+  "welcomeF3Desc": { "message": "Bağlantıları ısıtır — sayfalar tıklandığında daha hızlı yüklenir." },
+  "welcomeTipsTitle": { "message": "İpuçları" },
+  "welcomeTip1": { "message": "FastWeb'i araç çubuğuna sabitleyin — yapboz simgesine tıklayın ve sabitleyin." },
+  "welcomeTip2": { "message": "Hızlandırma açıkken şimşek simgesini izleyin — bağlantılar ısınırken yanıp söner." },
+  "welcomeCta": { "message": "Ayarları aç" },
+  "welcomeMore": { "message": "Daha fazla bilgi" }
 }
