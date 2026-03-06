@@ -58,6 +58,9 @@ export default defineConfig({
           id: 'fastweb@fastweb.cam',
           strict_min_version: '142.0',
         },
+        gecko_android: {
+          strict_min_version: '142.0',
+        },
       },
     }),
   }),
