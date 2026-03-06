@@ -141,5 +141,19 @@
   "tabPrefs": { "message": "Настройки" },
   "prefPanelMode": { "message": "Панель на SERP" },
   "panelModePanel": { "message": "Панель" },
-  "panelModeIcon": { "message": "Только иконка" }
+  "panelModeIcon": { "message": "Только иконка" },
+  "welcomeTitle": { "message": "Добро пожаловать в FastWeb" },
+  "welcomeHeading": { "message": "FastWeb установлен!" },
+  "welcomeSub": { "message": "Ваши результаты поиска стали мощнее." },
+  "welcomeF1Title": { "message": "Альтернативные домены" },
+  "welcomeF1Desc": { "message": "Зеркала и альтернативы прямо в Google, Bing, DuckDuckGo и Яндекс." },
+  "welcomeF2Title": { "message": "Умные закладки" },
+  "welcomeF2Desc": { "message": "Релевантные закладки появляются рядом с результатами поиска." },
+  "welcomeF3Title": { "message": "Ускорение ссылок" },
+  "welcomeF3Desc": { "message": "Прогревает соединения — страницы открываются быстрее." },
+  "welcomeTipsTitle": { "message": "Советы" },
+  "welcomeTip1": { "message": "Закрепите FastWeb на панели инструментов — нажмите на пазл и закрепите иконку." },
+  "welcomeTip2": { "message": "При включённом ускорении следите за иконкой молнии — она мигает при прогреве ссылок." },
+  "welcomeCta": { "message": "Открыть настройки" },
+  "welcomeMore": { "message": "Подробнее" }
 }

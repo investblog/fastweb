@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title data-i18n="welcomeTitle">Welcome to FastWeb</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="../../assets/css/theme.css" />
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+    }
+
+    .welcome {
+      max-width: 480px;
+      padding: var(--space-6);
+      text-align: center;
+    }
+
+    .welcome__logo {
+      width: 64px;
+      height: 64px;
+      margin-bottom: var(--space-4);
+    }
+
+    .welcome__heading {
+      font-size: var(--fs-2xl);
+      font-weight: var(--fw-bold);
+      margin: 0 0 var(--space-2);
+    }
+
+    .welcome__sub {
+      font-size: var(--fs-md);
+      color: var(--text-muted);
+      margin: 0 0 var(--space-6);
+      line-height: var(--lh-body);
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      text-align: start;
+      margin-bottom: var(--space-6);
+    }
+
+    .feature {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+
+    .feature__icon {
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      color: var(--primary);
+    }
+
+    .feature__text {
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+    }
+
+    .feature__title {
+      font-weight: var(--fw-semibold);
+      color: var(--text-main);
+    }
+
+    .feature__desc {
+      color: var(--text-muted);
+    }
+
+    .welcome__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+      font-family: inherit;
+      font-size: var(--fs-md);
+      font-weight: var(--fw-semibold);
+      padding: 0.75em 2em;
+      border: none;
+      border-radius: var(--r-pill);
+      background: var(--primary);
+      color: var(--btn-text-on-dark);
+      cursor: pointer;
+      transition: background var(--transition-md);
+    }
+
+    .welcome__cta:hover {
+      background: var(--primary-hover);
+    }
+
+    .welcome__cta:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    .welcome__actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .welcome__secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+      font-family: inherit;
+      font-size: var(--fs-sm);
+      font-weight: var(--fw-medium);
+      padding: 0.6em 1.5em;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--r-pill);
+      background: transparent;
+      color: var(--text-muted);
+      text-decoration: none;
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+    }
+
+    .welcome__secondary:hover {
+      background: var(--bg-soft);
+      border-color: var(--brand);
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    .tips {
+      text-align: start;
+      margin-bottom: var(--space-6);
+      padding: var(--space-4);
+      background: var(--bg-soft);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .tips__title {
+      font-size: var(--fs-xs);
+      font-weight: var(--fw-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    .tip {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      font-size: var(--fs-sm);
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    .tip__icon {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+      margin-top: 1px;
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+  <!-- Icon sprite (subset) -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none">
+    <symbol id="ico-globe" viewBox="0 0 20 20"><path fill="currentColor" d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0M2 10c0-.61.08-1.21.21-1.78L6.99 13v1c0 1.1.9 2 2 2v1.93A8.01 8.01 0 0 1 2 10m13.89 5.4A1.99 1.99 0 0 0 14 14h-1v-3c0-.55-.45-1-1-1H6V8h2c.55 0 1-.45 1-1V5h2c1.1 0 2-.9 2-2v-.41A7.998 7.998 0 0 1 18 10c0 2.08-.8 3.97-2.11 5.4"/></symbol>
+    <symbol id="ico-bolt" viewBox="0 0 20 20"><path fill="currentColor" d="M10.91 0 4.544 12.727H9.09V20l6.364-12.727h-4.546z"/></symbol>
+    <symbol id="ico-bookmark" viewBox="0 0 24 24"><path d="M5 3a2 2 0 0 0-2 2v16l9-4 9 4V5a2 2 0 0 0-2-2z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-pin" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7m0 11.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3M13 20h-2v2h2z" fill="currentColor"/></symbol>
+  </svg>
+
+  <div class="welcome">
+    <img class="welcome__logo" src="/icons/icon-128.png" alt="" />
+    <h1 class="welcome__heading" data-i18n="welcomeHeading">FastWeb installed!</h1>
+    <p class="welcome__sub" data-i18n="welcomeSub">Your search results just got superpowers.</p>
+
+    <div class="features">
+      <div class="feature">
+        <svg class="feature__icon"><use href="#ico-globe"/></svg>
+        <div class="feature__text">
+          <div class="feature__title" data-i18n="welcomeF1Title">Alternate domains</div>
+          <div class="feature__desc" data-i18n="welcomeF1Desc">See official mirrors right on Google, Bing, DuckDuckGo & Yandex.</div>
+        </div>
+      </div>
+      <div class="feature">
+        <svg class="feature__icon"><use href="#ico-bookmark"/></svg>
+        <div class="feature__text">
+          <div class="feature__title" data-i18n="welcomeF2Title">Smart bookmarks</div>
+          <div class="feature__desc" data-i18n="welcomeF2Desc">Relevant bookmarks surface alongside search results.</div>
+        </div>
+      </div>
+      <div class="feature">
+        <svg class="feature__icon"><use href="#ico-bolt"/></svg>
+        <div class="feature__text">
+          <div class="feature__title" data-i18n="welcomeF3Title">Link acceleration</div>
+          <div class="feature__desc" data-i18n="welcomeF3Desc">Warms up connections so pages load faster on click.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tips">
+      <div class="tips__title" data-i18n="welcomeTipsTitle">Tips</div>
+      <div class="tip">
+        <svg class="tip__icon"><use href="#ico-pin"/></svg>
+        <span data-i18n="welcomeTip1">Pin FastWeb to the toolbar for quick access — click the puzzle icon and pin it.</span>
+      </div>
+      <div class="tip">
+        <svg class="tip__icon"><use href="#ico-bolt"/></svg>
+        <span data-i18n="welcomeTip2">When acceleration is on, watch for the lightning icon — it flashes as links warm up.</span>
+      </div>
+    </div>
+
+    <div class="welcome__actions">
+      <button class="welcome__cta" type="button" id="openSettings" data-i18n="welcomeCta">Open Settings</button>
+      <a class="welcome__secondary" id="learnMore" href="https://fastweb.cam/welcome" target="_blank" rel="noreferrer" data-i18n="welcomeMore">Learn more</a>
+    </div>
+  </div>
+  <script type="module" src="./main.ts"></script>
+</body>
+</html>

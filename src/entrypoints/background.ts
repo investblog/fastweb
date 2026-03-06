@@ -253,35 +253,26 @@ export default defineBackground(() => {
     return (lang === 'ru' || lang === 'uk') ? 'https://fastweb.su' : 'https://fastweb.cam';
   }
 
-  function getWelcomeUrl(): string {
+  function getLocalePath(path: string): string {
     const lang = getBrowserLocale();
     const base = getSiteBase();
     // fastweb.su serves ru/uk at root — no locale prefix
-    if (base.includes('fastweb.su')) return `${base}/welcome`;
+    if (base.includes('fastweb.su')) return `${base}${path}`;
     // fastweb.cam: English at root, other locales under /{locale}/
-    if (!SITE_LOCALES.has(lang) || lang === 'en') return `${base}/welcome`;
-    return `${base}/${lang}/welcome`;
+    if (!SITE_LOCALES.has(lang) || lang === 'en') return `${base}${path}`;
+    return `${base}/${lang}${path}`;
   }
 
   // Set uninstall URL (feedback page)
   try {
-    void browser.runtime.setUninstallURL(`${getSiteBase()}/#contact`);
+    void browser.runtime.setUninstallURL(`${getLocalePath('/')}#contact`);
   } catch { /* ignore — Firefox MV2 may throw in some contexts */ }
 
   browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason === 'install') {
       void loadLocalBundle();
-      // Open welcome page + sidebar
-      try {
-        void browser.tabs.create({ url: getWelcomeUrl() }).then((tab) => {
-          if (import.meta.env.FIREFOX) {
-            try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
-          } else if (!OPERA) {
-            const sp = (browser as any).sidePanel;
-            if (sp?.open && tab?.id) sp.open({ tabId: tab.id }).catch(() => {});
-          }
-        });
-      } catch { /* ignore */ }
+      // Open local welcome page (user can open sidebar from there via button click)
+      try { void browser.tabs.create({ url: browser.runtime.getURL('/welcome.html') }); } catch { /* ignore */ }
     } else if (reason === 'update') {
       void fetchAndSyncBundle();
     }
@@ -297,10 +288,16 @@ export default defineBackground(() => {
           if (import.meta.env.FIREFOX) {
             try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
           } else if (!OPERA) {
-            // Chrome/Edge: sidePanel.open()
             const sp = (browser as any).sidePanel;
-            if (sp?.open && sender?.tab?.id) {
-              sp.open({ tabId: sender.tab.id }).catch(() => {});
+            if (sp?.open) {
+              if (sender?.tab?.id) {
+                sp.open({ tabId: sender.tab.id }).catch(() => {});
+              } else {
+                // Extension page (welcome.html) — use active tab
+                browser.tabs.query({ active: true, currentWindow: true }).then(([tab]) => {
+                  if (tab?.id) sp.open({ tabId: tab.id }).catch(() => {});
+                }).catch(() => {});
+              }
             }
           }
           break;

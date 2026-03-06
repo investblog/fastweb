@@ -141,5 +141,19 @@
   "tabPrefs": { "message": "Settings" },
   "prefPanelMode": { "message": "SERP panel" },
   "panelModePanel": { "message": "Auto panel" },
-  "panelModeIcon": { "message": "Icon only" }
+  "panelModeIcon": { "message": "Icon only" },
+  "welcomeTitle": { "message": "Welcome to FastWeb" },
+  "welcomeHeading": { "message": "FastWeb installed!" },
+  "welcomeSub": { "message": "Your search results just got superpowers." },
+  "welcomeF1Title": { "message": "Alternate domains" },
+  "welcomeF1Desc": { "message": "See official mirrors right on Google, Bing, DuckDuckGo & Yandex." },
+  "welcomeF2Title": { "message": "Smart bookmarks" },
+  "welcomeF2Desc": { "message": "Relevant bookmarks surface alongside search results." },
+  "welcomeF3Title": { "message": "Link acceleration" },
+  "welcomeF3Desc": { "message": "Warms up connections so pages load faster on click." },
+  "welcomeTipsTitle": { "message": "Tips" },
+  "welcomeTip1": { "message": "Pin FastWeb to the toolbar for quick access — click the puzzle icon and pin it." },
+  "welcomeTip2": { "message": "When acceleration is on, watch for the lightning icon — it flashes as links warm up." },
+  "welcomeCta": { "message": "Open Settings" },
+  "welcomeMore": { "message": "Learn more" }
 }
