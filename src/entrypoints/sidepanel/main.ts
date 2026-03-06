@@ -1,3 +1,4 @@
+import { browser } from 'wxt/browser';
 import { applyI18n, _ } from '@shared/i18n';
 import { normalizeKeyDomain, normalizeAlt } from '@shared/url-utils';
 import { tokenizeQuery, matchesBrand, ruToLat } from '@shared/tokenizer';
@@ -7,6 +8,10 @@ import { getStoreInfo } from '@shared/store-links';
 import type { Prefs, AlternatesMap, BookmarkEntry } from '@shared/types';
 
 const $ = (s: string) => document.querySelector(s);
+
+// --- Popup mode detection ---
+// sidebar/sidepanel loads with #sidebar; popup has no hash
+const isPopup = !location.hash.includes('sidebar');
 
 // --- Tab navigation ---
 type ViewName = 'domains' | 'preferences';
@@ -498,6 +503,45 @@ function initHeaderScroll(): void {
   }, { passive: true });
 }
 
+// --- Open sidebar (for popup → sidebar transition) ---
+async function openSidePanel(): Promise<void> {
+  try {
+    if ((browser as any).sidebarAction?.open) {
+      await (browser as any).sidebarAction.open();
+      window.close();
+      return;
+    }
+    if ((browser as any).sidePanel) {
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+      if (tab?.id) {
+        await (browser as any).sidePanel.open({ tabId: tab.id });
+      } else {
+        const win = await browser.windows.getCurrent();
+        await (browser as any).sidePanel.open({ windowId: win.id });
+      }
+      window.close();
+      return;
+    }
+  } catch { /* ignore */ }
+}
+
+// --- Popup mode setup ---
+function initPopupMode(): void {
+  if (!isPopup) return;
+  document.documentElement.setAttribute('data-popup', '');
+
+  // Add "pin to sidebar" button in header
+  const actions = document.querySelector('.panel__actions');
+  if (!actions) return;
+  const pinBtn = document.createElement('button');
+  pinBtn.className = 'btn-icon';
+  pinBtn.type = 'button';
+  pinBtn.title = _('settingsBtn', 'Pin to sidebar');
+  pinBtn.innerHTML = '<span class="ah-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></span>';
+  pinBtn.addEventListener('click', openSidePanel);
+  actions.prepend(pinBtn);
+}
+
 // --- Boot ---
 void (async function boot(): Promise<void> {
   try {
@@ -508,6 +552,7 @@ void (async function boot(): Promise<void> {
   } catch { /* ignore */ }
   initTheme();
   applyI18n();
+  initPopupMode();
   initNavigation();
   initStoreLink();
   initHeaderScroll();

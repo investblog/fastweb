@@ -15,6 +15,11 @@ export default defineContentScript({
     let __prefs: Prefs = { ...DEFAULT_PREFS };
     let __theme: 'dark' | 'light' | 'auto' = 'auto';
 
+    // Cached hints for popup
+    let __lastAlternates: Array<{ domain: string; alts: Array<{ host: string; href: string }> }> = [];
+    let __lastBookmarks: Array<{ title: string; url: string }> = [];
+    let __lastQuery = '';
+
     function resolveTheme(): 'dark' | 'light' {
       if (__theme === 'dark' || __theme === 'light') return __theme;
       return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -410,7 +415,10 @@ export default defineContentScript({
     let lastQuery = currentQuery();
 
     function renderTips(): void {
-      if (!detectSerpContext()) return;
+      if (!detectSerpContext()) {
+        __lastQuery = ''; __lastAlternates = []; __lastBookmarks = [];
+        return;
+      }
       lastUrl = location.href;
 
       getPrefsAndAlternates((data) => {
@@ -437,6 +445,7 @@ export default defineContentScript({
 
         const existing = document.getElementById('ah-root');
         if (!keysWithAlts.length) {
+          __lastQuery = q || ''; __lastAlternates = []; __lastBookmarks = [];
           setBadge(0, 0, 0);
           if (existing) existing.remove();
           reportSerpState('none');
@@ -444,6 +453,14 @@ export default defineContentScript({
         }
 
         const el = injectPanel();
+
+        // Cache for popup hints
+        __lastQuery = q || '';
+        __lastAlternates = keysWithAlts.map(key => ({
+          domain: key.replace(/^www\./, ''),
+          alts: resolveKey(key).map(a => toHref(a)).filter(r => r.href),
+        }));
+
         // Respect user's manual dismiss or icon-only mode
         const startCollapsed = userDismissed || __prefs.serpPanelMode === 'icon';
         setPanelExpanded(el, !startCollapsed);
@@ -571,6 +588,7 @@ export default defineContentScript({
 
               const totalCount = keysWithAlts.length + bookmarkHits.length;
               setBadge(totalCount, keysWithAlts.length, bookmarkHits.length);
+              __lastBookmarks = bookmarkHits.map(b => ({ title: b.title, url: b.url }));
 
               if (bookmarkHits.length && bmWrap) {
                 bmWrap.classList.add('active');
@@ -607,6 +625,7 @@ export default defineContentScript({
             } catch { /* ignore */ }
           });
         } else {
+          __lastBookmarks = [];
           // Bookmarks disabled — activate search based on alternates alone
           initSearchFilter(el, totalAltsCount);
         }
@@ -640,7 +659,7 @@ export default defineContentScript({
     // --- Listen for TOGGLE_SERP_PANEL from background (icon click) ---
     try {
       if (chrome.runtime?.onMessage) {
-        chrome.runtime.onMessage.addListener((msg: any) => {
+        chrome.runtime.onMessage.addListener((msg: any, _sender: any, sendResponse: any) => {
           if (msg?.type === 'TOGGLE_SERP_PANEL') {
             const el = document.getElementById('ah-root');
             if (el && el.classList.contains('ah-root--collapsed')) {
@@ -649,6 +668,9 @@ export default defineContentScript({
               setPanelExpanded(el, true);
               reportSerpState('expanded');
             }
+          }
+          if (msg?.type === 'GET_POPUP_HINTS') {
+            sendResponse({ alternates: __lastAlternates, bookmarks: __lastBookmarks, query: __lastQuery });
           }
         });
       }

@@ -259,3 +259,21 @@ html, body {
   gap: var(--space-2);
   margin-top: var(--space-4);
 }
+
+/* ============================================================================
+   Popup mode — sidepanel.html opened as action popup (Firefox/Opera)
+   ============================================================================ */
+
+html[data-popup] body {
+  width: 400px;
+}
+
+html[data-popup] .panel {
+  min-height: 0;
+  height: auto;
+  max-height: 600px;
+}
+
+html[data-popup] .panel__body {
+  min-height: 0;
+}

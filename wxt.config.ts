@@ -64,15 +64,29 @@ export default defineConfig({
 
   hooks: {
     'build:manifestGenerated': (wxt, manifest) => {
+      // Chrome/Edge: remove popup — icon click opens sidePanel natively via onClicked
+      if (wxt.config.browser === 'chrome') {
+        if (manifest.action) {
+          delete manifest.action.default_popup;
+        }
+        // Tag sidepanel path so JS can distinguish sidebar from popup mode
+        const sp = (manifest as unknown as Record<string, any>).side_panel;
+        if (sp) sp.default_path = 'sidepanel.html#sidebar';
+      }
       // Firefox AMO requires data_collection_permissions (mandatory H1 2026).
       if (manifest.browser_specific_settings?.gecko) {
         (manifest.browser_specific_settings.gecko as Record<string, unknown>)
           .data_collection_permissions = { required: ['none'] };
       }
-      // Firefox: no sidePanel — popup fallback for smart icon click
+      // Firefox: no sidePanel — sidepanel.html doubles as popup + sidebar
       if (wxt.config.browser === 'firefox') {
         if (manifest.action) {
           manifest.action.default_popup = 'sidepanel.html';
+        }
+        const sidebar = (manifest as unknown as Record<string, any>).sidebar_action;
+        if (sidebar) {
+          sidebar.default_icon = 'icons/icon-48.png';
+          sidebar.default_panel = 'sidepanel.html#sidebar';
         }
       }
       // Opera: no sidePanel support — use sidebar_action + action popup fallback
@@ -83,11 +97,11 @@ export default defineConfig({
         }
         // Left sidebar panel (Opera proprietary)
         (manifest as unknown as Record<string, unknown>).sidebar_action = {
-          default_panel: 'sidepanel.html',
+          default_panel: 'sidepanel.html#sidebar',
           default_icon: 'icons/icon-48.png',
           default_title: 'FastWeb',
         };
-        // Toolbar icon opens popup; sidebar icon opens panel automatically
+        // Toolbar icon opens sidepanel.html as popup; sidebar icon opens panel automatically
         if (manifest.action) {
           manifest.action.default_popup = 'sidepanel.html';
         }
