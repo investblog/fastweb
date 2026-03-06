@@ -137,6 +137,8 @@
   "telegramBtn": {
     "message": "Telegram"
   },
+  "tabDomains": { "message": "Domains" },
+  "tabPrefs": { "message": "Settings" },
   "prefPanelMode": { "message": "SERP panel" },
   "panelModePanel": { "message": "Auto panel" },
   "panelModeIcon": { "message": "Icon only" }

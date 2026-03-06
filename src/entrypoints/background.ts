@@ -86,7 +86,7 @@ export default defineBackground(() => {
     if (!next) return;
     queuedUrls.delete(next);
     activePrefetch += 1;
-    void fetch(next, { mode: 'no-cors', credentials: 'omit', redirect: 'manual' })
+    void fetch(next, { mode: 'no-cors', credentials: 'omit', redirect: 'follow' })
       .catch(() => {})
       .finally(() => {
         activePrefetch = Math.max(0, activePrefetch - 1);
@@ -245,9 +245,43 @@ export default defineBackground(() => {
     if (alarm.name === BUNDLE_ALARM) void fetchAndSyncBundle();
   });
 
+  // --- Website URLs (locale-aware mirror for ru/uk) ---
+  const SITE_LOCALES = new Set(['en', 'ru', 'uk', 'tr', 'es', 'id', 'fa']);
+
+  function getSiteBase(): string {
+    const lang = getBrowserLocale();
+    return (lang === 'ru' || lang === 'uk') ? 'https://fastweb.su' : 'https://fastweb.cam';
+  }
+
+  function getWelcomeUrl(): string {
+    const lang = getBrowserLocale();
+    const base = getSiteBase();
+    // fastweb.su serves ru/uk at root — no locale prefix
+    if (base.includes('fastweb.su')) return `${base}/welcome`;
+    // fastweb.cam: English at root, other locales under /{locale}/
+    if (!SITE_LOCALES.has(lang) || lang === 'en') return `${base}/welcome`;
+    return `${base}/${lang}/welcome`;
+  }
+
+  // Set uninstall URL (feedback page)
+  try {
+    void browser.runtime.setUninstallURL(`${getSiteBase()}/#contact`);
+  } catch { /* ignore — Firefox MV2 may throw in some contexts */ }
+
   browser.runtime.onInstalled.addListener(({ reason }) => {
     if (reason === 'install') {
       void loadLocalBundle();
+      // Open welcome page + sidebar
+      try {
+        void browser.tabs.create({ url: getWelcomeUrl() }).then((tab) => {
+          if (import.meta.env.FIREFOX) {
+            try { (browser as any).sidebarAction.open(); } catch { /* ignore */ }
+          } else if (!OPERA) {
+            const sp = (browser as any).sidePanel;
+            if (sp?.open && tab?.id) sp.open({ tabId: tab.id }).catch(() => {});
+          }
+        });
+      } catch { /* ignore */ }
     } else if (reason === 'update') {
       void fetchAndSyncBundle();
     }

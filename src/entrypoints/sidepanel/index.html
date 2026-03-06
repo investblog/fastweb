@@ -9,6 +9,18 @@
   <link rel="stylesheet" href="../../assets/css/panel.css" />
 </head>
 <body>
+  <!-- Icon sprite -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" id="icon-sprite">
+    <symbol id="ico-globe" viewBox="0 0 20 20"><path fill="currentColor" d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0M2 10c0-.61.08-1.21.21-1.78L6.99 13v1c0 1.1.9 2 2 2v1.93A8.01 8.01 0 0 1 2 10m13.89 5.4A1.99 1.99 0 0 0 14 14h-1v-3c0-.55-.45-1-1-1H6V8h2c.55 0 1-.45 1-1V5h2c1.1 0 2-.9 2-2v-.41A7.998 7.998 0 0 1 18 10c0 2.08-.8 3.97-2.11 5.4"/></symbol>
+    <symbol id="ico-cog" viewBox="0 0 20 20"><path fill="currentColor" d="M9.73 13.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7m7.43-2.53c.04-.32.07-.64.07-.97s-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46a.49.49 0 0 0-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98L12.23.42a.506.506 0 0 0-.5-.42h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L2.3 9c-.04.34-.07.67-.07 1s.03.65.07.97L.19 12.63c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64z"/></symbol>
+    <symbol id="ico-panel" viewBox="0 0 20 20"><path fill="currentColor" d="M2 3a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zm5 1h11v12H7zm-1 0v12H2V4z"/></symbol>
+    <symbol id="ico-bolt" viewBox="0 0 20 20"><path fill="currentColor" d="M10.91 0 4.544 12.727H9.09V20l6.364-12.727h-4.546z"/></symbol>
+    <symbol id="ico-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="ico-sidebar" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><line x1="9" y1="3" x2="9" y2="21" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="ico-chevron" viewBox="0 0 12 12"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ico-x" viewBox="0 0 20 20"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></symbol>
+  </svg>
+
   <div class="panel">
     <!-- Header -->
     <header class="panel__header">
@@ -20,15 +32,21 @@
       </div>
       <div class="panel__actions">
         <button class="btn-icon" type="button" data-action="toggle-theme" data-i18n-title="themeBtn" title="Toggle theme">
-          <span class="ah-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>
+          <span class="ah-icon"><svg><use href="#ico-moon"/></svg></span>
         </button>
       </div>
     </header>
 
     <!-- Tab navigation -->
     <nav class="panel__nav">
-      <button class="nav-tab is-active" data-tab="domains" data-i18n="domainsHeading">Manage domains</button>
-      <button class="nav-tab" data-tab="preferences" data-i18n="prefsHeading">Advanced settings</button>
+      <button class="nav-tab is-active" data-tab="domains">
+        <svg class="nav-tab__icon"><use href="#ico-globe"/></svg>
+        <span data-i18n="tabDomains">Domains</span>
+      </button>
+      <button class="nav-tab" data-tab="preferences">
+        <svg class="nav-tab__icon"><use href="#ico-cog"/></svg>
+        <span data-i18n="tabPrefs">Settings</span>
+      </button>
     </nav>
 
     <!-- Tier 2: collapsible controls -->
@@ -44,7 +62,7 @@
         <div class="input-wrap" id="searchWrap">
           <input id="search" class="input" placeholder="Type to filter..." data-i18n-placeholder="searchPlaceholder" aria-label="Filter domains" data-i18n-aria-label="searchLabel" />
           <button type="button" class="input-wrap__clear" id="searchClear" aria-label="Clear">
-            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M17 4.41 15.59 3 10 8.59 4.41 3 3 4.41 8.59 10 3 15.59 4.41 17 10 11.41 15.59 17 17 15.59 11.41 10z" fill="currentColor"/></svg>
+            <svg aria-hidden="true" width="20" height="20"><use href="#ico-x"/></svg>
           </button>
         </div>
       </div>
@@ -156,12 +174,19 @@
             <div class="panel-mode__label" data-i18n="prefPanelMode">SERP panel</div>
             <div class="dropdown" id="panelModeDropdown">
               <button class="btn-chip" type="button" aria-haspopup="menu" aria-expanded="false">
+                <svg class="btn-chip__icon" id="panelModeChipIcon"><use href="#ico-panel"/></svg>
                 <span class="btn-chip__label" id="panelModeChipLabel" data-i18n="panelModePanel">Auto panel</span>
-                <span class="btn-chip__chevron"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4.5 6 7.5 9 4.5"/></svg></span>
+                <span class="btn-chip__chevron"><svg><use href="#ico-chevron"/></svg></span>
               </button>
               <div class="dropdown__menu" role="menu">
-                <button class="dropdown__item is-active" data-mode="panel" type="button" role="menuitem" data-i18n="panelModePanel">Auto panel</button>
-                <button class="dropdown__item" data-mode="icon" type="button" role="menuitem" data-i18n="panelModeIcon">Icon only</button>
+                <button class="dropdown__item is-active" data-mode="panel" data-icon="ico-panel" type="button" role="menuitem">
+                  <svg class="dropdown__icon"><use href="#ico-panel"/></svg>
+                  <span data-i18n="panelModePanel">Auto panel</span>
+                </button>
+                <button class="dropdown__item" data-mode="icon" data-icon="ico-bolt" type="button" role="menuitem">
+                  <svg class="dropdown__icon"><use href="#ico-bolt"/></svg>
+                  <span data-i18n="panelModeIcon">Icon only</span>
+                </button>
               </div>
             </div>
           </div>

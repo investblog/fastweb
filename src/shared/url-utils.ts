@@ -129,6 +129,18 @@ export function normalizeKeyDomain(s: string | undefined | null): string {
   return t.replace(/^https?:\/\//i, '').replace(/^www\./i, '').replace(/\/.*$/, '').toLowerCase();
 }
 
+/** Root domain for favicon lookup (strip subdomains, keep SLD.TLD) */
+export function faviconHost(host: string): string {
+  const parts = host.replace(/^www\./i, '').split('.');
+  if (parts.length <= 2) return parts.join('.');
+  const sld = parts[parts.length - 2];
+  // Preserve two-part TLDs like co.uk, com.br, org.au
+  if (['co', 'com', 'org', 'net', 'ac', 'gov', 'edu'].includes(sld)) {
+    return parts.slice(-3).join('.');
+  }
+  return parts.slice(-2).join('.');
+}
+
 export function normalizeAlt(s: string | undefined | null): string {
   const t = String(s || '').trim();
   try {

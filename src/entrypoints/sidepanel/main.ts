@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser';
 import { applyI18n, _ } from '@shared/i18n';
-import { normalizeKeyDomain, normalizeAlt } from '@shared/url-utils';
+import { normalizeKeyDomain, normalizeAlt, faviconHost } from '@shared/url-utils';
 import { tokenizeQuery, matchesBrand, ruToLat } from '@shared/tokenizer';
 import { TLD_STOP, DEFAULT_PREFS } from '@shared/constants';
 import { initTheme, toggleTheme } from '@shared/theme';
@@ -151,7 +151,7 @@ function renderBookmarks(tokens: string[]): void {
     hits.forEach(h => {
       const a = document.createElement('a'); a.className = 'pill pill--rich'; a.href = h.url; a.target = '_blank'; a.rel = 'noreferrer';
       const img = document.createElement('img');
-      try { img.src = `https://icons.duckduckgo.com/ip3/${new URL(h.url).hostname}.ico`; } catch { img.src = ''; }
+      try { img.src = `https://icons.duckduckgo.com/ip3/${faviconHost(new URL(h.url).hostname)}.ico`; } catch { img.src = ''; }
       img.loading = 'lazy'; img.onerror = () => { img.removeAttribute('src'); img.style.display = 'none'; };
       img.width = 16; img.height = 16; img.className = 'pill__icon';
       const span = document.createElement('span');
@@ -257,6 +257,7 @@ async function initPrefsUI(): Promise<void> {
     prefetchOptions: document.querySelector('#prefetch-options') as HTMLElement,
     panelModeDropdown: document.querySelector('#panelModeDropdown') as HTMLElement,
     panelModeChipLabel: document.querySelector('#panelModeChipLabel') as HTMLElement,
+    panelModeChipIcon: document.querySelector('#panelModeChipIcon use') as SVGUseElement | null,
   };
   if (!els.min) return;
   const prefs = await loadPrefs();
@@ -279,9 +280,16 @@ async function initPrefsUI(): Promise<void> {
   if (els.panelModeDropdown) {
     const mode = prefs.serpPanelMode || 'panel';
     els.panelModeDropdown.querySelectorAll('.dropdown__item').forEach(btn => {
-      btn.classList.toggle('is-active', btn.getAttribute('data-mode') === mode);
-      if (btn.getAttribute('data-mode') === mode && els.panelModeChipLabel) {
-        els.panelModeChipLabel.textContent = btn.textContent;
+      const isMatch = btn.getAttribute('data-mode') === mode;
+      btn.classList.toggle('is-active', isMatch);
+      if (isMatch) {
+        if (els.panelModeChipLabel) {
+          els.panelModeChipLabel.textContent = (btn.querySelector('span') as HTMLElement)?.textContent || btn.textContent;
+        }
+        const iconId = btn.getAttribute('data-icon');
+        if (iconId && els.panelModeChipIcon) {
+          els.panelModeChipIcon.setAttribute('href', `#${iconId}`);
+        }
       }
     });
   }
@@ -358,7 +366,13 @@ async function initPrefsUI(): Promise<void> {
       if (!item) return;
       els.panelModeDropdown.querySelectorAll('.dropdown__item').forEach(b => b.classList.remove('is-active'));
       item.classList.add('is-active');
-      if (els.panelModeChipLabel) els.panelModeChipLabel.textContent = item.textContent;
+      if (els.panelModeChipLabel) {
+        els.panelModeChipLabel.textContent = (item.querySelector('span') as HTMLElement)?.textContent || item.textContent;
+      }
+      const iconId = item.getAttribute('data-icon');
+      if (iconId && els.panelModeChipIcon) {
+        els.panelModeChipIcon.setAttribute('href', `#${iconId}`);
+      }
       els.panelModeDropdown.classList.remove('dropdown--open');
       chip?.setAttribute('aria-expanded', 'false');
       debouncedSave(snapshot());
@@ -537,7 +551,7 @@ function initPopupMode(): void {
   pinBtn.className = 'btn-icon';
   pinBtn.type = 'button';
   pinBtn.title = _('settingsBtn', 'Pin to sidebar');
-  pinBtn.innerHTML = '<span class="ah-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></span>';
+  pinBtn.innerHTML = '<span class="ah-icon"><svg><use href="#ico-sidebar"/></svg></span>';
   pinBtn.addEventListener('click', openSidePanel);
   actions.prepend(pinBtn);
 }

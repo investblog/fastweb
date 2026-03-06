@@ -1,4 +1,4 @@
-import { detectSerpContext, getQuery, getQueryFromDom, findDomainsInQuery, toHref, toHost } from '@shared/url-utils';
+import { detectSerpContext, getQuery, getQueryFromDom, findDomainsInQuery, toHref, toHost, faviconHost } from '@shared/url-utils';
 import { tokenizeQuery, matchAlternatesByBrandTokens, ruToLat } from '@shared/tokenizer';
 import { DEFAULT_PREFS, STORAGE_DEFAULTS, TLD_STOP, BADGE_COLORS } from '@shared/constants';
 import { createIcon } from '@shared/ui-helpers';
@@ -523,7 +523,7 @@ export default defineContentScript({
                 link.className = 'ah-pill ah-pill-rich';
                 link.href = obj.href; link.target = '_blank'; link.rel = 'noreferrer'; link.title = obj.href;
                 const img = document.createElement('img');
-                img.src = `https://icons.duckduckgo.com/ip3/${obj.host}.ico`;
+                img.src = `https://icons.duckduckgo.com/ip3/${faviconHost(obj.host)}.ico`;
                 img.className = 'ah-pill-icon'; img.alt = '';
                 img.loading = 'lazy'; img.onerror = () => { img.removeAttribute('src'); img.style.display = 'none'; };
                 const span = document.createElement('span');
@@ -605,7 +605,7 @@ export default defineContentScript({
                   const img = document.createElement('img');
                   let host = '';
                   try { host = new URL(h.url).hostname; } catch { /* ignore */ }
-                  img.src = `https://icons.duckduckgo.com/ip3/${host}.ico`;
+                  img.src = `https://icons.duckduckgo.com/ip3/${faviconHost(host)}.ico`;
                   img.className = 'ah-pill-icon'; img.alt = '';
                   img.loading = 'lazy'; img.onerror = () => { img.removeAttribute('src'); img.style.display = 'none'; };
                   const span = document.createElement('span');
